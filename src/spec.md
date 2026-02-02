@@ -64,6 +64,18 @@ Subscription rules:
 
 ## Core Features
 
+### Loading Animation
+- Full-screen preloader displaying custom plant growth animation:
+  - Soil appears first with fade-in at the bottom
+  - A seed drops into the soil
+  - A sprout emerges, growing into a small plant with smooth transitions
+  - Website content loads immediately after animation finishes
+  - Colors aligned with Agrigence color scheme (dark green, soil brown, light sky tones)
+  - Seamless transition into main site
+  - Performance optimized to prevent page load delays
+  - Responsive design for all screen sizes
+  - Used during initial app loading on all pages
+
 ### Global Header
 - Profile icon dropdown menu in top-right corner with dynamic options based on login state:
   - For logged-out users: Login, Create Account
@@ -82,20 +94,20 @@ Subscription rules:
   - Contrasting color (bright white or deep green depending on background)
   - Fade-in animation consistent with agriculture theme
   - Responsive design for mobile and desktop displays
-- News and Updates section displaying recent news from backend with title, date, and short description in scrolling format with "Read More" links
-- Latest Magazine section displaying recent magazines in responsive grid layout with:
-  - Magazine cards showing cover image, title, issue, short tagline/summary
-  - "View Magazine" button linking to journals page
-  - "Download PDF" button for direct download
-  - Fade-in and slide-up animations consistent with site theme
-  - Professional color theme (Dark Green #1B5E20, White #FFFFFF, Light Grey #F5F5F5)
+- News and Updates section displaying 3 sample news articles:
+  - "New Advances in Organic Farming Techniques – 2026"
+  - "ICAR Releases New Crop Guidelines for Rabi Season"
+  - "Workshop on Sustainable Agriculture Conducted Successfully"
+  - Each with title, date, and short description in scrolling format with "Read More" links
 - Articles Preview section displaying 3 sample articles in responsive three-column card grid layout:
-  - Article titles: "Role of AI in Modern Agriculture", "Improving Soil Fertility Naturally", "Water Management Practices for Farmers"
+  - "Role of AI in Modern Agriculture" with placeholder description
+  - "Improving Soil Fertility Naturally" with placeholder description
+  - "Water Management Practices for Farmers" with placeholder description
   - Each card shows title, short placeholder description (2-3 lines), and "Read More" button
   - Visual styling with Dark Green (#1B5E20) for headings and buttons, White background (#FFFFFF), Light Grey (#F5F5F5) card backgrounds, Dark Grey text (#333333)
   - Soft hover animation on cards and smooth fade-in animation on scroll
   - Responsive design that stacks cards on mobile devices
-- User Reviews section positioned toward the bottom of the home page displaying 3-5 user testimonials in responsive card/grid layout with reviewer name, photo (optional), star rating icons, and short feedback text with fade-in animations
+- User Reviews section positioned toward the bottom of the home page displaying 4 user testimonials in responsive card/grid layout with reviewer name, designation, photo, star rating icons, and short feedback text with fade-in animations
 
 ### Editorial Board Page
 - Header titled "Editorial Board" with introductory paragraph explaining the board's purpose
@@ -188,7 +200,7 @@ Subscription rules:
 - Payment Failure Page: displays error message with retry payment options
 
 ## Pages Structure
-- Home page with news section, latest magazine section, articles preview section, and user reviews section
+- Home page with news section, articles preview section, and user reviews section
 - Login page with email/password authentication
 - Registration page with user account creation
 - Forgot Password page with password reset workflow
@@ -221,19 +233,15 @@ The backend must store:
 - Contact form submissions
 - Stripe configuration settings (secret key, public key, allowed countries)
 - User session management data
-- Sample content data including 3 news posts with agricultural reporting style titles and dates
-- Sample magazine data with 2-3 magazines including metadata and descriptions
-- Sample article data with 2-3 articles including title, author, and description snippets
-- User review testimonials with reviewer name, rating, and feedback text
-- Latest magazine data including:
-  - "Agrigence Monthly – January 2026 Edition"
-  - "Modern Farming Methods – Special Issue"
-  - "Soil Health & Crop Productivity Guide"
-  - Each with title, issue information, short tagline/summary, and cover image references
-- Articles preview data including:
-  - "Role of AI in Modern Agriculture" with placeholder description
-  - "Improving Soil Fertility Naturally" with placeholder description
-  - "Water Management Practices for Farmers" with placeholder description
+- Sample content data including 3 news posts:
+  - "New Advances in Organic Farming Techniques – 2026"
+  - "ICAR Releases New Crop Guidelines for Rabi Season"
+  - "Workshop on Sustainable Agriculture Conducted Successfully"
+- Sample article data with 3 articles including title, author, and description snippets:
+  - "Role of AI in Modern Agriculture"
+  - "Improving Soil Fertility Naturally"
+  - "Water Management Practices for Farmers"
+- User review testimonials with 4 sample reviews including reviewer name, designation, rating, and feedback text
 
 ## Backend Authentication Integration
 The backend must provide:
@@ -283,18 +291,7 @@ The backend must provide:
   - Hover effects for cards and buttons
   - Hero tagline fade-in animation for visual prominence
   - User reviews section fade-in animations
-  - Latest magazine section fade-in and slide-up animations
   - Articles preview section fade-in animations and soft hover effects on cards
-- Custom loading animation featuring a plant growing from soil with refined animation sequence:
-  - Soil appears first with fade-in at the bottom
-  - A seed drops into the soil
-  - A sprout emerges, growing into a small plant with smooth transitions
-  - Website content loads immediately after animation finishes
-  - Colors aligned with Agrigence color scheme (dark green, soil brown, light sky tones)
-  - Seamless transition into main site
-  - Performance optimized to prevent page load delays
-  - Responsive design for all screen sizes
-  - Used during initial app loading on all pages
 - Minimal, modern, responsive layout with soft shadows and rounded cards
 - Consistent typography and spacing across pages
 - Performance optimized animations for mobile devices
@@ -303,7 +300,6 @@ The backend must provide:
 - Admin Panel styled with agricultural aesthetic matching site design
 - Hero section tagline styling with contrasting colors and large typography for maximum visibility
 - Authentication pages styled consistently with agriculture theme
-- Latest magazine section styled with professional color palette
 - Articles preview section styled with professional color palette
 - Editorial Board Manager section styled with consistent agricultural theme, smooth transitions, and professional card layouts
 
@@ -317,14 +313,13 @@ The backend must provide:
 - Subscription validation logic
 - Visitor counter functionality with persistent storage
 - Responsive design with agriculture-themed styling
-- Card-based layouts for editorial members, news, magazine sections, articles preview, articles, and user reviews
+- Card-based layouts for editorial members, news, articles preview, articles, and user reviews
 - Academic/professional design consistency across all pages
 - Main navigation menu with updated labels (News instead of Notice Board)
 - React Query integration for search functionality
 - Secure payment flow with proper error handling and user feedback
 - Admin Panel integration with existing backend endpoints and authorization
 - Dynamic profile menu based on authentication state
-- Latest magazine section with responsive grid layout and consistent card design
 - Articles preview section with responsive three-column grid layout that stacks on mobile
 - Custom LoadingScreen component with plant growth animation using CSS animations or lightweight SVG animation
 - Editorial Board Manager with confirmation modals for deletion, success notifications, and smooth transitions

@@ -33,10 +33,11 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col">
+      {/* Hero Section */}
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden animate-fade-in">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(/assets/generated/indian-farmer-rice-fields.dim_1200x600.jpg)' }}
+          style={{ backgroundImage: 'url(/assets/generated/hero-banner.dim_1200x600.jpg)' }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 to-background/70" />
         </div>
@@ -44,7 +45,7 @@ export default function HomePage() {
           <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-slide-up text-foreground">
             Agriculture Knowledge, Research & Opportunities in One Place
           </h1>
-          <p className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-8 animate-fade-in text-primary drop-shadow-lg px-4 py-3 leading-relaxed" style={{ animationDelay: '0.2s', animationDuration: '1s' }}>
+          <p className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-8 animate-fade-in text-primary drop-shadow-lg px-4 py-3 leading-relaxed bg-background/30 backdrop-blur-sm rounded-lg inline-block" style={{ animationDelay: '0.2s', animationDuration: '1s' }}>
             Join the leading platform for agricultural research and journal publication
           </p>
           <div className="flex flex-wrap gap-4 justify-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
@@ -58,6 +59,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* News and Updates Section */}
       <section className="bg-muted/30 py-16 animate-fade-in">
         <div className="container">
           <div className="flex items-center gap-2 mb-6">
@@ -73,8 +75,8 @@ export default function HomePage() {
               </Card>
             ) : latestNews && latestNews.length > 0 ? (
               <>
-                {latestNews.map((news) => (
-                  <Card key={news.id} className="hover:shadow-md transition-all hover:-translate-y-1">
+                {latestNews.map((news, index) => (
+                  <Card key={news.id} className="hover:shadow-md transition-all hover:-translate-y-1 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                     <CardHeader>
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
@@ -111,62 +113,40 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Articles Preview Section */}
       <section className="container py-16 animate-fade-in">
         <div className="flex items-center gap-2 mb-6">
-          <Library className="h-6 w-6 text-primary" />
-          <h2 className="text-3xl font-bold">Latest Magazines</h2>
+          <BookMarked className="h-6 w-6 text-primary" />
+          <h2 className="text-3xl font-bold">Articles Preview</h2>
         </div>
-        {magazinesLoading ? (
+        {articlePreviewsLoading ? (
           <Card>
             <CardContent className="py-8">
-              <p className="text-center text-muted-foreground">Loading magazines...</p>
+              <p className="text-center text-muted-foreground">Loading articles...</p>
             </CardContent>
           </Card>
-        ) : homePageMagazines && homePageMagazines.length > 0 ? (
+        ) : articlePreviews && articlePreviews.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {homePageMagazines.map((magazine, index) => (
+            {articlePreviews.slice(0, 3).map((article, index) => (
               <Card 
-                key={magazine.id} 
-                className="overflow-hidden shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 animate-slide-up"
+                key={article.id} 
+                className="bg-card hover:shadow-lg transition-all hover:-translate-y-1 animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="bg-muted/30 flex items-center justify-center p-6">
-                  <img
-                    src={magazine.imageUrl || '/assets/generated/magazine-cover-template.dim_300x400.png'}
-                    alt={magazine.title}
-                    className="w-full max-w-[200px] h-auto object-cover rounded-lg shadow-md"
-                  />
-                </div>
                 <CardHeader>
-                  <Badge variant="secondary" className="mb-2 w-fit">
-                    {magazine.issue}
-                  </Badge>
-                  <CardTitle className="text-xl line-clamp-2">{magazine.title}</CardTitle>
-                  <CardDescription className="line-clamp-3 text-sm">
-                    {magazine.description}
+                  <CardTitle className="text-xl text-primary line-clamp-2">
+                    {article.title}
+                  </CardTitle>
+                  <CardDescription className="text-sm text-muted-foreground line-clamp-3 mt-2">
+                    {article.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col gap-3">
-                    <p className="text-xs text-muted-foreground">
-                      <Calendar className="inline h-3 w-3 mr-1" />
-                      {formatDate(magazine.publishedDate)}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <Button asChild size="sm" className="flex-1">
-                        <Link to="/journals">
-                          <Eye className="h-3 w-3 mr-1" />
-                          View
-                        </Link>
-                      </Button>
-                      <Button asChild variant="outline" size="sm" className="flex-1">
-                        <Link to="/journals">
-                          <Download className="h-3 w-3 mr-1" />
-                          Download
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
+                  <Button asChild variant="default" size="sm" className="w-full">
+                    <Link to="/journals">
+                      Read More
+                    </Link>
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -174,61 +154,14 @@ export default function HomePage() {
         ) : (
           <Card>
             <CardContent className="py-8">
-              <p className="text-center text-muted-foreground">No magazines available at the moment</p>
+              <p className="text-center text-muted-foreground">No article previews available at the moment</p>
             </CardContent>
           </Card>
         )}
       </section>
 
+      {/* User Reviews Section */}
       <section className="bg-muted/30 py-16 animate-fade-in">
-        <div className="container">
-          <div className="flex items-center gap-2 mb-6">
-            <BookMarked className="h-6 w-6 text-primary" />
-            <h2 className="text-3xl font-bold">Articles Preview</h2>
-          </div>
-          {articlePreviewsLoading ? (
-            <Card>
-              <CardContent className="py-8">
-                <p className="text-center text-muted-foreground">Loading articles...</p>
-              </CardContent>
-            </Card>
-          ) : articlePreviews && articlePreviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articlePreviews.map((article, index) => (
-                <Card 
-                  key={article.id} 
-                  className="bg-card hover:shadow-lg transition-all hover:-translate-y-1 animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <CardHeader>
-                    <CardTitle className="text-xl text-primary line-clamp-2">
-                      {article.title}
-                    </CardTitle>
-                    <CardDescription className="text-sm text-muted-foreground line-clamp-3 mt-2">
-                      {article.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button asChild variant="default" size="sm" className="w-full">
-                      <Link to="/journals">
-                        Read More
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Card>
-              <CardContent className="py-8">
-                <p className="text-center text-muted-foreground">No article previews available at the moment</p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </section>
-
-      <section className="container py-16 animate-fade-in">
         <div className="container">
           <div className="flex items-center gap-2 mb-6">
             <Quote className="h-6 w-6 text-primary" />
@@ -241,9 +174,9 @@ export default function HomePage() {
               </CardContent>
             </Card>
           ) : userReviews && userReviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {userReviews.map((review) => (
-                <Card key={review.id} className="hover:shadow-lg transition-all hover:-translate-y-1 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {userReviews.slice(0, 4).map((review, index) => (
+                <Card key={review.id} className="hover:shadow-lg transition-all hover:-translate-y-1 animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                   <CardHeader>
                     <div className="flex items-center gap-4 mb-3">
                       {review.photoUrl ? (
