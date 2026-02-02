@@ -5,38 +5,38 @@
 @layer base {
     :root {
         --radius: 0.625rem;
-        --background: 0.98 0.02 120;
-        --foreground: 0.18 0.05 140;
+        --background: 1 0 0;
+        --foreground: 0.20 0.02 140;
         --card: 1 0 0;
-        --card-foreground: 0.18 0.05 140;
+        --card-foreground: 0.20 0.02 140;
         --popover: 1 0 0;
-        --popover-foreground: 0.18 0.05 140;
-        --primary: 0.48 0.20 140;
-        --primary-foreground: 0.98 0.02 120;
-        --secondary: 0.86 0.06 45;
-        --secondary-foreground: 0.25 0.10 45;
-        --muted: 0.94 0.02 120;
-        --muted-foreground: 0.48 0.05 140;
-        --accent: 0.83 0.10 75;
-        --accent-foreground: 0.25 0.10 45;
+        --popover-foreground: 0.20 0.02 140;
+        --primary: 0.35 0.15 145;
+        --primary-foreground: 1 0 0;
+        --secondary: 0.96 0.01 0;
+        --secondary-foreground: 0.20 0.02 140;
+        --muted: 0.96 0.01 0;
+        --muted-foreground: 0.45 0.02 140;
+        --accent: 0.96 0.01 0;
+        --accent-foreground: 0.20 0.02 140;
         --destructive: 0.55 0.22 25;
-        --destructive-foreground: 0.98 0.02 120;
-        --border: 0.88 0.02 120;
-        --input: 0.88 0.02 120;
-        --ring: 0.48 0.20 140;
+        --destructive-foreground: 1 0 0;
+        --border: 0.90 0.01 0;
+        --input: 0.90 0.01 0;
+        --ring: 0.35 0.15 145;
         --chart-1: 0.55 0.18 145;
         --chart-2: 0.65 0.15 85;
         --chart-3: 0.48 0.12 45;
         --chart-4: 0.70 0.20 165;
         --chart-5: 0.60 0.16 125;
-        --sidebar: 0.98 0.02 120;
-        --sidebar-foreground: 0.18 0.05 140;
-        --sidebar-primary: 0.48 0.20 140;
-        --sidebar-primary-foreground: 0.98 0.02 120;
-        --sidebar-accent: 0.86 0.06 45;
-        --sidebar-accent-foreground: 0.25 0.10 45;
-        --sidebar-border: 0.88 0.02 120;
-        --sidebar-ring: 0.48 0.20 140;
+        --sidebar: 1 0 0;
+        --sidebar-foreground: 0.20 0.02 140;
+        --sidebar-primary: 0.35 0.15 145;
+        --sidebar-primary-foreground: 1 0 0;
+        --sidebar-accent: 0.96 0.01 0;
+        --sidebar-accent-foreground: 0.20 0.02 140;
+        --sidebar-border: 0.90 0.01 0;
+        --sidebar-ring: 0.35 0.15 145;
     }
 
     .dark {
@@ -46,19 +46,19 @@
         --card-foreground: 0.96 0.02 120;
         --popover: 0.20 0.03 140;
         --popover-foreground: 0.96 0.02 120;
-        --primary: 0.62 0.22 140;
+        --primary: 0.50 0.18 145;
         --primary-foreground: 0.15 0.03 140;
-        --secondary: 0.28 0.08 45;
-        --secondary-foreground: 0.90 0.05 45;
+        --secondary: 0.25 0.02 0;
+        --secondary-foreground: 0.90 0.02 120;
         --muted: 0.22 0.03 140;
         --muted-foreground: 0.68 0.03 120;
-        --accent: 0.32 0.10 75;
-        --accent-foreground: 0.90 0.05 75;
+        --accent: 0.25 0.03 140;
+        --accent-foreground: 0.90 0.02 120;
         --destructive: 0.60 0.24 25;
         --destructive-foreground: 0.96 0.02 120;
         --border: 0.25 0.03 140;
         --input: 0.25 0.03 140;
-        --ring: 0.62 0.22 140;
+        --ring: 0.50 0.18 145;
         --chart-1: 0.55 0.18 145;
         --chart-2: 0.65 0.15 85;
         --chart-3: 0.48 0.12 45;
@@ -66,12 +66,12 @@
         --chart-5: 0.60 0.16 125;
         --sidebar: 0.18 0.03 140;
         --sidebar-foreground: 0.96 0.02 120;
-        --sidebar-primary: 0.62 0.22 140;
+        --sidebar-primary: 0.50 0.18 145;
         --sidebar-primary-foreground: 0.15 0.03 140;
-        --sidebar-accent: 0.28 0.08 45;
-        --sidebar-accent-foreground: 0.90 0.05 45;
+        --sidebar-accent: 0.25 0.03 140;
+        --sidebar-accent-foreground: 0.90 0.02 120;
         --sidebar-border: 0.25 0.03 140;
-        --sidebar-ring: 0.62 0.22 140;
+        --sidebar-ring: 0.50 0.18 145;
     }
 
     * {
@@ -85,7 +85,7 @@
     }
 
     h1, h2, h3, h4, h5, h6 {
-        @apply font-bold;
+        @apply font-bold text-primary;
         letter-spacing: -0.02em;
     }
 
@@ -106,6 +106,7 @@
 
     p {
         line-height: 1.7;
+        @apply text-foreground;
     }
 }
 
@@ -123,4 +124,3 @@
         }
     }
 }
-

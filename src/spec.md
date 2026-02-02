@@ -88,15 +88,13 @@ Subscription rules:
   - "View Magazine" button linking to journals page
   - "Download PDF" button for direct download
   - Fade-in and slide-up animations consistent with site theme
-  - Indian agriculture color theme (Dark Green #1B5E20, White, Grey)
+  - Professional color theme (Dark Green #1B5E20, White #FFFFFF, Light Grey #F5F5F5)
 - Articles Preview section displaying 3 sample articles in responsive three-column card grid layout:
   - Article titles: "Role of AI in Modern Agriculture", "Improving Soil Fertility Naturally", "Water Management Practices for Farmers"
   - Each card shows title, short placeholder description (2-3 lines), and "Read More" button
   - Visual styling with Dark Green (#1B5E20) for headings and buttons, White background (#FFFFFF), Light Grey (#F5F5F5) card backgrounds, Dark Grey text (#333333)
   - Soft hover animation on cards and smooth fade-in animation on scroll
   - Responsive design that stacks cards on mobile devices
-- One featured magazine card showcasing the most recent journal with cover image, title, volume/issue info, description, and View/Download buttons
-- One featured article card displaying latest article with title, author, and submission date in clean card layout with hover animation
 - User Reviews section positioned toward the bottom of the home page displaying 3-5 user testimonials in responsive card/grid layout with reviewer name, photo (optional), star rating icons, and short feedback text with fade-in animations
 
 ### Editorial Board Page
@@ -190,7 +188,7 @@ Subscription rules:
 - Payment Failure Page: displays error message with retry payment options
 
 ## Pages Structure
-- Home page with news section, latest magazine section, articles preview section, featured magazine card, featured article card, and user reviews section
+- Home page with news section, latest magazine section, articles preview section, and user reviews section
 - Login page with email/password authentication
 - Registration page with user account creation
 - Forgot Password page with password reset workflow
@@ -269,7 +267,14 @@ The backend must provide:
 - Search results must be filterable by title, author name, and keywords
 
 ## Design & Animation Requirements
-- Indian agriculture theme with natural color palette (greens, soil browns, sky tones)
+- Professional color palette applied globally across the site UI:
+  - Primary Color: Dark Green (#1B5E20)
+  - Secondary: White (#FFFFFF)
+  - Accent: Light Grey (#F5F5F5)
+  - Headings: Dark Green (#1B5E20)
+  - Body Text: Dark Grey (#333333)
+  - Buttons: Green background (#1B5E20) with white text (#FFFFFF)
+- Consistent use of the color theme for all text (headings, body), buttons, and cards to achieve a modern, professional appearance aligned with the Agrigence agricultural theme
 - Professional typography with enhanced color contrast for readability across light/dark themes
 - Harmonized section fonts and spacing for cohesive visual hierarchy
 - Lightweight CSS and Framer Motion animations:
@@ -298,8 +303,8 @@ The backend must provide:
 - Admin Panel styled with agricultural aesthetic matching site design
 - Hero section tagline styling with contrasting colors and large typography for maximum visibility
 - Authentication pages styled consistently with agriculture theme
-- Latest magazine section styled with Dark Green (#1B5E20), White, and Grey color scheme
-- Articles preview section styled with Dark Green (#1B5E20) for headings and buttons, White background (#FFFFFF), Light Grey (#F5F5F5) card backgrounds, Dark Grey text (#333333)
+- Latest magazine section styled with professional color palette
+- Articles preview section styled with professional color palette
 - Editorial Board Manager section styled with consistent agricultural theme, smooth transitions, and professional card layouts
 
 ## Technical Requirements

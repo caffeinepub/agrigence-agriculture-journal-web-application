@@ -2,14 +2,13 @@ import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useGetLatestNews, useGetHomePageMagazines, useGetHomePageArticles, useGetAllUserReviews, useGetAllArticlePreviews } from '../hooks/useQueries';
-import { FileText, Newspaper, BookOpen, Calendar, User, Eye, Download, Star, Quote, Library, BookMarked } from 'lucide-react';
+import { useGetLatestNews, useGetHomePageMagazines, useGetAllUserReviews, useGetAllArticlePreviews } from '../hooks/useQueries';
+import { Newspaper, Calendar, User, Eye, Download, Star, Quote, Library, BookMarked } from 'lucide-react';
 import React from 'react';
 
 export default function HomePage() {
   const { data: latestNews, isLoading: newsLoading } = useGetLatestNews(3);
   const { data: homePageMagazines, isLoading: magazinesLoading } = useGetHomePageMagazines();
-  const { data: homePageArticles, isLoading: articlesLoading } = useGetHomePageArticles();
   const { data: userReviews, isLoading: reviewsLoading } = useGetAllUserReviews();
   const { data: articlePreviews, isLoading: articlePreviewsLoading } = useGetAllArticlePreviews();
 
@@ -17,9 +16,6 @@ export default function HomePage() {
     const date = new Date(Number(timestamp) / 1000000);
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
-
-  const featuredMagazine = homePageMagazines?.[0];
-  const featuredArticle = homePageArticles?.[0];
 
   const renderStars = (rating: bigint) => {
     const stars: React.ReactElement[] = [];
@@ -226,113 +222,6 @@ export default function HomePage() {
             <Card>
               <CardContent className="py-8">
                 <p className="text-center text-muted-foreground">No article previews available at the moment</p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </section>
-
-      <section className="container py-16 animate-fade-in">
-        <div className="container">
-          <div className="flex items-center gap-2 mb-6">
-            <BookOpen className="h-6 w-6 text-primary" />
-            <h2 className="text-3xl font-bold">Featured Magazine</h2>
-          </div>
-          {magazinesLoading ? (
-            <Card>
-              <CardContent className="py-8">
-                <p className="text-center text-muted-foreground">Loading magazine...</p>
-              </CardContent>
-            </Card>
-          ) : featuredMagazine ? (
-            <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-              <div className="grid md:grid-cols-[300px_1fr] gap-6">
-                <div className="bg-muted/30 flex items-center justify-center p-8">
-                  <img
-                    src={featuredMagazine.imageUrl || '/assets/generated/magazine-cover-template.dim_300x400.png'}
-                    alt={featuredMagazine.title}
-                    className="w-full max-w-[250px] h-auto object-cover rounded-lg shadow-md"
-                  />
-                </div>
-                <div className="p-6 flex flex-col justify-between">
-                  <div>
-                    <Badge variant="secondary" className="mb-3">
-                      {featuredMagazine.issue}
-                    </Badge>
-                    <CardTitle className="text-2xl mb-3">{featuredMagazine.title}</CardTitle>
-                    <CardDescription className="text-base mb-4">
-                      {featuredMagazine.description}
-                    </CardDescription>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      <Calendar className="inline h-4 w-4 mr-1" />
-                      Published: {formatDate(featuredMagazine.publishedDate)}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    <Button asChild>
-                      <Link to="/journals">
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Magazine
-                      </Link>
-                    </Button>
-                    <Button asChild variant="outline">
-                      <Link to="/journals">
-                        <Download className="h-4 w-4 mr-2" />
-                        Browse Archive
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          ) : (
-            <Card>
-              <CardContent className="py-8">
-                <p className="text-center text-muted-foreground">No magazine available at the moment</p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </section>
-
-      <section className="bg-muted/30 py-16 animate-fade-in">
-        <div className="container">
-          <div className="flex items-center gap-2 mb-6">
-            <FileText className="h-6 w-6 text-primary" />
-            <h2 className="text-3xl font-bold">Featured Article</h2>
-          </div>
-          {articlesLoading ? (
-            <Card>
-              <CardContent className="py-8">
-                <p className="text-center text-muted-foreground">Loading article...</p>
-              </CardContent>
-            </Card>
-          ) : featuredArticle ? (
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl">{featuredArticle.title}</CardTitle>
-                <CardDescription className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <User className="h-4 w-4" />
-                    <span>{featuredArticle.author}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Calendar className="h-3 w-3" />
-                    <span>{formatDate(featuredArticle.submissionDate)}</span>
-                  </div>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">{featuredArticle.description}</p>
-                <Button asChild variant="outline">
-                  <Link to="/journals">Read More Articles</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardContent className="py-8">
-                <p className="text-center text-muted-foreground">No articles available at the moment</p>
               </CardContent>
             </Card>
           )}
