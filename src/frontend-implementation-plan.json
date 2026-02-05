@@ -1,70 +1,66 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Custom Agrigence SVG preloader (book → plant) with smooth fade-out",
+  "title": "Update existing /author-guidelines page content, semantics, and SEO (no route changes)",
   "requirements": [
     {
-      "id": "REQ-16",
-      "summary": "Replace GIF fullscreen loader with a responsive, flat-vector SVG animation of a book opening and a plant growing (3–4 leaves) on a clean white background with soft shadow and green palette.",
+      "id": "REQ-42",
+      "summary": "Replace all existing /author-guidelines on-page content with the exact provided policy text, using correct heading hierarchy and semantic lists.",
       "acceptanceCriteria": [
-        "The existing loader at frontend/src/components/LoadingScreen.tsx no longer references the current GIF asset and instead renders the specified book→soil→sprout→plant animation in a flat vector style.",
-        "The animation is implemented using a lightweight SVG-based approach (inline SVG or static SVG asset) or Lottie; it does not introduce a heavy runtime or block initial rendering.",
-        "The loader remains centered on screen, uses a white background, includes a subtle soft shadow under the book/plant, and uses a green agriculture palette consistent with the app theme.",
-        "The plant ends with 3–4 leaves clearly visible at the end state.",
-        "The loader scales responsively and stays visually balanced on common mobile and desktop viewport sizes."
+        "Navigating to \"/author-guidelines\" shows an H1 with the exact text: \"Author Guidelines, Editorial & Publication Policy — Agrigence\".",
+        "The introductory paragraphs and the 3 bullet points are rendered exactly as provided, preserving punctuation and curly quotes (e.g., “Popular Articles”).",
+        "The \"Publication Policy\" section is an H2 followed by a single ordered list containing items 1–12 exactly as provided.",
+        "The \"Formatting Guidelines\" section is an H2 followed by a single ordered list containing items 13–20 exactly as provided.",
+        "The page uses semantic HTML lists (<ul>/<ol>) rather than visually simulated lists."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/LoadingScreen.tsx",
+          "path": "frontend/src/pages/AuthorGuidelinesPage.tsx",
           "operation": "modify",
-          "description": "Remove the GIF-based loader and implement an inline-SVG, flat-vector animation depicting: closed book → opening book → soil in the crease → sprout emerging → plant growing to 3–4 leaves, centered on a white overlay with a subtle soft shadow and green agriculture palette. Ensure the SVG scales responsively (e.g., via viewBox + max-width constraints) and remains visually balanced across mobile/desktop."
-        },
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Add CSS keyframes/utility classes (Tailwind-compatible) used by LoadingScreen’s inline SVG to drive the book opening, soil reveal, sprout emergence, and leaf growth animations, plus shared shadow styling; keep styles lightweight and scoped to the loader to avoid affecting the rest of the app."
+          "description": "Replace the current card-based guidelines content with the verbatim user-provided policy text for the existing /author-guidelines page, ensuring: single H1 exactly \"Author Guidelines, Editorial & Publication Policy — Agrigence\"; intro paragraphs rendered as paragraphs; the 3 intro bullets rendered as a single <ul>; \"Publication Policy\" rendered as an H2 followed by one <ol> containing items 1–12 exactly; \"Formatting Guidelines\" rendered as an H2 followed by one <ol> containing items 13–20 exactly; preserve punctuation/curly quotes exactly as provided; remove unrelated existing sections (e.g., WhatsApp help, subscription limits) if they are not part of the provided text."
         }
       ]
     },
     {
-      "id": "REQ-17",
-      "summary": "Add a smooth fade-out transition that blocks interactions during fade, then unmounts the loader without layout shift or flicker.",
+      "id": "REQ-43",
+      "summary": "Keep the existing green agriculture theme, spacing, and typography for the updated page and ensure mobile responsiveness.",
       "acceptanceCriteria": [
-        "When the loader is dismissed, it fades out smoothly (opacity transition) rather than disappearing abruptly.",
-        "During fade-out, the loader overlay does not allow clicks to pass through until it is fully gone, and it fully unmounts after the transition.",
-        "The homepage/app content is visible immediately after the loader fades out, with no flashing or white-to-white flicker."
+        "The page continues to use the existing container widths and vertical spacing consistent with other informational pages.",
+        "On small screens, headings and lists reflow without horizontal scrolling and maintain readable line-length (no clipped text).",
+        "Heading levels are used in order (single H1, H2 for main sections; no H3 unless needed for sub-sections, and if used they must appear under an H2)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/LoadingScreen.tsx",
+          "path": "frontend/src/pages/AuthorGuidelinesPage.tsx",
           "operation": "modify",
-          "description": "Implement a two-phase loader lifecycle (visible → fading → unmounted) using an opacity transition on the fixed overlay. Keep the overlay capturing pointer events until the fade transition completes, then unmount to restore interactions. Trigger fade-out when the SVG animation completes (or after a small fixed duration) and ensure no layout shift by keeping the loader as a fixed inset overlay."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Ensure LoadingScreen remains mounted above routed content (current placement) and, if needed, pass a minimal readiness signal/prop so the loader can dismiss when the app is ready, while preserving immediate rendering of RouterProvider beneath to avoid flicker."
+          "description": "Apply the app’s existing layout patterns (e.g., container + max-width + vertical spacing) and existing typography classes so the updated content matches the current site theme; ensure lists and long lines wrap properly on small screens (no horizontal scrolling) and keep heading hierarchy strictly H1 then H2 (only introduce H3 if the provided text requires sub-sections under an H2)."
         }
       ]
     },
     {
-      "id": "REQ-18",
-      "summary": "Keep the preloader performance-friendly: avoid heavy assets, avoid per-frame React state updates, and ensure it doesn’t get stuck across initial boot and navigation.",
+      "id": "REQ-44",
+      "summary": "Make /author-guidelines SEO-friendly without changing the URL: set document title to match the H1 and provide a meta description derived from the provided introduction (without altering on-page text).",
       "acceptanceCriteria": [
-        "The preloader implementation does not load large GIF/video assets for the animation.",
-        "The animation runs smoothly on typical devices (no obvious jank) and does not trigger excessive React re-renders (e.g., avoid per-frame setState loops).",
-        "The preloader works reliably across route changes and initial app boot without getting stuck permanently."
+        "The route remains \"/author-guidelines\" (no new page and no route change).",
+        "When visiting \"/author-guidelines\", the browser tab title/document.title equals: \"Author Guidelines, Editorial & Publication Policy — Agrigence\".",
+        "A meta description tag is present for this route/page and reflects the provided introductory content without changing the on-page text.",
+        "The on-page content includes the keywords naturally only where they already appear in the provided text (no extra keyword-stuffing sentences added)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/LoadingScreen.tsx",
+          "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Refactor loader logic to avoid per-frame timers/setInterval-driven progress state; drive visuals via CSS/SVG animations and use at most a small number of state transitions (e.g., start/fade/unmount). Add defensive completion handling (animationend and/or a single fallback timeout) so the loader cannot get stuck. Respect prefers-reduced-motion by shortening/simplifying animation when enabled."
+          "description": "Ensure a base <meta name='description'> tag exists in the document <head> so the app has a description tag available for route-level updates."
         },
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/src/utils/seo.ts",
+          "operation": "create",
+          "description": "Add a small SEO utility to set document.title and to create/update the <meta name='description'> tag content at runtime for a given route (used by the Author Guidelines page)."
+        },
+        {
+          "path": "frontend/src/pages/AuthorGuidelinesPage.tsx",
           "operation": "modify",
-          "description": "Add any minimal reduced-motion overrides for the loader animation classes (e.g., shorten durations / disable nonessential motion) to improve perceived performance on constrained devices and accessibility settings."
+          "description": "Set document.title exactly to \"Author Guidelines, Editorial & Publication Policy — Agrigence\" when this page is mounted, and set the meta description content using text derived from the provided introductory paragraph(s) (e.g., reuse the first intro paragraph verbatim or a contiguous excerpt), without modifying the on-page rendered text; do not add extra keyword sentences beyond what already exists in the provided content."
         }
       ]
     }

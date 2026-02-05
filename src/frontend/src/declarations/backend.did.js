@@ -115,6 +115,14 @@ export const UserReview = IDL.Record({
   'feedback' : IDL.Text,
   'rating' : IDL.Nat,
 });
+export const CMSBannerNotice = IDL.Record({
+  'link' : IDL.Opt(IDL.Text),
+  'text' : IDL.Text,
+});
+export const CMSBannerConfig = IDL.Record({
+  'notices' : IDL.Vec(CMSBannerNotice),
+  'isBannerEnabled' : IDL.Bool,
+});
 export const UserProfile = IDL.Record({
   'occupation' : IDL.Text,
   'name' : IDL.Text,
@@ -196,6 +204,10 @@ export const ProfileInput = IDL.Record({
   'phone' : IDL.Text,
   'isInstitute' : IDL.Bool,
   'qualification' : IDL.Text,
+});
+export const CMSBannerInput = IDL.Record({
+  'link' : IDL.Opt(IDL.Text),
+  'text' : IDL.Text,
 });
 export const StripeConfiguration = IDL.Record({
   'allowedCountries' : IDL.Vec(IDL.Text),
@@ -330,6 +342,7 @@ export const idlService = IDL.Service({
   'getAllPendingArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
   'getAllUserReviews' : IDL.Func([], [IDL.Vec(UserReview)], ['query']),
   'getArticlePreview' : IDL.Func([IDL.Nat], [ArticlePreview], ['query']),
+  'getBannerConfig' : IDL.Func([], [CMSBannerConfig], ['query']),
   'getBlogPost' : IDL.Func([IDL.Nat], [BlogPost], ['query']),
   'getBlogPostCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getBlogPostsPaginated' : IDL.Func(
@@ -394,6 +407,7 @@ export const idlService = IDL.Service({
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([ProfileInput], [], []),
+  'setBannerNotices' : IDL.Func([IDL.Vec(CMSBannerInput)], [], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
   'setTermsPlaceholders' : IDL.Func([TermsPlaceholders], [], []),
   'submitArticle' : IDL.Func(
@@ -407,6 +421,7 @@ export const idlService = IDL.Service({
       [],
       [],
     ),
+  'toggleBanner' : IDL.Func([IDL.Bool], [], []),
   'transform' : IDL.Func(
       [TransformationInput],
       [TransformationOutput],
@@ -587,6 +602,14 @@ export const idlFactory = ({ IDL }) => {
     'feedback' : IDL.Text,
     'rating' : IDL.Nat,
   });
+  const CMSBannerNotice = IDL.Record({
+    'link' : IDL.Opt(IDL.Text),
+    'text' : IDL.Text,
+  });
+  const CMSBannerConfig = IDL.Record({
+    'notices' : IDL.Vec(CMSBannerNotice),
+    'isBannerEnabled' : IDL.Bool,
+  });
   const UserProfile = IDL.Record({
     'occupation' : IDL.Text,
     'name' : IDL.Text,
@@ -668,6 +691,10 @@ export const idlFactory = ({ IDL }) => {
     'phone' : IDL.Text,
     'isInstitute' : IDL.Bool,
     'qualification' : IDL.Text,
+  });
+  const CMSBannerInput = IDL.Record({
+    'link' : IDL.Opt(IDL.Text),
+    'text' : IDL.Text,
   });
   const StripeConfiguration = IDL.Record({
     'allowedCountries' : IDL.Vec(IDL.Text),
@@ -803,6 +830,7 @@ export const idlFactory = ({ IDL }) => {
     'getAllPendingArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
     'getAllUserReviews' : IDL.Func([], [IDL.Vec(UserReview)], ['query']),
     'getArticlePreview' : IDL.Func([IDL.Nat], [ArticlePreview], ['query']),
+    'getBannerConfig' : IDL.Func([], [CMSBannerConfig], ['query']),
     'getBlogPost' : IDL.Func([IDL.Nat], [BlogPost], ['query']),
     'getBlogPostCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getBlogPostsPaginated' : IDL.Func(
@@ -883,6 +911,7 @@ export const idlFactory = ({ IDL }) => {
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([ProfileInput], [], []),
+    'setBannerNotices' : IDL.Func([IDL.Vec(CMSBannerInput)], [], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
     'setTermsPlaceholders' : IDL.Func([TermsPlaceholders], [], []),
     'submitArticle' : IDL.Func(
@@ -896,6 +925,7 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'toggleBanner' : IDL.Func([IDL.Bool], [], []),
     'transform' : IDL.Func(
         [TransformationInput],
         [TransformationOutput],

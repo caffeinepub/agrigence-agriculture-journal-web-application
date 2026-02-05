@@ -21,6 +21,8 @@ import type {
   ArticlePreview,
   TermsPlaceholders,
   BlogPost,
+  CMSBannerConfig,
+  CMSBannerInput,
 } from '../backend';
 
 export function useGetCallerUserProfile() {
@@ -69,6 +71,50 @@ export function useIsCallerAdmin() {
     },
     enabled: !!actor && !isFetching,
     retry: false,
+  });
+}
+
+// Banner Notice Hooks
+export function useGetBannerConfig() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<CMSBannerConfig>({
+    queryKey: ['bannerConfig'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getBannerConfig();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useSetBannerNotices() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (notices: CMSBannerInput[]) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.setBannerNotices(notices);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bannerConfig'] });
+    },
+  });
+}
+
+export function useToggleBanner() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (isEnabled: boolean) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.toggleBanner(isEnabled);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bannerConfig'] });
+    },
   });
 }
 

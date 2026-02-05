@@ -14,7 +14,9 @@ import OutCall "http-outcalls/outcall";
 import Nat "mo:core/Nat";
 import Runtime "mo:core/Runtime";
 
+import List "mo:core/List";
 
+// Use migration module to enable smart data upgrades
 
 actor {
   type UserRole = AccessControl.UserRole;
@@ -257,6 +259,21 @@ actor {
     lastUpdateDate : Text;
   };
 
+  public type CMSBannerNotice = {
+    text : Text;
+    link : ?Text;
+  };
+
+  public type CMSBannerConfig = {
+    notices : [CMSBannerNotice];
+    isBannerEnabled : Bool;
+  };
+
+  public type CMSBannerInput = {
+    text : Text;
+    link : ?Text;
+  };
+
   // Defaults
   let defaultPlans : [SubscriptionPlan] = [
     {
@@ -358,6 +375,10 @@ actor {
   let userReviews = Map.empty<Nat, UserReview>();
   let blogPosts = Map.empty<Nat, BlogPost>();
 
+  // Banner config to hold notices and enabled flag
+  let bannerNotices = List.empty<CMSBannerNotice>();
+  var isBannerEnabled = true;
+
   var newsIdCounter = 1;
   var journalIdCounter = 1;
   var editorialMemberIdCounter = 2;
@@ -382,6 +403,37 @@ actor {
     companyAddress = "Zura Haradhan, Chandauli Uttar Pradesh, 221115";
     addressCity = "Chandauli";
     lastUpdateDate = "2024-06-04";
+  };
+
+  // Banner Notice Functions
+
+  public query func getBannerConfig() : async CMSBannerConfig {
+    // Public access - no authorization check needed
+    let notices = bannerNotices.toArray();
+    {
+      notices;
+      isBannerEnabled;
+    };
+  };
+
+  public shared ({ caller }) func setBannerNotices(notices : [CMSBannerInput]) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update banner notices");
+    };
+    bannerNotices.clear();
+    for (noticeInput in notices.values()) {
+      bannerNotices.add({
+        text = noticeInput.text;
+        link = noticeInput.link;
+      });
+    };
+  };
+
+  public shared ({ caller }) func toggleBanner(isEnabled : Bool) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can toggle banner");
+    };
+    isBannerEnabled := isEnabled;
   };
 
   // Blog Management

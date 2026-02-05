@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T13:54:43.179Z",
+  "generatedAt": "2026-02-05T14:51:13.558Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -11,41 +11,40 @@
     "implemented": 3,
     "items": [
       {
-        "id": "REQ-16",
-        "summary": "Replace the current GIF-based fullscreen loader with a custom, lightweight, flat-vector animation for Agrigence: a closed book appears, opens smoothly, soil appears in the center crease, a sprout emerges, then grows into a healthy plant with 3–4 leaves, all centered on a clean white background with a soft shadow and a green agriculture color theme.",
+        "id": "REQ-42",
+        "summary": "Update the existing Author Guidelines page at the current route \"/author-guidelines\" to replace all current on-page content with the exact user-provided text (no rewriting, no paraphrasing), using proper heading hierarchy and list semantics.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/LoadingScreen.tsx",
-          "frontend/src/index.css"
+          "frontend/src/pages/AuthorGuidelinesPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/LoadingScreen.tsx",
-          "frontend/src/index.css"
+          "frontend/src/pages/AuthorGuidelinesPage.tsx"
         ]
       },
       {
-        "id": "REQ-17",
-        "summary": "Implement a smooth fade-out transition from the preloader into the website content: once the animation completes (or the app is ready), the preloader should fade out and then unmount without causing layout shift or interaction issues.",
+        "id": "REQ-43",
+        "summary": "Preserve the site’s existing green agriculture theme, spacing, and typography on the updated Author Guidelines page, and ensure the layout is mobile responsive.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/LoadingScreen.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/pages/AuthorGuidelinesPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/LoadingScreen.tsx"
+          "frontend/src/pages/AuthorGuidelinesPage.tsx"
         ]
       },
       {
-        "id": "REQ-18",
-        "summary": "Ensure the preloader is performance-friendly and does not negatively affect perceived page load speed: keep the implementation small (no large raster animations), avoid unnecessary timers/work on the main thread, and minimize re-renders during the animation.",
+        "id": "REQ-44",
+        "summary": "Make the updated Author Guidelines page SEO-friendly while keeping the URL unchanged: set the document title to the exact H1 text and include an appropriate meta description derived from the provided introduction; ensure the content contains the specified keywords without altering the provided text.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/LoadingScreen.tsx",
-          "frontend/src/index.css"
+          "frontend/index.html",
+          "frontend/src/utils/seo.ts",
+          "frontend/src/pages/AuthorGuidelinesPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/LoadingScreen.tsx",
-          "frontend/src/index.css"
+          "frontend/index.html",
+          "frontend/src/utils/seo.ts",
+          "frontend/src/pages/AuthorGuidelinesPage.tsx"
         ]
       }
     ]
@@ -55,8 +54,9 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/LoadingScreen.tsx",
-    "frontend/src/index.css",
+    "frontend/index.html",
+    "frontend/src/pages/AuthorGuidelinesPage.tsx",
+    "frontend/src/utils/seo.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

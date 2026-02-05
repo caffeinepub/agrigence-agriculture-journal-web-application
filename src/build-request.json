@@ -1,74 +1,74 @@
 {
   "kind": "build_request",
-  "title": "Replace current GIF LoadingScreen with custom Agrigence book-to-plant SVG preloader",
+  "title": "Replace existing Author Guidelines page content with provided policy text (same URL, SEO-friendly)",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-16",
-      "text": "Replace the current GIF-based fullscreen loader with a custom, lightweight, flat-vector animation for Agrigence: a closed book appears, opens smoothly, soil appears in the center crease, a sprout emerges, then grows into a healthy plant with 3–4 leaves, all centered on a clean white background with a soft shadow and a green agriculture color theme.",
+      "id": "REQ-42",
+      "text": "Update the existing Author Guidelines page at the current route \"/author-guidelines\" to replace all current on-page content with the exact user-provided text (no rewriting, no paraphrasing), using proper heading hierarchy and list semantics.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Create a custom website loading animation (preloader) for the brand “Agrigence”.\n\nConcept:\nAn animated book opens, and from the center of the book, a small green plant sprouts and grows upward.\n\nAnimation sequence:\n1) A closed book appears at the center of the screen on a white background.\n2) The book smoothly opens.\n3) From the middle crease of the open book, soil appears.\n4) A small green sprout emerges from the soil.\n5) The sprout grows into a healthy plant with 3–4 leaves.\n6) As the plant finishes growing, the website loads and fades in.\n\nDesign style:\n- Minimal, smooth, elegant animation\n- Green agriculture color theme\n- Flat vector style (professional, not cartoonish)\n- Clean white background with soft shadow\n\nTechnical requirements:\n- Use lightweight SVG or Lottie animation\n- Must not affect page loading speed\n- Centered on screen\n- Smooth fade-out transition into homepage\n- Fully responsive for mobile and desktop"
+          "Update the EXISTING page on the Agrigence website with the following content.\n\nDo NOT create a new page.\nDo NOT rewrite the text.\nReplace the current page content with the exact content below."
         ]
       },
       "acceptanceCriteria": [
-        "The existing loader at frontend/src/components/LoadingScreen.tsx no longer references the current GIF asset and instead renders the specified book→soil→sprout→plant animation in a flat vector style.",
-        "The animation is implemented using a lightweight SVG-based approach (inline SVG or static SVG asset) or Lottie; it does not introduce a heavy runtime or block initial rendering.",
-        "The loader remains centered on screen, uses a white background, includes a subtle soft shadow under the book/plant, and uses a green agriculture palette consistent with the app theme.",
-        "The plant ends with 3–4 leaves clearly visible at the end state.",
-        "The loader scales responsively and stays visually balanced on common mobile and desktop viewport sizes."
+        "Navigating to \"/author-guidelines\" shows an H1 with the exact text: \"Author Guidelines, Editorial & Publication Policy — Agrigence\".",
+        "The introductory paragraphs and the 3 bullet points are rendered exactly as provided, preserving punctuation and curly quotes (e.g., “Popular Articles”).",
+        "The \"Publication Policy\" section is an H2 followed by a single ordered list containing items 1–12 exactly as provided.",
+        "The \"Formatting Guidelines\" section is an H2 followed by a single ordered list containing items 13–20 exactly as provided.",
+        "The page uses semantic HTML lists (<ul>/<ol>) rather than visually simulated lists."
       ]
     },
     {
-      "id": "REQ-17",
-      "text": "Implement a smooth fade-out transition from the preloader into the website content: once the animation completes (or the app is ready), the preloader should fade out and then unmount without causing layout shift or interaction issues.",
+      "id": "REQ-43",
+      "text": "Preserve the site’s existing green agriculture theme, spacing, and typography on the updated Author Guidelines page, and ensure the layout is mobile responsive.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Smooth fade-out transition into homepage",
-          "As the plant finishes growing, the website loads and fades in."
+          "Keep the same green agriculture theme, spacing, and typography.\nUse proper heading hierarchy (H1, H2, H3), bullets, and numbered lists.\nEnsure the page is mobile responsive and SEO friendly."
         ]
       },
       "acceptanceCriteria": [
-        "When the loader is dismissed, it fades out smoothly (opacity transition) rather than disappearing abruptly.",
-        "During fade-out, the loader overlay does not allow clicks to pass through until it is fully gone, and it fully unmounts after the transition.",
-        "The homepage/app content is visible immediately after the loader fades out, with no flashing or white-to-white flicker."
+        "The page continues to use the existing container widths and vertical spacing consistent with other informational pages.",
+        "On small screens, headings and lists reflow without horizontal scrolling and maintain readable line-length (no clipped text).",
+        "Heading levels are used in order (single H1, H2 for main sections; no H3 unless needed for sub-sections, and if used they must appear under an H2)."
       ]
     },
     {
-      "id": "REQ-18",
-      "text": "Ensure the preloader is performance-friendly and does not negatively affect perceived page load speed: keep the implementation small (no large raster animations), avoid unnecessary timers/work on the main thread, and minimize re-renders during the animation.",
+      "id": "REQ-44",
+      "text": "Make the updated Author Guidelines page SEO-friendly while keeping the URL unchanged: set the document title to the exact H1 text and include an appropriate meta description derived from the provided introduction; ensure the content contains the specified keywords without altering the provided text.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Must not affect page loading speed",
-          "Use lightweight SVG or Lottie animation"
+          "SEO rules:\n- Maintain proper H1, H2 structure\n- Keep URL same\n- Optimize for keywords: Author Guidelines, Agriculture Magazine, Article Submission, Editorial Board, Publication Guidelines"
         ]
       },
       "acceptanceCriteria": [
-        "The preloader implementation does not load large GIF/video assets for the animation.",
-        "The animation runs smoothly on typical devices (no obvious jank) and does not trigger excessive React re-renders (e.g., avoid per-frame setState loops).",
-        "The preloader works reliably across route changes and initial app boot without getting stuck permanently."
+        "The route remains \"/author-guidelines\" (no new page and no route change).",
+        "When visiting \"/author-guidelines\", the browser tab title/document.title equals: \"Author Guidelines, Editorial & Publication Policy — Agrigence\".",
+        "A meta description tag is present for this route/page and reflects the provided introductory content without changing the on-page text.",
+        "The on-page content includes the keywords naturally only where they already appear in the provided text (no extra keyword-stuffing sentences added)."
       ]
     }
   ],
   "constraints": [
-    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Respect existing app architecture (React + TypeScript + Tailwind + React Query); implement the loader within current routing/layout without adding unsupported backend services."
+    "Do not create a new page or new route; update the existing Author Guidelines page in place and keep the URL the same.",
+    "Do not rewrite, paraphrase, or “improve” the user-provided text; render it verbatim.",
+    "Do not modify files under frontend/src/components/ui or other paths listed as immutable in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Do not implement or modify email/password authentication flows, admin CMS expansions, events/media library/SEO features, or other unrelated known-issue fixes as part of this loader change.",
-    "Do not change backend Motoko canister logic or data schemas for this request."
+    "Do not implement the previously requested Admin CMS or email/password authentication as part of this change.",
+    "Do not change backend data models or canister state for this content update."
   ],
   "imageRequirements": {
     "required": [],
@@ -77,9 +77,7 @@
   "userProfileUpdate": {
     "goalsToAdd": [],
     "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Prefer a minimal, elegant, flat-vector green agriculture-themed preloader animation (book opening + plant growth) with smooth fade-out into homepage."
-    ],
+    "preferencesToAdd": [],
     "preferencesToRemove": [],
     "miscToAdd": [],
     "miscToRemove": [],

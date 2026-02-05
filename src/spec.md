@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Replace the current GIF-based fullscreen LoadingScreen with a lightweight Agrigence-themed flat-vector book→sprout→plant preloader and add a smooth fade-out into the app.
+**Goal:** Replace the existing on-page content of the Author Guidelines page (same URL: `/author-guidelines`) with the exact user-provided “Author Guidelines, Editorial & Publication Policy — Agrigence” policy text, keeping the site’s current look and improving SEO metadata.
 
 **Planned changes:**
-- Update `frontend/src/components/LoadingScreen.tsx` to remove the existing GIF reference and render a custom SVG (or Lottie) animation: closed book appears, opens, soil appears in the crease, sprout emerges, and grows into a plant with 3–4 leaves, centered on a clean white background with a subtle soft shadow and green agriculture palette.
-- Implement a smooth dismissal flow where, when the animation completes (or the app is ready), the loader fades out (opacity transition), blocks interaction until fully gone, then unmounts without layout shift or flicker.
-- Keep the preloader implementation performance-friendly by avoiding large raster assets and minimizing main-thread work and React re-renders during the animation.
+- Update the existing `/author-guidelines` page to render the provided text verbatim (no rewriting/paraphrasing), including an H1, introductory paragraphs with a 3-item bullet list, and two H2 sections.
+- Implement semantic HTML structure for the content: proper heading hierarchy and real `<ul>/<ol>` lists, including ordered list items 1–12 under “Publication Policy” and 13–20 under “Formatting Guidelines”.
+- Preserve the existing green agriculture theme, spacing, typography, and ensure the page remains mobile responsive (no horizontal scrolling/clipped text).
+- Make the page SEO-friendly without changing the URL: set `document.title` to the exact H1 text and add a meta description derived from the provided introduction (without altering on-page text).
 
-**User-visible outcome:** On initial load, users see a centered Agrigence book-to-plant animation on a white background that smoothly fades out into the website content once ready.
+**User-visible outcome:** Visiting `/author-guidelines` shows the updated Author Guidelines, Editorial & Publication Policy content exactly as provided, with clean headings and proper bullet/numbered lists, consistent styling across devices, and updated page title/meta description for SEO.

@@ -40,6 +40,12 @@ export interface BlogPost {
   'imageUrl' : [] | [string],
   'publicationDate' : Time,
 }
+export interface CMSBannerConfig {
+  'notices' : Array<CMSBannerNotice>,
+  'isBannerEnabled' : boolean,
+}
+export interface CMSBannerInput { 'link' : [] | [string], 'text' : string }
+export interface CMSBannerNotice { 'link' : [] | [string], 'text' : string }
 export interface EditorialMember {
   'id' : bigint,
   'blob' : [] | [ExternalBlob],
@@ -291,6 +297,7 @@ export interface _SERVICE {
   'getAllPendingArticles' : ActorMethod<[], Array<Article>>,
   'getAllUserReviews' : ActorMethod<[], Array<UserReview>>,
   'getArticlePreview' : ActorMethod<[bigint], ArticlePreview>,
+  'getBannerConfig' : ActorMethod<[], CMSBannerConfig>,
   'getBlogPost' : ActorMethod<[bigint], BlogPost>,
   'getBlogPostCount' : ActorMethod<[], bigint>,
   'getBlogPostsPaginated' : ActorMethod<[bigint, bigint], Array<BlogPost>>,
@@ -330,12 +337,14 @@ export interface _SERVICE {
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isStripeConfigured' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[ProfileInput], undefined>,
+  'setBannerNotices' : ActorMethod<[Array<CMSBannerInput>], undefined>,
   'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,
   'setTermsPlaceholders' : ActorMethod<[TermsPlaceholders], undefined>,
   'submitArticle' : ActorMethod<
     [string, { 'doc' : null } | { 'pdf' : null }, string, bigint, ExternalBlob],
     undefined
   >,
+  'toggleBanner' : ActorMethod<[boolean], undefined>,
   'transform' : ActorMethod<[TransformationInput], TransformationOutput>,
   'updateArticleStatus' : ActorMethod<
     [Principal, string, { 'approved' : null } | { 'rejected' : null }],

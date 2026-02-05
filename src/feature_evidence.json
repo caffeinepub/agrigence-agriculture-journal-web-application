@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-current-gif-based-fullscreen-loader-with-a-custom-lightweight-flat-vector-animation-for-agrigence-a-closed-book-appears-opens-smoothly-soil-appears-in-the-center-crease-a-sprout-emerges-then-grows-into-a-healthy-plant-with-3-4-leaves-all-centered-on-a-clean-white-background-with-a-soft-shadow-and-a-green-agriculture-color-theme",
-      "featureTitle": "Replace the current GIF-based fullscreen loader with a custom, lightweight, flat-vector animation for Agrigence: a closed book appears, opens smoothly, soil appears in the center crease, a sprout emerges, then grows into a healthy plant with 3–4 leaves, all centered on a clean white background with a soft shadow and a green agriculture color theme.",
+      "featureId": "feature-update-the-existing-author-guidelines-page-at-the-current-route-author-guidelines-to-replace-all-current-on-page-content-with-the-exact-user-provided-text-no-rewriting-no-paraphrasing-using-proper-heading-hierarchy-and-list-semantics",
+      "featureTitle": "Update the existing Author Guidelines page at the current route \"/author-guidelines\" to replace all current on-page content with the exact user-provided text (no rewriting, no paraphrasing), using proper heading hierarchy and list semantics.",
       "files": [
-        "frontend/src/components/LoadingScreen.tsx",
-        "frontend/src/index.css"
+        "frontend/src/pages/AuthorGuidelinesPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -20,15 +19,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-16"
+        "REQ-42"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-a-smooth-fade-out-transition-from-the-preloader-into-the-website-content-once-the-animation-completes-or-the-app-is-ready-the-preloader-should-fade-out-and-then-unmount-without-causing-layout-shift-or-interaction-issues",
-      "featureTitle": "Implement a smooth fade-out transition from the preloader into the website content: once the animation completes (or the app is ready), the preloader should fade out and then unmount without causing layout shift or interaction issues.",
+      "featureId": "feature-preserve-the-site-s-existing-green-agriculture-theme-spacing-and-typography-on-the-updated-author-guidelines-page-and-ensure-the-layout-is-mobile-responsive",
+      "featureTitle": "Preserve the site’s existing green agriculture theme, spacing, and typography on the updated Author Guidelines page, and ensure the layout is mobile responsive.",
       "files": [
-        "frontend/src/components/LoadingScreen.tsx"
+        "frontend/src/pages/AuthorGuidelinesPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -42,16 +41,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-17"
+        "REQ-43"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-preloader-is-performance-friendly-and-does-not-negatively-affect-perceived-page-load-speed-keep-the-implementation-small-no-large-raster-animations-avoid-unnecessary-timers-work-on-the-main-thread-and-minimize-re-renders-during-the-animation",
-      "featureTitle": "Ensure the preloader is performance-friendly and does not negatively affect perceived page load speed: keep the implementation small (no large raster animations), avoid unnecessary timers/work on the main thread, and minimize re-renders during the animation.",
+      "featureId": "feature-make-the-updated-author-guidelines-page-seo-friendly-while-keeping-the-url-unchanged-set-the-document-title-to-the-exact-h1-text-and-include-an-appropriate-meta-description-derived-from-the-provided-introduction-ensure-the-content-contains-the-specified-keywords-without-altering-the-provided-text",
+      "featureTitle": "Make the updated Author Guidelines page SEO-friendly while keeping the URL unchanged: set the document title to the exact H1 text and include an appropriate meta description derived from the provided introduction; ensure the content contains the specified keywords without altering the provided text.",
       "files": [
-        "frontend/src/components/LoadingScreen.tsx",
-        "frontend/src/index.css"
+        "frontend/index.html",
+        "frontend/src/pages/AuthorGuidelinesPage.tsx",
+        "frontend/src/utils/seo.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -65,7 +65,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-18"
+        "REQ-44"
       ],
       "confidence": "high"
     }

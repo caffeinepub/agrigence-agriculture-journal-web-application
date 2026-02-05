@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 63,
+  "projectStateVersion": 77,
   "summary": "Agrigence is an agriculture journal/publication web app built on the Internet Computer with a Motoko backend canister and a React (TanStack Router) frontend. It supports public browsing of content (home feeds, news, blog posts, journals archive, editorial board, author guidelines, terms) and an authenticated user experience via Internet Identity for profile creation, subscription purchase/activation via Stripe Checkout (IC HTTP outcalls), and research article submission (DOC/PDF) using IC blob storage. Admins (bootstrapped via an environment token + user-provided secret) can manage operational content through an admin panel: publish/delete news, CRUD blog posts (optional image blob), upload journal issues (PDF blob) and mark as current/archive, review pending article submissions (approve/reject), CRUD editorial board members (optional uploaded photo blob or static avatar URL), and manage Terms & Conditions placeholders/content.",
   "existing_features": [
     {
@@ -413,26 +413,26 @@
       "version": 1
     },
     {
-      "id": "feature-replace-the-current-gif-based-fullscreen-loader-with-a-custom-lightweight-flat-vector-animation-for-agrigence-a-closed-book-appears-opens-smoothly-soil-appears-in-the-center-crease-a-sprout-emerges-then-grows-into-a-healthy-plant-with-3-4-leaves-all-centered-on-a-clean-white-background-with-a-soft-shadow-and-a-green-agriculture-color-theme",
-      "title": "Replace the current GIF-based fullscreen loader with a custom, lightweight, flat-vector animation for Agrigence: a closed book appears, opens smoothly, soil appears in the center crease, a sprout emerges, then grows into a healthy plant with 3–4 leaves, all centered on a clean white background with a soft shadow and a green agriculture color theme.",
+      "id": "feature-update-the-existing-author-guidelines-page-at-the-current-route-author-guidelines-to-replace-all-current-on-page-content-with-the-exact-user-provided-text-no-rewriting-no-paraphrasing-using-proper-heading-hierarchy-and-list-semantics",
+      "title": "Update the existing Author Guidelines page at the current route \"/author-guidelines\" to replace all current on-page content with the exact user-provided text (no rewriting, no paraphrasing), using proper heading hierarchy and list semantics.",
       "reqIds": [
-        "REQ-16"
+        "REQ-42"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-a-smooth-fade-out-transition-from-the-preloader-into-the-website-content-once-the-animation-completes-or-the-app-is-ready-the-preloader-should-fade-out-and-then-unmount-without-causing-layout-shift-or-interaction-issues",
-      "title": "Implement a smooth fade-out transition from the preloader into the website content: once the animation completes (or the app is ready), the preloader should fade out and then unmount without causing layout shift or interaction issues.",
+      "id": "feature-preserve-the-site-s-existing-green-agriculture-theme-spacing-and-typography-on-the-updated-author-guidelines-page-and-ensure-the-layout-is-mobile-responsive",
+      "title": "Preserve the site’s existing green agriculture theme, spacing, and typography on the updated Author Guidelines page, and ensure the layout is mobile responsive.",
       "reqIds": [
-        "REQ-17"
+        "REQ-43"
       ],
       "version": 1
     },
     {
-      "id": "feature-ensure-the-preloader-is-performance-friendly-and-does-not-negatively-affect-perceived-page-load-speed-keep-the-implementation-small-no-large-raster-animations-avoid-unnecessary-timers-work-on-the-main-thread-and-minimize-re-renders-during-the-animation",
-      "title": "Ensure the preloader is performance-friendly and does not negatively affect perceived page load speed: keep the implementation small (no large raster animations), avoid unnecessary timers/work on the main thread, and minimize re-renders during the animation.",
+      "id": "feature-make-the-updated-author-guidelines-page-seo-friendly-while-keeping-the-url-unchanged-set-the-document-title-to-the-exact-h1-text-and-include-an-appropriate-meta-description-derived-from-the-provided-introduction-ensure-the-content-contains-the-specified-keywords-without-altering-the-provided-text",
+      "title": "Make the updated Author Guidelines page SEO-friendly while keeping the URL unchanged: set the document title to the exact H1 text and include an appropriate meta description derived from the provided introduction; ensure the content contains the specified keywords without altering the provided text.",
       "reqIds": [
-        "REQ-18"
+        "REQ-44"
       ],
       "version": 1
     }
@@ -610,7 +610,215 @@
     },
     {
       "id": "AR-26",
-      "summary": "Create a custom Agrigence website preloader animation: book opens, soil appears, sprout grows into plant (3–4 leaves), then fades out into homepage; minimal flat vector style on white background with soft shadow; lightweight SVG or Lottie, centered, responsive, and performance-friendly.",
+      "summary": "Implement secure email/password authentication for Admin CMS access, supporting a single \"Super Admin\" role with full permissions, and ensure all admin-only backend operations are gated behind Super Admin authorization (not just frontend route gating).",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Add backend support for Super Admin credential management and secure password handling, including: initial Super Admin bootstrap flow, password hashing (no plaintext storage), and basic brute-force protections suitable for a single-admin CMS (e.g., rate limiting / cooldown on failed logins).",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Upgrade the existing Admin Panel UI into a simple, clean, non-technical CMS experience with clear navigation for: Magazines, Events/Programs, News/Updates, Editorial Board, Pages, Media Library, SEO, Homepage, and Inquiries.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Implement full Magazine Management in the CMS: create, edit, delete magazine issues with PDF upload plus cover image upload, title, description, and publish date; and add a feature/unfeature control to select issues for homepage display.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Add Events/Programs Management with full CRUD for conferences/trainings/workshops/seminars, including event image upload, date (or date range), venue, description, and a status flag (upcoming/ongoing/completed).",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Extend News/Updates CMS capabilities so admins can edit previously published news items (in addition to creating and deleting them).",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Extend Editorial Board Management to include the requested member fields: photo upload, name, designation, bio, and social links (store and render them on the public Editorial Board page).",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Implement CMS-managed editable homepage sections so admins can update homepage content (e.g., “Why Choose Agrigence”, “What We Do”, “Main Objective”, and other homepage sections currently hardcoded), including editable text plus associated images/icons, without modifying source code.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Implement a CMS Media Library that allows Super Admin to upload, list, search/filter, view details, and delete media assets (images, PDFs, documents), and reuse selected media across magazines, events, pages, and other CMS-managed content types.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-35",
+      "summary": "Add SEO controls editable in the CMS: meta title and meta description for key pages (at minimum: Home, News, Journals, Editorial Board, Terms) and alt text for CMS-managed images; also allow admins to control URL slugs where routing supports it.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Implement homepage composition controls in the CMS: choose which magazine/event/news items appear on the homepage and allow reordering of homepage sections (within the set of CMS-managed sections).",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Persist and manage Contact/Collaboration form submissions in the backend, provide an admin UI to view/manage inquiries, and support exporting inquiries to a downloadable format (CSV or JSON).",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-38",
+      "summary": "Add CMS operational safety features: provide an admin-only export of CMS-managed data (content + configuration metadata + media library metadata) to a structured JSON format suitable for backup/restore, and ensure CMS pages load quickly via React Query caching and incremental loading states.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-39",
+      "summary": "Implement a secure email/password Admin authentication system for the CMS, including a single \"Super Admin\" role, an initial bootstrap flow, secure password hashing (no plaintext storage), and basic brute-force protection (e.g., cooldown/rate limit after failed attempts).",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-40",
+      "summary": "Add a dedicated Admin CMS login UI for email/password and gate the Admin CMS routes behind the authenticated Super Admin session, with clear error messages and a non-technical UX.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-41",
+      "summary": "Implement full CRUD for \"Magazine Issues\" managed via the CMS, supporting PDF upload, cover image upload, title, description, and published date, without requiring any code changes for content updates.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-42",
+      "summary": "Implement full CRUD for \"Events\" in the CMS, supporting event type (conference/training/workshop/seminar), image, date/time (or date range), venue, description, and status (upcoming/ongoing/completed).",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-43",
+      "summary": "Extend the existing News/Updates CMS so admins can edit previously published news items, not only create and delete them.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-44",
+      "summary": "Extend Editorial Board management to match the requested CMS fields: photo, name, bio, and role (and keep existing fields where applicable).",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-45",
+      "summary": "Implement CMS-managed editable homepage sections for: \"Why Choose Agrigence\", \"What We Do\", and \"Main Objective\", including editable text and associated images/icons, so these sections are no longer hardcoded in the frontend.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-46",
+      "summary": "Implement a CMS Media Library for uploading and managing images and files (at minimum: images + PDFs), including listing, searching/filtering, viewing asset details (filename, type, size), editing alt text, and deleting assets.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-47",
+      "summary": "Add CMS controls that determine which content appears on the homepage (e.g., selecting featured magazine issues, featured events, and featured news) and support simple reordering of homepage sections.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-48",
+      "summary": "Implement CMS-managed SEO settings: meta title and meta description for key pages, and ensure media alt text is used consistently for CMS-managed images.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-49",
+      "summary": "Persist and manage Contact/Collaboration form submissions: store submissions in the backend, show a CMS inbox to view/search submissions, allow marking as resolved/archived, and allow exporting submissions to a downloadable format (CSV or JSON).",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-50",
+      "summary": "Consolidate and simplify the existing Admin panel experience into a non-technical CMS navigation structure that includes: Magazines, Events, News/Updates, Editorial Board, Pages (homepage sections), Media Library, SEO, Homepage, and Inquiries.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-51",
+      "summary": "Add an admin-only data export endpoint for CMS-managed content and configuration (magazines, events, homepage sections/composition, media metadata, SEO settings, inquiries) to support backup/restore workflows.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-52",
+      "summary": "Update the existing Author Guidelines page content to the provided exact text (no rewrite, same URL) with proper heading hierarchy (H1/H2/H3), lists, green theme styling, mobile responsiveness, and basic SEO keyword optimization.",
       "reqIds": [],
       "status": "pending"
     }

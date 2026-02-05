@@ -1,159 +1,73 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { FileText, CheckCircle2, MessageCircle } from 'lucide-react';
-import { SiWhatsapp } from 'react-icons/si';
+import { useEffect } from 'react';
+import { setSEO } from '@/utils/seo';
 
 export default function AuthorGuidelinesPage() {
+  useEffect(() => {
+    setSEO(
+      'Author Guidelines, Editorial & Publication Policy — Agrigence',
+      'At Agrigence, every submitted article undergoes a structured editorial and technical review to ensure quality, originality, and practical relevance for the agricultural community.'
+    );
+  }, []);
+
   return (
     <div className="container py-12">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold mb-4">Author Guidelines</h1>
-          <p className="text-lg text-muted-foreground">
-            Comprehensive formatting requirements for article submissions
+        <h1 className="text-4xl font-bold mb-8">
+          Author Guidelines, Editorial & Publication Policy — Agrigence
+        </h1>
+
+        <div className="space-y-6 text-base leading-relaxed">
+          <p>
+            At Agrigence, every submitted article undergoes a structured editorial and technical review to ensure quality, originality, and practical relevance for the agricultural community.
           </p>
-        </div>
 
-        <Card className="mb-8">
-          <CardHeader>
-            <div className="flex items-center gap-2 mb-2">
-              <FileText className="h-6 w-6 text-primary" />
-              <CardTitle>Article Formatting Requirements</CardTitle>
-            </div>
-            <CardDescription>
-              Please ensure your manuscript adheres to the following formatting guidelines before submission
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-                General Formatting
-              </h3>
-              <div className="space-y-2 ml-7">
-                <div className="flex items-start gap-3">
-                  <Badge variant="secondary" className="mt-0.5">Font</Badge>
-                  <p className="text-muted-foreground">Times New Roman</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Badge variant="secondary" className="mt-0.5">Font Size</Badge>
-                  <p className="text-muted-foreground">12pt</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Badge variant="secondary" className="mt-0.5">Line Spacing</Badge>
-                  <p className="text-muted-foreground">1.5</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Badge variant="secondary" className="mt-0.5">Margins</Badge>
-                  <p className="text-muted-foreground">1 inch on all sides</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Badge variant="secondary" className="mt-0.5">File Type</Badge>
-                  <p className="text-muted-foreground">PDF or DOC only</p>
-                </div>
-              </div>
-            </div>
-
-            <Separator />
-
-            <div>
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-                Required Sections
-              </h3>
-              <div className="space-y-2 ml-7">
-                <p className="text-muted-foreground">Your manuscript must include the following sections in order:</p>
-                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  <li>Title Page (with author information and affiliations)</li>
-                  <li>Abstract (150-250 words)</li>
-                  <li>Introduction</li>
-                  <li>Methodology</li>
-                  <li>Results</li>
-                  <li>Discussion</li>
-                  <li>Conclusion</li>
-                  <li>References</li>
-                </ul>
-              </div>
-            </div>
-
-            <Separator />
-
-            <div>
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-                Citation Format
-              </h3>
-              <div className="space-y-2 ml-7">
-                <p className="text-muted-foreground">
-                  All references must follow either <strong>APA</strong> or <strong>IEEE</strong> citation style consistently throughout the manuscript.
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Ensure all in-text citations have corresponding entries in the reference list, and vice versa.
-                </p>
-              </div>
-            </div>
-
-            <Separator />
-
-            <div>
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-                Submission Limits
-              </h3>
-              <div className="space-y-2 ml-7">
-                <p className="text-muted-foreground">
-                  The number of articles you can submit depends on your subscription plan:
-                </p>
-                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  <li><strong>₹149 Plan:</strong> 1 Article submission</li>
-                  <li><strong>₹499 Plan:</strong> 10 Articles (valid 12 months)</li>
-                  <li><strong>₹1499 Plan:</strong> Unlimited Articles (2 years)</li>
-                  <li><strong>₹4999 Institute Plan:</strong> Unlimited Articles (1 year)</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2 mb-2">
-              <MessageCircle className="h-6 w-6 text-primary" />
-              <CardTitle>Need Help?</CardTitle>
-            </div>
-            <CardDescription>
-              Contact our support team for any queries or assistance with your submission
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <SiWhatsapp className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-1">WhatsApp Support</h3>
-                <a
-                  href="https://wa.me/919452571317"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  +91 9452571317
-                </a>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Available Monday - Saturday, 9:00 AM - 6:00 PM
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/20">
-          <h3 className="font-semibold mb-2 text-primary">Important Note</h3>
-          <p className="text-sm text-muted-foreground">
-            All submissions undergo a peer-review process. Please ensure your manuscript meets all formatting requirements to avoid delays in the review process. Incomplete or improperly formatted submissions may be returned for revision.
+          <p>
+            Our Editorial Board includes Subject Matter Specialist Editors, research scholars from reputed research institutions, and senior professors from universities across India. All articles are initially reviewed by the Chief Editor and relevant Subject Specialists.
           </p>
+
+          <ul className="list-disc list-outside ml-6 space-y-2">
+            <li>Articles not following Agrigence formatting or publishing guidelines are rejected at screening.</li>
+            <li>If improvement is required, the article is returned to subject experts and reviewers for correction.</li>
+            <li>Only after proper review, correction, and approval is the article scheduled for publication in an upcoming issue.</li>
+          </ul>
+
+          <p>
+            Agrigence accepts only original "Popular Articles" or "Technical Articles" that have not been published or accepted elsewhere. For any queries regarding preparation or submission, authors must use the Contact Us section.
+          </p>
+
+          <p>
+            Upon acceptance, copyright of the article belongs to Agrigence (the publisher).
+          </p>
+
+          <h2 className="text-2xl font-bold mt-10 mb-4">Publication Policy</h2>
+
+          <ol className="list-decimal list-outside ml-6 space-y-2">
+            <li>Articles are published in the monthly issue of Agrigence.</li>
+            <li>All authors must be annual members of Agrigence.</li>
+            <li>Each author receives a membership certificate and unique membership ID after membership payment.</li>
+            <li>Publication is 100% free for annual members. Nominal charges apply for non-member co-authors (refer to Publication Fees).</li>
+            <li>Only properly formatted magazine articles and popular stories are accepted.</li>
+            <li>Articles must be submitted in .doc / .docx (Word format) only.</li>
+            <li>Submissions not in the prescribed format are rejected.</li>
+            <li>A monthly submission deadline is displayed on the homepage. Submissions after the due date are not accepted.</li>
+            <li>Article length: 2–4 pages maximum.</li>
+            <li>Articles must include an Introduction and Conclusion.</li>
+            <li>Content must be informative, innovative, and trend-focused.</li>
+            <li>Use of tables, figures, and high-quality photographs is encouraged.</li>
+          </ol>
+
+          <h2 className="text-2xl font-bold mt-10 mb-4">Formatting Guidelines</h2>
+
+          <ol className="list-decimal list-outside ml-6 space-y-2" start={13}>
+            <li>Title: Short, informative; 14 pt, Bold, Times New Roman.</li>
+            <li>Author details below title: 12 pt Times New Roman; corresponding author email in 12 pt Bold.</li>
+            <li>Body text: 12 pt; Main headings 14 pt bold; Subheadings 12 pt bold.</li>
+            <li>Use metric units; define all abbreviations; cite data sources clearly.</li>
+            <li>Symbols and abbreviations must follow IUB and IUPAC standards.</li>
+            <li>Prefer SI (metric) units consistently throughout.</li>
+            <li>Authors are solely responsible for plagiarism issues.</li>
+            <li>The published soft copy of the article is emailed to the author and is also downloadable from the website.</li>
+          </ol>
         </div>
       </div>
     </div>

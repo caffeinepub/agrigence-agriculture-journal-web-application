@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
@@ -44,8 +45,11 @@ import {
   useAddBlogPost,
   useUpdateBlogPost,
   useDeleteBlogPost,
+  useGetBannerConfig,
+  useSetBannerNotices,
+  useToggleBanner,
 } from '../hooks/useQueries';
-import { ExternalBlob, Variant_approved_rejected, EditorialMember, TermsPlaceholders, BlogPost } from '../backend';
+import { ExternalBlob, Variant_approved_rejected, EditorialMember, TermsPlaceholders, BlogPost, CMSBannerInput } from '../backend';
 import { toast } from 'sonner';
 import {
   AlertCircle,
@@ -63,8 +67,10 @@ import {
   Scale,
   Save,
   PenTool,
+  Bell,
 } from 'lucide-react';
 import { Principal } from '@dfinity/principal';
+import { optimizeImageWithFallback } from '../utils/optimizeImage';
 
 export default function AdminPanelContent() {
   const { data: news, isError: newsError } = useGetAllNews();
@@ -72,6 +78,7 @@ export default function AdminPanelContent() {
   const { data: pendingArticles, isError: pendingError } = useGetAllPendingArticles();
   const { data: editorialMembers, isError: editorialError } = useGetAllEditorialMembers();
   const { data: termsPlaceholders, isError: termsError } = useGetTermsPlaceholders();
+  const { data: bannerConfig, isError: bannerError } = useGetBannerConfig();
 
   const [newsTitle, setNewsTitle] = useState('');
   const [newsContent, setNewsContent] = useState('');
@@ -109,6 +116,11 @@ export default function AdminPanelContent() {
   const [addressCity, setAddressCity] = useState('');
   const [lastUpdateDate, setLastUpdateDate] = useState('');
 
+  const [bannerEnabled, setBannerEnabled] = useState(false);
+  const [bannerNotices, setBannerNoticesState] = useState<Array<{ text: string; link: string }>>([]);
+  const [newNoticeText, setNewNoticeText] = useState('');
+  const [newNoticeLink, setNewNoticeLink] = useState('');
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<EditorialMember | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -130,6 +142,8 @@ export default function AdminPanelContent() {
   const updateEditorialMember = useUpdateEditorialMember();
   const deleteEditorialMember = useDeleteEditorialMember();
   const setTermsPlaceholders = useSetTermsPlaceholders();
+  const setBannerNotices = useSetBannerNotices();
+  const toggleBanner = useToggleBanner();
 
   useEffect(() => {
     if (termsPlaceholders) {
@@ -142,6 +156,18 @@ export default function AdminPanelContent() {
     }
   }, [termsPlaceholders]);
 
+  useEffect(() => {
+    if (bannerConfig) {
+      setBannerEnabled(bannerConfig.isBannerEnabled);
+      setBannerNoticesState(
+        bannerConfig.notices.map((n) => ({
+          text: n.text,
+          link: n.link ?? '',
+        }))
+      );
+    }
+  }, [bannerConfig]);
+
   const getDisplayRole = (member: EditorialMember) => {
     if (member.isEditorInChief) {
       return 'Editor-in-Chief';
@@ -150,7 +176,7 @@ export default function AdminPanelContent() {
   };
 
   // Show error state if any admin data fails to load
-  if (newsError || blogError || pendingError || editorialError || termsError) {
+  if (newsError || blogError || pendingError || editorialError || termsError || bannerError) {
     return (
       <div className="container py-12">
         <Alert variant="destructive">
@@ -206,9 +232,17 @@ export default function AdminPanelContent() {
     try {
       let externalBlob: ExternalBlob | null = null;
       if (blogImage) {
-        const arrayBuffer = await blogImage.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        externalBlob = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
+        const optimized = await optimizeImageWithFallback(blogImage, {
+          maxWidth: 1200,
+          maxHeight: 800,
+          quality: 0.85,
+        });
+
+        if (!optimized.wasOptimized && optimized.message) {
+          toast.info(optimized.message);
+        }
+
+        externalBlob = ExternalBlob.fromBytes(optimized.bytes).withUploadProgress((percentage) => {
           setBlogImageUploadProgress(percentage);
         });
       }
@@ -252,9 +286,17 @@ export default function AdminPanelContent() {
     try {
       let externalBlob: ExternalBlob | null = null;
       if (blogImage) {
-        const arrayBuffer = await blogImage.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        externalBlob = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
+        const optimized = await optimizeImageWithFallback(blogImage, {
+          maxWidth: 1200,
+          maxHeight: 800,
+          quality: 0.85,
+        });
+
+        if (!optimized.wasOptimized && optimized.message) {
+          toast.info(optimized.message);
+        }
+
+        externalBlob = ExternalBlob.fromBytes(optimized.bytes).withUploadProgress((percentage) => {
           setBlogImageUploadProgress(percentage);
         });
       }
@@ -386,9 +428,17 @@ export default function AdminPanelContent() {
     try {
       let externalBlob: ExternalBlob | null = null;
       if (memberPhoto) {
-        const arrayBuffer = await memberPhoto.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        externalBlob = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
+        const optimized = await optimizeImageWithFallback(memberPhoto, {
+          maxWidth: 800,
+          maxHeight: 800,
+          quality: 0.9,
+        });
+
+        if (!optimized.wasOptimized && optimized.message) {
+          toast.info(optimized.message);
+        }
+
+        externalBlob = ExternalBlob.fromBytes(optimized.bytes).withUploadProgress((percentage) => {
           setPhotoUploadProgress(percentage);
         });
       }
@@ -440,9 +490,17 @@ export default function AdminPanelContent() {
     try {
       let externalBlob: ExternalBlob | null = null;
       if (memberPhoto) {
-        const arrayBuffer = await memberPhoto.arrayBuffer();
-        const uint8Array = new Uint8Array(arrayBuffer);
-        externalBlob = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
+        const optimized = await optimizeImageWithFallback(memberPhoto, {
+          maxWidth: 800,
+          maxHeight: 800,
+          quality: 0.9,
+        });
+
+        if (!optimized.wasOptimized && optimized.message) {
+          toast.info(optimized.message);
+        }
+
+        externalBlob = ExternalBlob.fromBytes(optimized.bytes).withUploadProgress((percentage) => {
           setPhotoUploadProgress(percentage);
         });
       }
@@ -520,6 +578,47 @@ export default function AdminPanelContent() {
     }
   };
 
+  const handleAddNotice = () => {
+    if (!newNoticeText.trim()) {
+      toast.error('Notice text is required');
+      return;
+    }
+
+    setBannerNoticesState([...bannerNotices, { text: newNoticeText, link: newNoticeLink }]);
+    setNewNoticeText('');
+    setNewNoticeLink('');
+  };
+
+  const handleRemoveNotice = (index: number) => {
+    setBannerNoticesState(bannerNotices.filter((_, i) => i !== index));
+  };
+
+  const handleSaveBannerConfig = async () => {
+    try {
+      const notices: CMSBannerInput[] = bannerNotices.map((n) => ({
+        text: n.text,
+        link: n.link || undefined,
+      }));
+
+      await setBannerNotices.mutateAsync(notices);
+      toast.success('Banner notices saved successfully');
+    } catch (error) {
+      toast.error('Failed to save banner notices');
+      console.error(error);
+    }
+  };
+
+  const handleToggleBanner = async (enabled: boolean) => {
+    try {
+      await toggleBanner.mutateAsync(enabled);
+      setBannerEnabled(enabled);
+      toast.success(`Banner ${enabled ? 'enabled' : 'disabled'} successfully`);
+    } catch (error) {
+      toast.error('Failed to toggle banner');
+      console.error(error);
+    }
+  };
+
   return (
     <div className="container py-12 animate-fade-in">
       <div className="mb-8">
@@ -528,7 +627,7 @@ export default function AdminPanelContent() {
       </div>
 
       <Tabs defaultValue="magazine" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid">
           <TabsTrigger value="magazine" className="gap-2">
             <BookOpen className="h-4 w-4" />
             Publish Magazine
@@ -544,6 +643,10 @@ export default function AdminPanelContent() {
           <TabsTrigger value="editorial" className="gap-2">
             <Users className="h-4 w-4" />
             Editorial Board
+          </TabsTrigger>
+          <TabsTrigger value="banner" className="gap-2">
+            <Bell className="h-4 w-4" />
+            Notice Banner
           </TabsTrigger>
           <TabsTrigger value="terms" className="gap-2">
             <Scale className="h-4 w-4" />
@@ -1268,6 +1371,10 @@ export default function AdminPanelContent() {
                             <img
                               src={member.blob.getDirectURL()}
                               alt={member.name}
+                              width="64"
+                              height="64"
+                              loading="lazy"
+                              decoding="async"
                               className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
                             />
                           ) : (
@@ -1331,6 +1438,124 @@ export default function AdminPanelContent() {
                   <p className="text-muted-foreground">No editorial board members added yet</p>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="banner" className="space-y-6">
+          <Card className="border-primary/20 shadow-sm">
+            <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
+              <CardTitle className="flex items-center gap-2 text-primary">
+                <Bell className="h-5 w-5" />
+                Notice Banner Management
+              </CardTitle>
+              <CardDescription>
+                Manage the running notice banner displayed below the header on all pages
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-6">
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border border-primary/10">
+                <div>
+                  <Label htmlFor="banner-toggle" className="text-base font-medium">
+                    Enable Notice Banner
+                  </Label>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Show or hide the notice banner across the entire website
+                  </p>
+                </div>
+                <Switch
+                  id="banner-toggle"
+                  checked={bannerEnabled}
+                  onCheckedChange={handleToggleBanner}
+                  disabled={toggleBanner.isPending}
+                />
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-base font-medium">Notice Items</Label>
+                  <Badge variant="secondary">{bannerNotices.length} notices</Badge>
+                </div>
+
+                <div className="space-y-3">
+                  {bannerNotices.map((notice, index) => (
+                    <div
+                      key={index}
+                      className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg border border-primary/10"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground mb-1">{notice.text}</p>
+                        {notice.link && (
+                          <p className="text-xs text-muted-foreground truncate">
+                            Link: {notice.link}
+                          </p>
+                        )}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveNotice(index)}
+                        className="shrink-0 hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  ))}
+
+                  {bannerNotices.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">No notices added yet</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-3 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                  <Label className="text-base font-medium">Add New Notice</Label>
+                  <div className="space-y-2">
+                    <Input
+                      placeholder="Notice text (required)"
+                      value={newNoticeText}
+                      onChange={(e) => setNewNoticeText(e.target.value)}
+                      className="border-primary/20 focus:border-primary"
+                    />
+                    <Input
+                      placeholder="Link URL (optional)"
+                      value={newNoticeLink}
+                      onChange={(e) => setNewNoticeLink(e.target.value)}
+                      className="border-primary/20 focus:border-primary"
+                    />
+                    <Button
+                      onClick={handleAddNotice}
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-primary/20 hover:bg-primary/5"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Notice
+                    </Button>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleSaveBannerConfig}
+                  disabled={setBannerNotices.isPending}
+                  className="w-full md:w-auto"
+                  size="lg"
+                >
+                  {setBannerNotices.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Banner Configuration
+                    </>
+                  )}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

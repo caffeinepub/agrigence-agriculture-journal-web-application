@@ -28,6 +28,14 @@ export interface TermsPlaceholders {
     companyName: string;
     companyAddress: string;
 }
+export interface CMSBannerNotice {
+    link?: string;
+    text: string;
+}
+export interface CMSBannerInput {
+    link?: string;
+    text: string;
+}
 export interface HomePageArticle {
     title: string;
     description: string;
@@ -42,6 +50,10 @@ export interface Subscription {
     remainingArticles: bigint;
     isInstitute: boolean;
     startDate: Time;
+}
+export interface CMSBannerConfig {
+    notices: Array<CMSBannerNotice>;
+    isBannerEnabled: boolean;
 }
 export interface TransformationInput {
     context: Uint8Array;
@@ -257,6 +269,7 @@ export interface backendInterface {
     getAllPendingArticles(): Promise<Array<Article>>;
     getAllUserReviews(): Promise<Array<UserReview>>;
     getArticlePreview(id: bigint): Promise<ArticlePreview>;
+    getBannerConfig(): Promise<CMSBannerConfig>;
     getBlogPost(blogPostId: bigint): Promise<BlogPost>;
     getBlogPostCount(): Promise<bigint>;
     getBlogPostsPaginated(page: bigint, pageSize: bigint): Promise<Array<BlogPost>>;
@@ -293,9 +306,11 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     isStripeConfigured(): Promise<boolean>;
     saveCallerUserProfile(profile: ProfileInput): Promise<void>;
+    setBannerNotices(notices: Array<CMSBannerInput>): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
     setTermsPlaceholders(placeholders: TermsPlaceholders): Promise<void>;
     submitArticle(title: string, fileType: Variant_doc_pdf, fileName: string, fileSize: bigint, externalBlob: ExternalBlob): Promise<void>;
+    toggleBanner(isEnabled: boolean): Promise<void>;
     transform(input: TransformationInput): Promise<TransformationOutput>;
     updateArticleStatus(user: Principal, articleTitle: string, newStatus: Variant_approved_rejected): Promise<void>;
     updateBlogPost(blogPostId: bigint, title: string, content: string, authorName: string, publicationDate: Time, imageUrl: string | null, blob: ExternalBlob | null, shortSummary: string): Promise<void>;

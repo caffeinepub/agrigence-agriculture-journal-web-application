@@ -143,6 +143,54 @@
         }
     }
 
+    /* Notice Banner Styles */
+    .notice-banner-container {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .notice-marquee-track {
+        display: flex;
+        gap: 3rem;
+        animation: marquee-scroll 30s linear infinite;
+        white-space: nowrap;
+    }
+
+    .notice-banner-container:hover .notice-marquee-track {
+        animation-play-state: paused;
+    }
+
+    .notice-item {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 1rem;
+    }
+
+    .notice-link,
+    .notice-text {
+        display: inline-flex;
+        align-items: center;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .notice-link:hover {
+        text-decoration: underline;
+    }
+
+    @keyframes marquee-scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
     /* Reduced motion support for loader */
     @media (prefers-reduced-motion: reduce) {
         .book-closed,
@@ -159,6 +207,10 @@
             to {
                 opacity: 1;
             }
+        }
+
+        .notice-marquee-track {
+            animation: marquee-scroll 60s linear infinite;
         }
     }
 }
