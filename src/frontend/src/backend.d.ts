@@ -20,6 +20,14 @@ export interface TransformationOutput {
     headers: Array<http_header>;
 }
 export type Time = bigint;
+export interface TermsPlaceholders {
+    websiteName: string;
+    companyEmail: string;
+    lastUpdateDate: string;
+    addressCity: string;
+    companyName: string;
+    companyAddress: string;
+}
 export interface HomePageArticle {
     title: string;
     description: string;
@@ -114,6 +122,16 @@ export interface Article {
     fileType: Variant_doc_pdf;
     author: string;
     submissionDate: Time;
+}
+export interface BlogPost {
+    id: bigint;
+    title: string;
+    content: string;
+    blob?: ExternalBlob;
+    authorName: string;
+    shortSummary: string;
+    imageUrl?: string;
+    publicationDate: Time;
 }
 export interface ArticlePreview {
     id: bigint;
@@ -213,6 +231,7 @@ export enum Variant_pending_approved_rejected {
     rejected = "rejected"
 }
 export interface backendInterface {
+    addBlogPost(title: string, content: string, authorName: string, imageUrl: string | null, publicationDate: Time, blob: ExternalBlob | null, shortSummary: string): Promise<void>;
     addEditorialMember(name: string, qualification: string, role: string, expertise: string, email: string, phone: string, isEditorialBoardAuthor: boolean, isEditorInChief: boolean, isReviewerBoardMember: boolean, profilePictureUrl: string, profilePicture: ExternalBlob | null): Promise<void>;
     addNews(title: string, content: string, summary: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
@@ -225,10 +244,12 @@ export interface backendInterface {
     createSubscription(planId: string, startDate: Time): Promise<void>;
     createUserReview(name: string, photoUrl: string | null, rating: bigint, feedback: string): Promise<void>;
     deleteArticle(articleTitle: string): Promise<void>;
+    deleteBlogPost(blogPostId: bigint): Promise<void>;
     deleteEditorialMember(editorialMemberId: bigint): Promise<void>;
     deleteNews(newsId: string): Promise<void>;
     getAllArticlePreviews(): Promise<Array<ArticlePreview>>;
     getAllArticles(): Promise<Array<Article>>;
+    getAllBlogPosts(): Promise<Array<BlogPost>>;
     getAllEditorialMembers(): Promise<Array<EditorialMember>>;
     getAllJournalsByYear(year: bigint): Promise<Array<Journal>>;
     getAllMagazines(): Promise<Array<Magazine>>;
@@ -236,6 +257,9 @@ export interface backendInterface {
     getAllPendingArticles(): Promise<Array<Article>>;
     getAllUserReviews(): Promise<Array<UserReview>>;
     getArticlePreview(id: bigint): Promise<ArticlePreview>;
+    getBlogPost(blogPostId: bigint): Promise<BlogPost>;
+    getBlogPostCount(): Promise<bigint>;
+    getBlogPostsPaginated(page: bigint, pageSize: bigint): Promise<Array<BlogPost>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getCurrentJournal(): Promise<Journal | null>;
@@ -246,6 +270,7 @@ export interface backendInterface {
     getHomePageMagazines(): Promise<Array<HomePageMagazine>>;
     getJournal(journalId: bigint): Promise<Journal>;
     getJournalCount(): Promise<bigint>;
+    getLatestBlogPosts(count: bigint): Promise<Array<BlogPost>>;
     getLatestNews(count: bigint): Promise<Array<News>>;
     getMagazine(magazineId: bigint): Promise<Magazine>;
     getNews(newsId: string): Promise<News>;
@@ -257,6 +282,8 @@ export interface backendInterface {
     getStripeSessionStatus(sessionId: string): Promise<StripeSessionStatus>;
     getSubscriptionPlanObject(planId: string): Promise<SubscriptionPlan>;
     getSubscriptionPlans(): Promise<Array<SubscriptionPlan>>;
+    getTermsAndConditions(): Promise<string>;
+    getTermsPlaceholders(): Promise<TermsPlaceholders>;
     getUserArticles(user: Principal): Promise<Array<Article>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     getUserReview(userReviewId: bigint): Promise<UserReview>;
@@ -267,10 +294,14 @@ export interface backendInterface {
     isStripeConfigured(): Promise<boolean>;
     saveCallerUserProfile(profile: ProfileInput): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
+    setTermsPlaceholders(placeholders: TermsPlaceholders): Promise<void>;
     submitArticle(title: string, fileType: Variant_doc_pdf, fileName: string, fileSize: bigint, externalBlob: ExternalBlob): Promise<void>;
     transform(input: TransformationInput): Promise<TransformationOutput>;
     updateArticleStatus(user: Principal, articleTitle: string, newStatus: Variant_approved_rejected): Promise<void>;
+    updateBlogPost(blogPostId: bigint, title: string, content: string, authorName: string, publicationDate: Time, imageUrl: string | null, blob: ExternalBlob | null, shortSummary: string): Promise<void>;
+    updateEditorialMember(editorialMemberId: bigint, name: string, qualification: string, role: string, expertise: string, email: string, phone: string, isEditorialBoardAuthor: boolean, isEditorInChief: boolean, isReviewerBoardMember: boolean, profilePictureUrl: string, profilePicture: ExternalBlob | null): Promise<void>;
     updateSubscriptionsTimestamp(): Promise<void>;
+    updateTermsAndConditions(content: string): Promise<void>;
     updateVisitorCounter(pageViews: bigint, uniqueVisitors: bigint, totalSessions: bigint, averageSessionDuration: bigint, activeSessions: bigint | null): Promise<void>;
     uploadJournal(title: string, month: bigint, year: bigint, fileName: string, description: string, fileSize: bigint, externalBlob: ExternalBlob, isCurrent: boolean, isArchive: boolean): Promise<void>;
 }

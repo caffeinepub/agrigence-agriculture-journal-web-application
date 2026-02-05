@@ -1,0 +1,26 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Ensure correct Editor-in-Chief labeling in editorial member UI",
+  "requirements": [
+    {
+      "id": "REQ-2",
+      "summary": "Ensure any user-facing labels added/updated for the new Editor-in-Chief entry use correct English spelling and capitalization (\"Editor-in-Chief\").",
+      "acceptanceCriteria": [
+        "All newly introduced user-facing text related to this change is in English and uses the label \"Editor-in-Chief\" (not \"editor in cheaf\")."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/EditorialBoardPage.tsx",
+          "operation": "modify",
+          "description": "Update role badge rendering to prefer the canonical label \"Editor-in-Chief\" when member.isEditorInChief is true, ensuring correct spelling/capitalization even if the persisted role string differs."
+        },
+        {
+          "path": "frontend/src/pages/AdminPanelPage.tsx",
+          "operation": "modify",
+          "description": "Update editorial member list role display to prefer the canonical label \"Editor-in-Chief\" when member.isEditorInChief is true, ensuring consistent correct spelling/capitalization in the Admin Panel."
+        }
+      ]
+    }
+  ]
+}

@@ -6,14 +6,16 @@ import Iter "mo:core/Iter";
 import Text "mo:core/Text";
 import Principal "mo:core/Principal";
 import Time "mo:core/Time";
-import Runtime "mo:core/Runtime";
+import Order "mo:core/Order";
 import Storage "blob-storage/Storage";
 import Stripe "stripe/stripe";
 import MixinStorage "blob-storage/Mixin";
-import Nat "mo:core/Nat";
 import OutCall "http-outcalls/outcall";
-import Order "mo:core/Order";
+import Nat "mo:core/Nat";
+import Runtime "mo:core/Runtime";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   type UserRole = AccessControl.UserRole;
 
@@ -24,6 +26,7 @@ actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
+  // Types
   public type ArticlePreview = {
     id : Nat;
     title : Text;
@@ -222,7 +225,39 @@ actor {
     };
   };
 
-  // DEFAULTS
+  public type BlogPost = {
+    id : Nat;
+    title : Text;
+    content : Text;
+    authorName : Text;
+    publicationDate : Time.Time;
+    imageUrl : ?Text;
+    blob : ?Storage.ExternalBlob;
+    shortSummary : Text;
+  };
+
+  public type TermsAndConditions = {
+    content : Text;
+    placeHolders : {
+      websiteName : Text;
+      companyName : Text;
+      companyEmail : Text;
+      companyAddress : Text;
+      addressCity : Text;
+      lastUpdateDate : Text;
+    };
+  };
+
+  public type TermsPlaceholders = {
+    websiteName : Text;
+    companyName : Text;
+    companyEmail : Text;
+    companyAddress : Text;
+    addressCity : Text;
+    lastUpdateDate : Text;
+  };
+
+  // Defaults
   let defaultPlans : [SubscriptionPlan] = [
     {
       id = "plan-1-article";
@@ -262,6 +297,53 @@ actor {
     },
   ];
 
+  let defaultTermsContent : Text = "Welcome to [Company Name]. [Company Name] (or \"we\", \"us\", or \"our\") operates"
+    # " [Website Name] (\"Website\", \"Platform\", \"Service\")."
+    # "\n\n1. Acceptance of Terms\nBy accessing or using our Website, you agree to be bound by these Terms"
+    # " and any applicable policies, including our Privacy Policy."
+    # "\nIf you do not agree with these Terms, you must not use our Website.\n"
+    # "\n2. Website Purpose\nThis Website is designed for the academic and professional exchange of "
+    # "agricultural research. It serves educational and informational purposes only. No guarantee is "
+    # "made regarding the accuracy or application of content.\n"
+    # "\n3. User Content & Responsibilities\n- Users are solely responsible for the content they submit. "
+    # "- By submitting content, you affirm it is original, does not infringe on intellectual property, "
+    # "and contains no harmful or illegal material.\n"
+    # "- Any views expressed in submitted articles are those of the author and do not reflect the "
+    # "position of [Company Name].\n"
+    # "- Users must not attempt to exploit platform vulnerabilities or use the Website for unauthorized "
+    # "commercial activity.\n"
+    # "- Users must comply with all applicable laws and platform policies at all times.\n"
+    # "\n4. Account Security\n- Users must provide valid contact information and maintain strong passwords. "
+    # "- Each account is limited to one individual or designated institution member.\n"
+    # "- Inappropriate, fraudulent, or noncompliant accounts will be access restricted or terminated.\n"
+    # "\n5. Subscriptions & Payments\n- Subscription fees are non-refundable except as required by law.\n"
+    # "- By accessing premium content, you agree to comply with your plan status.\n"
+    # "- All payments are processed through third-party provider Stripe's secure platform.\n"
+    # "- Prices and subscription terms may vary by plan and regional requirements.\n"
+    # "\n6. Content Ownership & Usage\n- [Company Name] retains ownership of site branding and design elements."
+    # "- Content authors maintain copyright to original works in their name.\n"
+    # "- By submitting work, you grant [Company Name] a perpetual license to display, reproduce, and "
+    # "share content within the Platform's scope.\n"
+    # "\n7. Platform Limitations\n- The Platform is provided \"as is\" and we make no guarantees regarding "
+    # "uptime, performance, or uninterrupted availability.\n"
+    # "- We reserve the right to modify, suspend, or discontinue services at any time."
+    # "- [Company Name] is not responsible for loss of data, access restrictions, or technical "
+    # "interruptions.\n"
+    # "\n8. Privacy Policy\n- We collect and process user data for legitimate Platform operation and service "
+    # "improvement purposes only.\n"
+    # "- Data is shared only as required for payment processing, legal obligations, or with user consent.\n"
+    # "- We do not sell, rent, or lease personal information to third parties for marketing purposes.\n"
+    # "- We process, store, and transfer data in accordance with the laws of [Address], [City].\n"
+    # "\n9. Dispute Resolution & Jurisdiction\n- Disputes will be resolved using binding arbitration, with all "
+    # "claims subject to the laws of the governing jurisdiction.\n"
+    # "- Legal proceedings relating to Platform use must be filed in designated courts of competent "
+    # "jurisdiction in [Address], [City].\n"
+    # "- Users waive any claims to class actions, loss of profit, punitive damages, or indirect losses.\n"
+    # "\n10. Policy Changes\n- Terms may be revised periodically to stay current with Platform operations. "
+    # "- Users will be notified prior to any substantive changes taking effect.\n"
+    # "- Continued use of the Platform constitutes acceptance of current Terms.\n"
+    # "[Address], [City]\nContact: [Email]\nLast Updated: [Date]";
+
   // STORED DATA
   let articlePreviews = Map.empty<Nat, ArticlePreview>();
   let userProfiles = Map.empty<Principal, UserProfile>();
@@ -274,14 +356,16 @@ actor {
   let homePageArticles = Map.empty<Nat, HomePageArticle>();
   let homePageMagazines = Map.empty<Nat, HomePageMagazine>();
   let userReviews = Map.empty<Nat, UserReview>();
+  let blogPosts = Map.empty<Nat, BlogPost>();
 
   var newsIdCounter = 1;
   var journalIdCounter = 1;
-  var editorialMemberIdCounter = 1;
+  var editorialMemberIdCounter = 2;
   var magazineIdCounter = 1;
   var homePageArticleIdCounter = 1;
   var homePageMagazineIdCounter = 1;
   var userReviewIdCounter = 1;
+  var blogPostIdCounter = 1;
   var visitorCounter : VisitorCounter = {
     pageViews = 0;
     uniqueVisitors = 0;
@@ -290,22 +374,189 @@ actor {
     activeSessions = null;
   };
 
-  // ENDPOINTS
+  var termsContent : Text = defaultTermsContent;
+  var termsPlaceholders : TermsPlaceholders = {
+    websiteName = "Agrigence";
+    companyName = "Agrigence Private Limited";
+    companyEmail = "admin@agrigence.com";
+    companyAddress = "Zura Haradhan, Chandauli Uttar Pradesh, 221115";
+    addressCity = "Chandauli";
+    lastUpdateDate = "2024-06-04";
+  };
 
-  // ARTICLE PREVIEWS (NEW)
+  // Blog Management
+  public shared ({ caller }) func addBlogPost(
+    title : Text,
+    content : Text,
+    authorName : Text,
+    imageUrl : ?Text,
+    publicationDate : Time.Time,
+    blob : ?Storage.ExternalBlob,
+    shortSummary : Text,
+  ) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can add blog posts");
+    };
+    let newPost : BlogPost = {
+      id = blogPostIdCounter;
+      title;
+      content;
+      authorName;
+      publicationDate;
+      imageUrl;
+      blob = blob;
+      shortSummary;
+    };
+    blogPosts.add(blogPostIdCounter, newPost);
+    blogPostIdCounter += 1;
+  };
+
+  public shared ({ caller }) func updateBlogPost(
+    blogPostId : Nat,
+    title : Text,
+    content : Text,
+    authorName : Text,
+    publicationDate : Time.Time,
+    imageUrl : ?Text,
+    blob : ?Storage.ExternalBlob,
+    shortSummary : Text,
+  ) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update blog posts");
+    };
+    switch (blogPosts.get(blogPostId)) {
+      case (null) { Runtime.trap("Blog post does not exist") };
+      case (?_) {
+        let updatedPost : BlogPost = {
+          id = blogPostId;
+          title;
+          content;
+          authorName;
+          publicationDate;
+          imageUrl;
+          blob;
+          shortSummary;
+        };
+        blogPosts.add(blogPostId, updatedPost);
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteBlogPost(blogPostId : Nat) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can delete blog posts");
+    };
+    blogPosts.remove(blogPostId);
+  };
+
+  public query func getBlogPost(blogPostId : Nat) : async BlogPost {
+    // Public access - no authorization check needed
+    switch (blogPosts.get(blogPostId)) {
+      case (null) { Runtime.trap("Blog post does not exist") };
+      case (?post) { post };
+    };
+  };
+
+  public query func getAllBlogPosts() : async [BlogPost] {
+    // Public access - no authorization check needed
+    blogPosts.values().toArray();
+  };
+
+  public query func getLatestBlogPosts(count : Nat) : async [BlogPost] {
+    // Public access - no authorization check needed
+    let sortedPosts = blogPosts.values().toArray();
+    let sorted = sortedPosts.reverse();
+    sorted.sliceToArray(0, Nat.min(count, sorted.size()));
+  };
+
+  public query func getBlogPostCount() : async Nat {
+    // Public access - no authorization check needed
+    blogPosts.size();
+  };
+
+  public query func getBlogPostsPaginated(page : Nat, pageSize : Nat) : async [BlogPost] {
+    // Public access - no authorization check needed
+    let allPosts = blogPosts.toArray();
+    let (start, end) = calculatePaginationIndices(allPosts.size(), page, pageSize);
+    switch (start < allPosts.size()) {
+      case (true) {
+        switch (end <= allPosts.size()) {
+          case (true) {
+            allPosts.sliceToArray(start, end).map(func((_, post)) { post });
+          };
+          case (false) {
+            [];
+          };
+        };
+      };
+      case (false) { [] };
+    };
+  };
+
+  func calculatePaginationIndices(totalSize : Nat, page : Nat, pageSize : Nat) : (Nat, Nat) {
+    let start = page * pageSize;
+    let end = natMin(totalSize, start + pageSize);
+    (start, end);
+  };
+
+  func natMin(a : Nat, b : Nat) : Nat {
+    if (a < b) { a } else { b };
+  };
+
+  // Terms and Conditions Management
+  public query func getTermsAndConditions() : async Text {
+    // Public access - no authorization check needed
+    // Replace placeholders with actual values
+    var content = termsContent;
+    content := content.replace(#text("[Website Name]"), termsPlaceholders.websiteName);
+    content := content.replace(#text("[Company Name]"), termsPlaceholders.companyName);
+    content := content.replace(#text("[Email]"), termsPlaceholders.companyEmail);
+    content := content.replace(#text("[Address]"), termsPlaceholders.companyAddress);
+    content := content.replace(#text("[City]"), termsPlaceholders.addressCity);
+    content := content.replace(#text("[Date]"), termsPlaceholders.lastUpdateDate);
+    content;
+  };
+
+  public query ({ caller }) func getTermsPlaceholders() : async TermsPlaceholders {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can view terms placeholders");
+    };
+    termsPlaceholders;
+  };
+
+  public shared ({ caller }) func setTermsPlaceholders(placeholders : TermsPlaceholders) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update terms placeholders");
+    };
+    termsPlaceholders := placeholders;
+  };
+
+  public shared ({ caller }) func updateTermsAndConditions(content : Text) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update terms and conditions");
+    };
+    termsContent := content;
+  };
+
+  // Endpoints
+
+  // Article Previews (new)
   public query func getAllArticlePreviews() : async [ArticlePreview] {
+    // Public access - no authorization check needed
     articlePreviews.values().toArray();
   };
 
   public query func getArticlePreview(id : Nat) : async ArticlePreview {
+    // Public access - no authorization check needed
     switch (articlePreviews.get(id)) {
       case (null) { Runtime.trap("Article preview does not exist") };
       case (?preview) { preview };
     };
   };
 
-  // VISITOR COUNTER
+  // Visitor Counter
   public query func getVisitorCounter() : async VisitorCounter {
+    // Public access - no authorization check needed
     visitorCounter;
   };
 
@@ -328,7 +579,7 @@ actor {
     };
   };
 
-  // PROFILE MANAGEMENT
+  // Profile Management
   public shared ({ caller }) func saveCallerUserProfile(profile : ProfileInput) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can save profiles");
@@ -354,7 +605,7 @@ actor {
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can save profiles");
+      Runtime.trap("Unauthorized: Only users can view profiles");
     };
     userProfiles.get(caller);
   };
@@ -378,20 +629,24 @@ actor {
     filteredProfiles.sort();
   };
 
-  // EDITORIAL MEMBERS
+  // Editorial Members
   public query func getEditorialBoardMembers() : async [EditorialMember] {
+    // Public access - no authorization check needed
     getEditorialMembersByFilter(true, false, false);
   };
 
   public query func getEditorInChiefMembers() : async [EditorialMember] {
+    // Public access - no authorization check needed
     getEditorialMembersByFilter(false, true, false);
   };
 
   public query func getReviewerBoardMembers() : async [EditorialMember] {
+    // Public access - no authorization check needed
     getEditorialMembersByFilter(false, false, true);
   };
 
   public query func getAllEditorialMembers() : async [EditorialMember] {
+    // Public access - no authorization check needed
     editorialMembers.values().toArray();
   };
 
@@ -430,6 +685,47 @@ actor {
     editorialMemberIdCounter += 1;
   };
 
+  public shared ({ caller }) func updateEditorialMember(
+    editorialMemberId : Nat,
+    name : Text,
+    qualification : Text,
+    role : Text,
+    expertise : Text,
+    email : Text,
+    phone : Text,
+    isEditorialBoardAuthor : Bool,
+    isEditorInChief : Bool,
+    isReviewerBoardMember : Bool,
+    profilePictureUrl : Text,
+    profilePicture : ?Storage.ExternalBlob
+  ) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update editorial members");
+    };
+
+    switch (editorialMembers.get(editorialMemberId)) {
+      case (null) { Runtime.trap("Editorial member does not exist") };
+      case (?existingMember) {
+        let updatedMember : EditorialMember = {
+          blob = profilePicture;
+          id = editorialMemberId;
+          name;
+          qualification;
+          role;
+          expertise;
+          email;
+          phone;
+          isEditorialBoardAuthor;
+          isEditorInChief;
+          isReviewerBoardMember;
+          createdAt = existingMember.createdAt;
+          profilePictureUrl;
+        };
+        editorialMembers.add(editorialMemberId, updatedMember);
+      };
+    };
+  };
+
   public shared ({ caller }) func deleteEditorialMember(editorialMemberId : Nat) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can delete editorial members");
@@ -451,12 +747,14 @@ actor {
     );
   };
 
-  // MAGAZINES
+  // Magazines
   public query func getAllMagazines() : async [Magazine] {
+    // Public access - no authorization check needed
     magazines.values().toArray();
   };
 
   public query func getMagazine(magazineId : Nat) : async Magazine {
+    // Public access - no authorization check needed
     switch (magazines.get(magazineId)) {
       case (null) { Runtime.trap("Magazine does not exist") };
       case (?magazine) { magazine };
@@ -485,12 +783,14 @@ actor {
     magazineIdCounter += 1;
   };
 
-  // HOME PAGE MAGAZINES AND ARTICLES
+  // Home Page Magazines and Articles
   public query func getHomePageMagazines() : async [HomePageMagazine] {
+    // Public access - no authorization check needed
     homePageMagazines.values().toArray();
   };
 
   public query func getHomePageArticles() : async [HomePageArticle] {
+    // Public access - no authorization check needed
     homePageArticles.values().toArray();
   };
 
@@ -557,12 +857,14 @@ actor {
     homePageArticleIdCounter += 1;
   };
 
-  // USER REVIEWS
+  // User Reviews
   public query func getAllUserReviews() : async [UserReview] {
+    // Public access - no authorization check needed
     userReviews.values().toArray();
   };
 
   public query func getUserReview(userReviewId : Nat) : async UserReview {
+    // Public access - no authorization check needed
     switch (userReviews.get(userReviewId)) {
       case (null) { Runtime.trap("User review does not exist") };
       case (?userReview) { userReview };
@@ -589,7 +891,7 @@ actor {
     userReviewIdCounter += 1;
   };
 
-  // NEWS
+  // News
   public shared ({ caller }) func addNews(title : Text, content : Text, summary : Text) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can add news");
@@ -613,6 +915,7 @@ actor {
   };
 
   public query func getNews(newsId : Text) : async News {
+    // Public access - no authorization check needed
     switch (news.get(newsId)) {
       case (null) { Runtime.trap("News does not exist") };
       case (?n) { n };
@@ -620,21 +923,24 @@ actor {
   };
 
   public query func getAllNews() : async [News] {
+    // Public access - no authorization check needed
     let allNews = news.values().toArray();
     allNews;
   };
 
   public query func getLatestNews(count : Nat) : async [News] {
+    // Public access - no authorization check needed
     let sortedNews = news.values().toArray();
     let sorted = sortedNews.reverse();
     sorted.sliceToArray(0, Nat.min(count, sorted.size()));
   };
 
   public query func getNewsCount() : async Nat {
+    // Public access - no authorization check needed
     news.size();
   };
 
-  // JOURNALS
+  // Journals
   public shared ({ caller }) func uploadJournal(
     title : Text,
     month : Nat,
@@ -668,6 +974,7 @@ actor {
   };
 
   public query func getJournal(journalId : Nat) : async Journal {
+    // Public access - no authorization check needed
     switch (journals.get(journalId)) {
       case (null) { Runtime.trap("Journal does not exist") };
       case (?journal) { journal };
@@ -675,6 +982,7 @@ actor {
   };
 
   public query func getAllJournalsByYear(year : Nat) : async [Journal] {
+    // Public access - no authorization check needed
     let allJournals = journals.values().toArray();
     let filteredJournals = allJournals.filter(
       func(journal) { journal.year == year }
@@ -683,6 +991,7 @@ actor {
   };
 
   public query func getCurrentJournal() : async ?Journal {
+    // Public access - no authorization check needed
     let currentYear = 2024 : Nat;
     let currentMonth = 6 : Nat;
     let filtered = journals.values().toArray().filter(func(journal) { journal.year == currentYear and journal.month == currentMonth });
@@ -693,15 +1002,18 @@ actor {
   };
 
   public query func getJournalCount() : async Nat {
+    // Public access - no authorization check needed
     journals.size();
   };
 
-  // STRIPE PRODUCTS
+  // Stripe Products
   public query func getSubscriptionPlans() : async [SubscriptionPlan] {
+    // Public access - no authorization check needed
     defaultPlans;
   };
 
   public query func getSubscriptionPlanObject(planId : Text) : async SubscriptionPlan {
+    // Public access - no authorization check needed
     switch (defaultPlans.find(func(plan) { plan.id == planId })) {
       case (null) { Runtime.trap("Subscription plan does not exist") };
       case (?plan) { plan };
@@ -723,11 +1035,13 @@ actor {
   };
 
   public query func getPlanCount() : async Nat {
+    // Public access - no authorization check needed
     defaultPlans.size();
   };
 
-  // ARTICLES
+  // Articles
   public query func getAllArticles() : async [Article] {
+    // Public access - no authorization check needed (only approved articles shown)
     var allArticles : [Article] = [];
     for ((_, userArticles) in articles.entries()) {
       let approvedArticles = userArticles.filter(func(article) { article.status == #approved });
@@ -746,7 +1060,7 @@ actor {
     };
   };
 
-  // SUBSCRIPTION VALIDATION FOR ARTICLES
+  // Subscription Validation for Articles
   public shared ({ caller }) func submitArticle(
     title : Text,
     fileType : { #pdf; #doc },
@@ -854,7 +1168,7 @@ actor {
     allPending.sort();
   };
 
-  // SUBSCRIPTIONS
+  // Subscriptions
   public shared ({ caller }) func createSubscription(planId : Text, startDate : Time.Time) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can create subscriptions");
@@ -949,7 +1263,7 @@ actor {
     };
   };
 
-  // STRIPE/PAYMENT INTEGRATION
+  // Stripe/Payment Integration
   var configuration : ?Stripe.StripeConfiguration = null;
 
   public shared ({ caller }) func setStripeConfiguration(config : Stripe.StripeConfiguration) : async () {
@@ -987,7 +1301,7 @@ actor {
     await Stripe.createCheckoutSession(getStripeConfiguration(), caller, items, successUrl, cancelUrl, transform);
   };
 
-  // HELPERS
+  // Helpers
   func calculateEndDate(startDate : Time.Time, durationMnts : Nat) : Time.Time {
     switch (durationMnts) {
       case (12) { startDate + 365 * 24 * 60 * 60 * 1000000 };
@@ -1022,8 +1336,10 @@ actor {
     };
   };
 
-  // HELPERS
+  // Helpers
   public query ({ caller }) func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
+    // Public access - required for HTTP outcalls
     OutCall.transform(input);
   };
 };
+

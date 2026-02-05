@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,9 +37,16 @@ import {
   useUpdateArticleStatus,
   useGetAllEditorialMembers,
   useAddEditorialMember,
+  useUpdateEditorialMember,
   useDeleteEditorialMember,
+  useGetTermsPlaceholders,
+  useSetTermsPlaceholders,
+  useGetAllBlogPosts,
+  useAddBlogPost,
+  useUpdateBlogPost,
+  useDeleteBlogPost,
 } from '../hooks/useQueries';
-import { ExternalBlob, Variant_approved_rejected, EditorialMember } from '../backend';
+import { ExternalBlob, Variant_approved_rejected, EditorialMember, TermsPlaceholders, BlogPost } from '../backend';
 import { toast } from 'sonner';
 import {
   AlertCircle,
@@ -54,18 +61,31 @@ import {
   Users,
   Edit,
   UserPlus,
+  Scale,
+  Save,
+  PenTool,
 } from 'lucide-react';
 import { Principal } from '@dfinity/principal';
 
 export default function AdminPanelPage() {
   const { data: isAdmin, isLoading: adminLoading } = useIsCallerAdmin();
   const { data: news } = useGetAllNews();
+  const { data: blogPosts } = useGetAllBlogPosts();
   const { data: pendingArticles } = useGetAllPendingArticles();
   const { data: editorialMembers } = useGetAllEditorialMembers();
+  const { data: termsPlaceholders } = useGetTermsPlaceholders();
 
   const [newsTitle, setNewsTitle] = useState('');
   const [newsContent, setNewsContent] = useState('');
   const [newsSummary, setNewsSummary] = useState('');
+  
+  const [blogTitle, setBlogTitle] = useState('');
+  const [blogContent, setBlogContent] = useState('');
+  const [blogAuthorName, setBlogAuthorName] = useState('');
+  const [blogSummary, setBlogSummary] = useState('');
+  const [blogImage, setBlogImage] = useState<File | null>(null);
+  const [blogImageUploadProgress, setBlogImageUploadProgress] = useState(0);
+  
   const [journalTitle, setJournalTitle] = useState('');
   const [journalDescription, setJournalDescription] = useState('');
   const [journalMonth, setJournalMonth] = useState('');
@@ -75,7 +95,6 @@ export default function AdminPanelPage() {
   const [isArchive, setIsArchive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  // Editorial member form state
   const [memberName, setMemberName] = useState('');
   const [memberQualification, setMemberQualification] = useState('');
   const [memberRole, setMemberRole] = useState('');
@@ -85,20 +104,53 @@ export default function AdminPanelPage() {
   const [memberPhoto, setMemberPhoto] = useState<File | null>(null);
   const [photoUploadProgress, setPhotoUploadProgress] = useState(0);
 
-  // Edit dialog state
+  const [websiteName, setWebsiteName] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [companyEmail, setCompanyEmail] = useState('');
+  const [companyAddress, setCompanyAddress] = useState('');
+  const [addressCity, setAddressCity] = useState('');
+  const [lastUpdateDate, setLastUpdateDate] = useState('');
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<EditorialMember | null>(null);
-
-  // Delete confirmation state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState<EditorialMember | null>(null);
 
+  const [blogEditDialogOpen, setBlogEditDialogOpen] = useState(false);
+  const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
+  const [blogDeleteDialogOpen, setBlogDeleteDialogOpen] = useState(false);
+  const [blogToDelete, setBlogToDelete] = useState<BlogPost | null>(null);
+
   const addNews = useAddNews();
   const deleteNews = useDeleteNews();
+  const addBlogPost = useAddBlogPost();
+  const updateBlogPost = useUpdateBlogPost();
+  const deleteBlogPost = useDeleteBlogPost();
   const uploadJournal = useUploadJournal();
   const updateArticleStatus = useUpdateArticleStatus();
   const addEditorialMember = useAddEditorialMember();
+  const updateEditorialMember = useUpdateEditorialMember();
   const deleteEditorialMember = useDeleteEditorialMember();
+  const setTermsPlaceholders = useSetTermsPlaceholders();
+
+  useEffect(() => {
+    if (termsPlaceholders) {
+      setWebsiteName(termsPlaceholders.websiteName);
+      setCompanyName(termsPlaceholders.companyName);
+      setCompanyEmail(termsPlaceholders.companyEmail);
+      setCompanyAddress(termsPlaceholders.companyAddress);
+      setAddressCity(termsPlaceholders.addressCity);
+      setLastUpdateDate(termsPlaceholders.lastUpdateDate);
+    }
+  }, [termsPlaceholders]);
+
+  const getDisplayRole = (member: EditorialMember) => {
+    // Prefer canonical label when isEditorInChief is true
+    if (member.isEditorInChief) {
+      return 'Editor-in-Chief';
+    }
+    return member.role;
+  };
 
   if (adminLoading) {
     return (
@@ -157,6 +209,115 @@ export default function AdminPanelPage() {
       toast.error('Failed to delete news');
       console.error(error);
     }
+  };
+
+  const handleAddBlogPost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!blogTitle || !blogContent || !blogAuthorName || !blogSummary) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      let externalBlob: ExternalBlob | null = null;
+      if (blogImage) {
+        const arrayBuffer = await blogImage.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        externalBlob = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
+          setBlogImageUploadProgress(percentage);
+        });
+      }
+
+      await addBlogPost.mutateAsync({
+        title: blogTitle,
+        content: blogContent,
+        authorName: blogAuthorName,
+        imageUrl: blogImage ? blogImage.name : null,
+        publicationDate: BigInt(Date.now() * 1000000),
+        blob: externalBlob,
+        shortSummary: blogSummary,
+      });
+
+      toast.success('Blog post published successfully');
+      setBlogTitle('');
+      setBlogContent('');
+      setBlogAuthorName('');
+      setBlogSummary('');
+      setBlogImage(null);
+      setBlogImageUploadProgress(0);
+    } catch (error) {
+      toast.error('Failed to publish blog post');
+      console.error(error);
+      setBlogImageUploadProgress(0);
+    }
+  };
+
+  const handleEditBlog = (blog: BlogPost) => {
+    setEditingBlog(blog);
+    setBlogTitle(blog.title);
+    setBlogContent(blog.content);
+    setBlogAuthorName(blog.authorName);
+    setBlogSummary(blog.shortSummary);
+    setBlogEditDialogOpen(true);
+  };
+
+  const handleUpdateBlog = async () => {
+    if (!editingBlog) return;
+
+    try {
+      let externalBlob: ExternalBlob | null = null;
+      if (blogImage) {
+        const arrayBuffer = await blogImage.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        externalBlob = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
+          setBlogImageUploadProgress(percentage);
+        });
+      }
+
+      await updateBlogPost.mutateAsync({
+        blogPostId: editingBlog.id,
+        title: blogTitle,
+        content: blogContent,
+        authorName: blogAuthorName,
+        publicationDate: editingBlog.publicationDate,
+        imageUrl: blogImage ? blogImage.name : (editingBlog.imageUrl ?? null),
+        blob: externalBlob ?? (editingBlog.blob ?? null),
+        shortSummary: blogSummary,
+      });
+
+      toast.success('Blog post updated successfully');
+      setBlogEditDialogOpen(false);
+      setEditingBlog(null);
+      setBlogTitle('');
+      setBlogContent('');
+      setBlogAuthorName('');
+      setBlogSummary('');
+      setBlogImage(null);
+      setBlogImageUploadProgress(0);
+    } catch (error) {
+      toast.error('Failed to update blog post');
+      console.error(error);
+      setBlogImageUploadProgress(0);
+    }
+  };
+
+  const handleDeleteBlog = async () => {
+    if (!blogToDelete) return;
+
+    try {
+      await deleteBlogPost.mutateAsync(blogToDelete.id);
+      toast.success('Blog post deleted successfully');
+      setBlogDeleteDialogOpen(false);
+      setBlogToDelete(null);
+    } catch (error) {
+      toast.error('Failed to delete blog post');
+      console.error(error);
+    }
+  };
+
+  const openBlogDeleteDialog = (blog: BlogPost) => {
+    setBlogToDelete(blog);
+    setBlogDeleteDialogOpen(true);
   };
 
   const handleUploadJournal = async (e: React.FormEvent) => {
@@ -291,11 +452,47 @@ export default function AdminPanelPage() {
   const handleUpdateMember = async () => {
     if (!editingMember) return;
 
-    // Note: Backend doesn't have an update endpoint, so we'll delete and re-add
-    // This is a limitation that should be noted
-    toast.info('Update functionality requires backend support. Please delete and re-add the member.');
-    setEditDialogOpen(false);
-    setEditingMember(null);
+    try {
+      let externalBlob: ExternalBlob | null = null;
+      if (memberPhoto) {
+        const arrayBuffer = await memberPhoto.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        externalBlob = ExternalBlob.fromBytes(uint8Array).withUploadProgress((percentage) => {
+          setPhotoUploadProgress(percentage);
+        });
+      }
+
+      await updateEditorialMember.mutateAsync({
+        editorialMemberId: editingMember.id,
+        name: memberName,
+        qualification: memberQualification,
+        role: memberRole,
+        expertise: memberExpertise,
+        email: memberEmail,
+        phone: memberPhone,
+        isEditorialBoardAuthor: editingMember.isEditorialBoardAuthor,
+        isEditorInChief: editingMember.isEditorInChief,
+        isReviewerBoardMember: editingMember.isReviewerBoardMember,
+        profilePictureUrl: memberPhoto ? memberPhoto.name : editingMember.profilePictureUrl,
+        profilePicture: externalBlob,
+      });
+
+      toast.success('Editorial member updated successfully');
+      setEditDialogOpen(false);
+      setEditingMember(null);
+      setMemberName('');
+      setMemberQualification('');
+      setMemberRole('');
+      setMemberExpertise('');
+      setMemberEmail('');
+      setMemberPhone('');
+      setMemberPhoto(null);
+      setPhotoUploadProgress(0);
+    } catch (error) {
+      toast.error('Failed to update editorial member');
+      console.error(error);
+      setPhotoUploadProgress(0);
+    }
   };
 
   const handleDeleteMember = async () => {
@@ -317,6 +514,27 @@ export default function AdminPanelPage() {
     setDeleteDialogOpen(true);
   };
 
+  const handleSaveTermsPlaceholders = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const placeholders: TermsPlaceholders = {
+        websiteName,
+        companyName,
+        companyEmail,
+        companyAddress,
+        addressCity,
+        lastUpdateDate,
+      };
+
+      await setTermsPlaceholders.mutateAsync(placeholders);
+      toast.success('Terms and Conditions placeholders updated successfully');
+    } catch (error) {
+      toast.error('Failed to update placeholders');
+      console.error(error);
+    }
+  };
+
   return (
     <div className="container py-12 animate-fade-in">
       <div className="mb-8">
@@ -325,7 +543,7 @@ export default function AdminPanelPage() {
       </div>
 
       <Tabs defaultValue="magazine" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
+        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
           <TabsTrigger value="magazine" className="gap-2">
             <BookOpen className="h-4 w-4" />
             Publish Magazine
@@ -334,9 +552,17 @@ export default function AdminPanelPage() {
             <Newspaper className="h-4 w-4" />
             Publish News
           </TabsTrigger>
+          <TabsTrigger value="blog" className="gap-2">
+            <PenTool className="h-4 w-4" />
+            Blog Management
+          </TabsTrigger>
           <TabsTrigger value="editorial" className="gap-2">
             <Users className="h-4 w-4" />
             Editorial Board
+          </TabsTrigger>
+          <TabsTrigger value="terms" className="gap-2">
+            <Scale className="h-4 w-4" />
+            Terms & Conditions
           </TabsTrigger>
         </TabsList>
 
@@ -689,6 +915,193 @@ export default function AdminPanelPage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="blog" className="space-y-6">
+          <Card className="border-primary/20 shadow-sm">
+            <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
+              <CardTitle className="flex items-center gap-2 text-primary">
+                <Plus className="h-5 w-5" />
+                Publish New Blog Post
+              </CardTitle>
+              <CardDescription>
+                Create and publish blog posts that will be displayed on the homepage and news page
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <form onSubmit={handleAddBlogPost} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="blogTitle" className="text-base">
+                    Blog Title <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="blogTitle"
+                    value={blogTitle}
+                    onChange={(e) => setBlogTitle(e.target.value)}
+                    placeholder="Enter an engaging blog title"
+                    className="border-primary/20 focus:border-primary"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="blogAuthorName" className="text-base">
+                    Author Name <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="blogAuthorName"
+                    value={blogAuthorName}
+                    onChange={(e) => setBlogAuthorName(e.target.value)}
+                    placeholder="e.g., Dr. Rajesh Kumar"
+                    className="border-primary/20 focus:border-primary"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="blogSummary" className="text-base">
+                    Short Summary <span className="text-destructive">*</span>
+                  </Label>
+                  <Textarea
+                    id="blogSummary"
+                    value={blogSummary}
+                    onChange={(e) => setBlogSummary(e.target.value)}
+                    placeholder="Brief summary for preview (2-3 lines)"
+                    rows={2}
+                    className="border-primary/20 focus:border-primary resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="blogContent" className="text-base">
+                    Content <span className="text-destructive">*</span>
+                  </Label>
+                  <Textarea
+                    id="blogContent"
+                    value={blogContent}
+                    onChange={(e) => setBlogContent(e.target.value)}
+                    placeholder="Enter the full blog content"
+                    rows={8}
+                    className="border-primary/20 focus:border-primary resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="blogImage" className="text-base">
+                    Featured Image (optional)
+                  </Label>
+                  <Input
+                    id="blogImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setBlogImage(e.target.files?.[0] || null)}
+                    className="border-primary/20 focus:border-primary cursor-pointer"
+                  />
+                  {blogImage && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">
+                      <FileText className="h-4 w-4 text-primary" />
+                      <span className="font-medium">{blogImage.name}</span>
+                      <span className="ml-auto">({(blogImage.size / 1024).toFixed(2)} KB)</span>
+                    </div>
+                  )}
+                </div>
+
+                {blogImageUploadProgress > 0 && blogImageUploadProgress < 100 && (
+                  <div className="space-y-2 bg-primary/5 p-4 rounded-lg border border-primary/20">
+                    <div className="flex items-center justify-between text-sm font-medium">
+                      <span className="text-primary">Uploading image...</span>
+                      <span className="text-primary">{blogImageUploadProgress}%</span>
+                    </div>
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all duration-300 ease-out"
+                        style={{ width: `${blogImageUploadProgress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  disabled={addBlogPost.isPending}
+                  className="w-full md:w-auto"
+                  size="lg"
+                >
+                  {addBlogPost.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                      Publishing...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Publish Blog Post
+                    </>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <PenTool className="h-5 w-5" />
+                Published Blog Posts
+                {blogPosts && (
+                  <Badge variant="secondary" className="ml-2">
+                    {blogPosts.length}
+                  </Badge>
+                )}
+              </CardTitle>
+              <CardDescription>Manage all published blog posts</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {blogPosts && blogPosts.length > 0 ? (
+                <div className="space-y-3">
+                  {blogPosts.map((blog) => (
+                    <div
+                      key={blog.id.toString()}
+                      className="border border-primary/10 rounded-lg p-4 hover:bg-muted/30 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold mb-1 text-primary">{blog.title}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">By {blog.authorName}</p>
+                          <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{blog.shortSummary}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Published: {new Date(Number(blog.publicationDate) / 1000000).toLocaleDateString('en-IN')}
+                          </p>
+                        </div>
+                        <div className="flex gap-2 shrink-0">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditBlog(blog)}
+                            className="border-primary/20 hover:bg-primary/5"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => openBlogDeleteDialog(blog)}
+                            disabled={deleteBlogPost.isPending}
+                            className="hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <PenTool className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
+                  <p className="text-muted-foreground">No blog posts published yet</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="editorial" className="space-y-6">
           <Card className="border-primary/20 shadow-sm">
             <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
@@ -880,7 +1293,7 @@ export default function AdminPanelPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-primary mb-1 line-clamp-1">{member.name}</h3>
-                          <p className="text-sm text-muted-foreground line-clamp-1">{member.role}</p>
+                          <p className="text-sm text-muted-foreground line-clamp-1">{getDisplayRole(member)}</p>
                         </div>
                       </div>
 
@@ -936,15 +1349,146 @@ export default function AdminPanelPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="terms" className="space-y-6">
+          <Card className="border-primary/20 shadow-sm">
+            <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
+              <CardTitle className="flex items-center gap-2 text-primary">
+                <Scale className="h-5 w-5" />
+                Manage Terms and Conditions Placeholders
+              </CardTitle>
+              <CardDescription>
+                Update placeholder values that will be displayed in the Terms and Conditions page
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <form onSubmit={handleSaveTermsPlaceholders} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="websiteName" className="text-base">
+                      Website Name
+                    </Label>
+                    <Input
+                      id="websiteName"
+                      value={websiteName}
+                      onChange={(e) => setWebsiteName(e.target.value)}
+                      placeholder="e.g., Agrigence"
+                      className="border-primary/20 focus:border-primary"
+                    />
+                    <p className="text-xs text-muted-foreground">Replaces [Website Name] in the terms</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="companyName" className="text-base">
+                      Company Name
+                    </Label>
+                    <Input
+                      id="companyName"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="e.g., Agrigence Publications"
+                      className="border-primary/20 focus:border-primary"
+                    />
+                    <p className="text-xs text-muted-foreground">Replaces [Company Name] in the terms</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="companyEmail" className="text-base">
+                    Contact Email
+                  </Label>
+                  <Input
+                    id="companyEmail"
+                    type="email"
+                    value={companyEmail}
+                    onChange={(e) => setCompanyEmail(e.target.value)}
+                    placeholder="e.g., agrigence@gmail.com"
+                    className="border-primary/20 focus:border-primary"
+                  />
+                  <p className="text-xs text-muted-foreground">Replaces [Email] in the terms</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="companyAddress" className="text-base">
+                      Address
+                    </Label>
+                    <Input
+                      id="companyAddress"
+                      value={companyAddress}
+                      onChange={(e) => setCompanyAddress(e.target.value)}
+                      placeholder="e.g., Zura Haradhan, Chandauli, Uttar Pradesh, 221115"
+                      className="border-primary/20 focus:border-primary"
+                    />
+                    <p className="text-xs text-muted-foreground">Replaces [Address] in the terms</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="addressCity" className="text-base">
+                      City
+                    </Label>
+                    <Input
+                      id="addressCity"
+                      value={addressCity}
+                      onChange={(e) => setAddressCity(e.target.value)}
+                      placeholder="e.g., Chandauli"
+                      className="border-primary/20 focus:border-primary"
+                    />
+                    <p className="text-xs text-muted-foreground">Replaces [City] in the terms</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="lastUpdateDate" className="text-base">
+                    Last Updated Date
+                  </Label>
+                  <Input
+                    id="lastUpdateDate"
+                    value={lastUpdateDate}
+                    onChange={(e) => setLastUpdateDate(e.target.value)}
+                    placeholder="e.g., February 2, 2026"
+                    className="border-primary/20 focus:border-primary"
+                  />
+                  <p className="text-xs text-muted-foreground">Replaces [Date] in the terms</p>
+                </div>
+
+                <Alert className="bg-primary/5 border-primary/20">
+                  <AlertCircle className="h-4 w-4 text-primary" />
+                  <AlertDescription className="text-sm">
+                    These values will replace the corresponding placeholders in the Terms and Conditions page. Make sure all information is accurate before saving.
+                  </AlertDescription>
+                </Alert>
+
+                <Button
+                  type="submit"
+                  disabled={setTermsPlaceholders.isPending}
+                  className="w-full md:w-auto"
+                  size="lg"
+                >
+                  {setTermsPlaceholders.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Placeholders
+                    </>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
 
-      {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Edit Editorial Member</DialogTitle>
             <DialogDescription>
-              Note: Full editing requires backend support. Currently, you can view details here.
+              Update the member's information below.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -964,17 +1508,79 @@ export default function AdminPanelPage() {
               <Label>Expertise</Label>
               <Textarea value={memberExpertise} onChange={(e) => setMemberExpertise(e.target.value)} rows={3} />
             </div>
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input value={memberEmail} onChange={(e) => setMemberEmail(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>Phone</Label>
+              <Input value={memberPhone} onChange={(e) => setMemberPhone(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>Update Photo (optional)</Label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setMemberPhoto(e.target.files?.[0] || null)}
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleUpdateMember}>Save Changes</Button>
+            <Button onClick={handleUpdateMember} disabled={updateEditorialMember.isPending}>
+              {updateEditorialMember.isPending ? 'Saving...' : 'Save Changes'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
+      <Dialog open={blogEditDialogOpen} onOpenChange={setBlogEditDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Edit Blog Post</DialogTitle>
+            <DialogDescription>
+              Update the blog post information below.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto">
+            <div className="space-y-2">
+              <Label>Title</Label>
+              <Input value={blogTitle} onChange={(e) => setBlogTitle(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>Author Name</Label>
+              <Input value={blogAuthorName} onChange={(e) => setBlogAuthorName(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>Short Summary</Label>
+              <Textarea value={blogSummary} onChange={(e) => setBlogSummary(e.target.value)} rows={2} />
+            </div>
+            <div className="space-y-2">
+              <Label>Content</Label>
+              <Textarea value={blogContent} onChange={(e) => setBlogContent(e.target.value)} rows={6} />
+            </div>
+            <div className="space-y-2">
+              <Label>Update Image (optional)</Label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setBlogImage(e.target.files?.[0] || null)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBlogEditDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateBlog} disabled={updateBlogPost.isPending}>
+              {updateBlogPost.isPending ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -991,6 +1597,26 @@ export default function AdminPanelPage() {
               className="bg-destructive hover:bg-destructive/90"
             >
               Remove Member
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={blogDeleteDialogOpen} onOpenChange={setBlogDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Blog Post?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <strong>{blogToDelete?.title}</strong>? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteBlog}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Delete Blog Post
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

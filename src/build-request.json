@@ -1,0 +1,54 @@
+{
+  "kind": "build_request",
+  "title": "Add Editor-in-Chief entry to Editorial Board (Dr. Dinesh Kumar Singh)",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Add a new editorial member record for the Editor-in-Chief with the following user-facing details: Name: \"Dr. Dinesh Kumar Singh\"; Role: \"Editor-in-Chief\"; Qualification/Affiliation text: \"Asst. Professor, National P.G. College, Barahalganj, Gorakhpur,\". Ensure the record is persisted and returned by the existing public editorial member listing APIs so it appears on the Editorial Board page and in the Admin Panel editorial member list.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add editor in cheaf \"\" Dr. Dinesh kumar Singh, Asst. Professor, National P.G. College, Barahalganj, Gorakhpur,"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Calling the backend query that powers the Editorial Board UI (currently `getAllEditorialMembers`) returns an entry with `name = \"Dr. Dinesh Kumar Singh\"` and `isEditorInChief = true`.",
+        "The Editorial Board page displays a card for \"Dr. Dinesh Kumar Singh\" with the badge text \"Editor-in-Chief\".",
+        "The entry remains present after canister upgrade/redeploy (i.e., it is not lost on restart/upgrade)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "If any user-facing labels or strings are added/updated to support the new Editor-in-Chief entry, use correct English spelling and capitalization (e.g., \"Editor-in-Chief\").",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "add editor in cheaf"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All newly introduced user-facing text related to this change is in English and uses the label \"Editor-in-Chief\" (not \"editor in cheaf\")."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single-actor Motoko canister; do not introduce additional backend services.",
+    "Do not edit any files under `frontend/src/components/ui` or other paths listed in `frontend.immutablePaths`."
+  ],
+  "nonGoals": [
+    "Do not implement new authentication methods or third-party auth providers.",
+    "Do not redesign the editorial board page layout beyond what is necessary to display the new entry.",
+    "Do not add email/phone/photo data for this member unless explicitly provided by the user."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

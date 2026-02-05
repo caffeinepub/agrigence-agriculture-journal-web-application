@@ -1,5 +1,6 @@
 import { SiFacebook, SiInstagram, SiX, SiYoutube, SiLinkedin } from 'react-icons/si';
 import { Heart } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 import CountdownTimer from './CountdownTimer';
 import VisitorCounter from './VisitorCounter';
 
@@ -18,6 +19,12 @@ export default function Footer() {
               <p className="text-sm text-muted-foreground mb-4">
                 Agriculture Knowledge, Research & Opportunities in One Place
               </p>
+              <Link
+                to="/terms-and-conditions"
+                className="text-sm text-primary hover:underline transition-colors"
+              >
+                Terms and Conditions
+              </Link>
             </div>
             <div>
               <h3 className="font-semibold text-lg mb-4">Contact</h3>

@@ -15,6 +15,7 @@ import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentFailurePage from './pages/PaymentFailurePage';
 import EditorialBoardPage from './pages/EditorialBoardPage';
 import AuthorGuidelinesPage from './pages/AuthorGuidelinesPage';
+import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -76,6 +77,12 @@ const authorGuidelinesRoute = createRoute({
   component: AuthorGuidelinesPage,
 });
 
+const termsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/terms-and-conditions',
+  component: TermsAndConditionsPage,
+});
+
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/dashboard',
@@ -127,6 +134,7 @@ const routeTree = rootRoute.addChildren([
   journalsRoute,
   editorialBoardRoute,
   authorGuidelinesRoute,
+  termsRoute,
   dashboardRoute,
   adminRoute,
   subscriptionRoute,

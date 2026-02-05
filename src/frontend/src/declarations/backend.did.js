@@ -19,6 +19,7 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
+export const Time = IDL.Int;
 export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
@@ -32,7 +33,6 @@ export const ShoppingItem = IDL.Record({
   'priceInCents' : IDL.Nat,
   'productDescription' : IDL.Text,
 });
-export const Time = IDL.Int;
 export const ArticlePreview = IDL.Record({
   'id' : IDL.Nat,
   'title' : IDL.Text,
@@ -53,6 +53,16 @@ export const Article = IDL.Record({
   'fileType' : IDL.Variant({ 'doc' : IDL.Null, 'pdf' : IDL.Null }),
   'author' : IDL.Text,
   'submissionDate' : Time,
+});
+export const BlogPost = IDL.Record({
+  'id' : IDL.Nat,
+  'title' : IDL.Text,
+  'content' : IDL.Text,
+  'blob' : IDL.Opt(ExternalBlob),
+  'authorName' : IDL.Text,
+  'shortSummary' : IDL.Text,
+  'imageUrl' : IDL.Opt(IDL.Text),
+  'publicationDate' : Time,
 });
 export const EditorialMember = IDL.Record({
   'id' : IDL.Nat,
@@ -163,6 +173,14 @@ export const SubscriptionPlan = IDL.Record({
   'price' : IDL.Nat,
   'isInstitute' : IDL.Bool,
 });
+export const TermsPlaceholders = IDL.Record({
+  'websiteName' : IDL.Text,
+  'companyEmail' : IDL.Text,
+  'lastUpdateDate' : IDL.Text,
+  'addressCity' : IDL.Text,
+  'companyName' : IDL.Text,
+  'companyAddress' : IDL.Text,
+});
 export const VisitorCounter = IDL.Record({
   'averageSessionDuration' : IDL.Nat,
   'activeSessions' : IDL.Opt(IDL.Nat),
@@ -230,6 +248,19 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addBlogPost' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(IDL.Text),
+        Time,
+        IDL.Opt(ExternalBlob),
+        IDL.Text,
+      ],
+      [],
+      [],
+    ),
   'addEditorialMember' : IDL.Func(
       [
         IDL.Text,
@@ -282,10 +313,12 @@ export const idlService = IDL.Service({
       [],
     ),
   'deleteArticle' : IDL.Func([IDL.Text], [], []),
+  'deleteBlogPost' : IDL.Func([IDL.Nat], [], []),
   'deleteEditorialMember' : IDL.Func([IDL.Nat], [], []),
   'deleteNews' : IDL.Func([IDL.Text], [], []),
   'getAllArticlePreviews' : IDL.Func([], [IDL.Vec(ArticlePreview)], ['query']),
   'getAllArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
+  'getAllBlogPosts' : IDL.Func([], [IDL.Vec(BlogPost)], ['query']),
   'getAllEditorialMembers' : IDL.Func(
       [],
       [IDL.Vec(EditorialMember)],
@@ -297,6 +330,13 @@ export const idlService = IDL.Service({
   'getAllPendingArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
   'getAllUserReviews' : IDL.Func([], [IDL.Vec(UserReview)], ['query']),
   'getArticlePreview' : IDL.Func([IDL.Nat], [ArticlePreview], ['query']),
+  'getBlogPost' : IDL.Func([IDL.Nat], [BlogPost], ['query']),
+  'getBlogPostCount' : IDL.Func([], [IDL.Nat], ['query']),
+  'getBlogPostsPaginated' : IDL.Func(
+      [IDL.Nat, IDL.Nat],
+      [IDL.Vec(BlogPost)],
+      ['query'],
+    ),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getCurrentJournal' : IDL.Func([], [IDL.Opt(Journal)], ['query']),
@@ -319,6 +359,7 @@ export const idlService = IDL.Service({
   'getHomePageMagazines' : IDL.Func([], [IDL.Vec(HomePageMagazine)], ['query']),
   'getJournal' : IDL.Func([IDL.Nat], [Journal], ['query']),
   'getJournalCount' : IDL.Func([], [IDL.Nat], ['query']),
+  'getLatestBlogPosts' : IDL.Func([IDL.Nat], [IDL.Vec(BlogPost)], ['query']),
   'getLatestNews' : IDL.Func([IDL.Nat], [IDL.Vec(News)], ['query']),
   'getMagazine' : IDL.Func([IDL.Nat], [Magazine], ['query']),
   'getNews' : IDL.Func([IDL.Text], [News], ['query']),
@@ -338,6 +379,8 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'getSubscriptionPlans' : IDL.Func([], [IDL.Vec(SubscriptionPlan)], ['query']),
+  'getTermsAndConditions' : IDL.Func([], [IDL.Text], ['query']),
+  'getTermsPlaceholders' : IDL.Func([], [TermsPlaceholders], ['query']),
   'getUserArticles' : IDL.Func([IDL.Principal], [IDL.Vec(Article)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
@@ -352,6 +395,7 @@ export const idlService = IDL.Service({
   'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([ProfileInput], [], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
+  'setTermsPlaceholders' : IDL.Func([TermsPlaceholders], [], []),
   'submitArticle' : IDL.Func(
       [
         IDL.Text,
@@ -377,7 +421,40 @@ export const idlService = IDL.Service({
       [],
       [],
     ),
+  'updateBlogPost' : IDL.Func(
+      [
+        IDL.Nat,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        Time,
+        IDL.Opt(IDL.Text),
+        IDL.Opt(ExternalBlob),
+        IDL.Text,
+      ],
+      [],
+      [],
+    ),
+  'updateEditorialMember' : IDL.Func(
+      [
+        IDL.Nat,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Bool,
+        IDL.Bool,
+        IDL.Bool,
+        IDL.Text,
+        IDL.Opt(ExternalBlob),
+      ],
+      [],
+      [],
+    ),
   'updateSubscriptionsTimestamp' : IDL.Func([], [], []),
+  'updateTermsAndConditions' : IDL.Func([IDL.Text], [], []),
   'updateVisitorCounter' : IDL.Func(
       [IDL.Nat, IDL.Nat, IDL.Nat, IDL.Nat, IDL.Opt(IDL.Nat)],
       [],
@@ -414,6 +491,7 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
+  const Time = IDL.Int;
   const ExternalBlob = IDL.Vec(IDL.Nat8);
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
@@ -427,7 +505,6 @@ export const idlFactory = ({ IDL }) => {
     'priceInCents' : IDL.Nat,
     'productDescription' : IDL.Text,
   });
-  const Time = IDL.Int;
   const ArticlePreview = IDL.Record({
     'id' : IDL.Nat,
     'title' : IDL.Text,
@@ -448,6 +525,16 @@ export const idlFactory = ({ IDL }) => {
     'fileType' : IDL.Variant({ 'doc' : IDL.Null, 'pdf' : IDL.Null }),
     'author' : IDL.Text,
     'submissionDate' : Time,
+  });
+  const BlogPost = IDL.Record({
+    'id' : IDL.Nat,
+    'title' : IDL.Text,
+    'content' : IDL.Text,
+    'blob' : IDL.Opt(ExternalBlob),
+    'authorName' : IDL.Text,
+    'shortSummary' : IDL.Text,
+    'imageUrl' : IDL.Opt(IDL.Text),
+    'publicationDate' : Time,
   });
   const EditorialMember = IDL.Record({
     'id' : IDL.Nat,
@@ -558,6 +645,14 @@ export const idlFactory = ({ IDL }) => {
     'price' : IDL.Nat,
     'isInstitute' : IDL.Bool,
   });
+  const TermsPlaceholders = IDL.Record({
+    'websiteName' : IDL.Text,
+    'companyEmail' : IDL.Text,
+    'lastUpdateDate' : IDL.Text,
+    'addressCity' : IDL.Text,
+    'companyName' : IDL.Text,
+    'companyAddress' : IDL.Text,
+  });
   const VisitorCounter = IDL.Record({
     'averageSessionDuration' : IDL.Nat,
     'activeSessions' : IDL.Opt(IDL.Nat),
@@ -622,6 +717,19 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addBlogPost' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(IDL.Text),
+          Time,
+          IDL.Opt(ExternalBlob),
+          IDL.Text,
+        ],
+        [],
+        [],
+      ),
     'addEditorialMember' : IDL.Func(
         [
           IDL.Text,
@@ -674,6 +782,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'deleteArticle' : IDL.Func([IDL.Text], [], []),
+    'deleteBlogPost' : IDL.Func([IDL.Nat], [], []),
     'deleteEditorialMember' : IDL.Func([IDL.Nat], [], []),
     'deleteNews' : IDL.Func([IDL.Text], [], []),
     'getAllArticlePreviews' : IDL.Func(
@@ -682,6 +791,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getAllArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
+    'getAllBlogPosts' : IDL.Func([], [IDL.Vec(BlogPost)], ['query']),
     'getAllEditorialMembers' : IDL.Func(
         [],
         [IDL.Vec(EditorialMember)],
@@ -693,6 +803,13 @@ export const idlFactory = ({ IDL }) => {
     'getAllPendingArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
     'getAllUserReviews' : IDL.Func([], [IDL.Vec(UserReview)], ['query']),
     'getArticlePreview' : IDL.Func([IDL.Nat], [ArticlePreview], ['query']),
+    'getBlogPost' : IDL.Func([IDL.Nat], [BlogPost], ['query']),
+    'getBlogPostCount' : IDL.Func([], [IDL.Nat], ['query']),
+    'getBlogPostsPaginated' : IDL.Func(
+        [IDL.Nat, IDL.Nat],
+        [IDL.Vec(BlogPost)],
+        ['query'],
+      ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getCurrentJournal' : IDL.Func([], [IDL.Opt(Journal)], ['query']),
@@ -719,6 +836,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getJournal' : IDL.Func([IDL.Nat], [Journal], ['query']),
     'getJournalCount' : IDL.Func([], [IDL.Nat], ['query']),
+    'getLatestBlogPosts' : IDL.Func([IDL.Nat], [IDL.Vec(BlogPost)], ['query']),
     'getLatestNews' : IDL.Func([IDL.Nat], [IDL.Vec(News)], ['query']),
     'getMagazine' : IDL.Func([IDL.Nat], [Magazine], ['query']),
     'getNews' : IDL.Func([IDL.Text], [News], ['query']),
@@ -742,6 +860,8 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(SubscriptionPlan)],
         ['query'],
       ),
+    'getTermsAndConditions' : IDL.Func([], [IDL.Text], ['query']),
+    'getTermsPlaceholders' : IDL.Func([], [TermsPlaceholders], ['query']),
     'getUserArticles' : IDL.Func(
         [IDL.Principal],
         [IDL.Vec(Article)],
@@ -764,6 +884,7 @@ export const idlFactory = ({ IDL }) => {
     'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([ProfileInput], [], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
+    'setTermsPlaceholders' : IDL.Func([TermsPlaceholders], [], []),
     'submitArticle' : IDL.Func(
         [
           IDL.Text,
@@ -789,7 +910,40 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'updateBlogPost' : IDL.Func(
+        [
+          IDL.Nat,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          Time,
+          IDL.Opt(IDL.Text),
+          IDL.Opt(ExternalBlob),
+          IDL.Text,
+        ],
+        [],
+        [],
+      ),
+    'updateEditorialMember' : IDL.Func(
+        [
+          IDL.Nat,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Bool,
+          IDL.Bool,
+          IDL.Bool,
+          IDL.Text,
+          IDL.Opt(ExternalBlob),
+        ],
+        [],
+        [],
+      ),
     'updateSubscriptionsTimestamp' : IDL.Func([], [], []),
+    'updateTermsAndConditions' : IDL.Func([IDL.Text], [], []),
     'updateVisitorCounter' : IDL.Func(
         [IDL.Nat, IDL.Nat, IDL.Nat, IDL.Nat, IDL.Opt(IDL.Nat)],
         [],

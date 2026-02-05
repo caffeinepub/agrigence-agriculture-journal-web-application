@@ -1,0 +1,405 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 24,
+  "summary": "Agrigence is an agriculture journal/publication web app built on the Internet Computer with a Motoko backend canister and a React (TanStack Router) frontend. It supports public browsing of content (home feeds, news, blog posts, journals archive, editorial board, author guidelines, terms) and an authenticated user experience via Internet Identity for profile creation, subscription purchase/activation via Stripe Checkout (IC HTTP outcalls), and research article submission (DOC/PDF) using IC blob storage. Admins (bootstrapped via an environment token + user-provided secret) can manage operational content through an admin panel: publish/delete news, CRUD blog posts (optional image blob), upload journal issues (PDF blob) and mark as current/archive, review pending article submissions (approve/reject), CRUD editorial board members (optional uploaded photo blob or static avatar URL), and manage Terms & Conditions placeholders/content.",
+  "existing_features": [
+    {
+      "id": "IF-1",
+      "title": "Internet Identity authentication context with persisted session",
+      "synonyms": [
+        "II login",
+        "AuthClient",
+        "InternetIdentityProvider"
+      ],
+      "description": "Provides a React context/hook to initialize DFINITY AuthClient, load an existing delegation from storage, login/logout, and expose identity plus granular status flags.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-2",
+      "title": "Identity-aware backend actor creation and query cache refresh",
+      "synonyms": [
+        "useActor",
+        "actor bootstrapping"
+      ],
+      "description": "Creates an authenticated or anonymous backend actor based on the current identity, then invalidates/refetches React Query caches when the actor changes.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-3",
+      "title": "Role-based access control with admin bootstrap secret",
+      "synonyms": [
+        "AccessControl",
+        "MixinAuthorization",
+        "RBAC"
+      ],
+      "description": "Motoko RBAC where the first principal providing the correct CAFFEINE_ADMIN_TOKEN-derived secret becomes admin; other authenticated principals are registered as users. Includes admin checks and admin role assignment.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-4",
+      "title": "URL hash secret parameter persistence and cleanup",
+      "synonyms": [
+        "getSecretParameter",
+        "urlParams",
+        "sessionStorage secret"
+      ],
+      "description": "Reads sensitive parameters from the URL hash, stores them in sessionStorage for the session, and removes them from the URL to reduce leakage; used for admin bootstrap secrets.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-5",
+      "title": "User profile save and retrieval (authenticated)",
+      "synonyms": [
+        "saveCallerUserProfile",
+        "getCallerUserProfile"
+      ],
+      "description": "Authenticated users can create/update their profile (name, email, phone, qualification, occupation, institute/unlimited flags) and fetch it from the backend.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-6",
+      "title": "First-time user profile setup dialog gate",
+      "synonyms": [
+        "ProfileSetupDialog",
+        "onboarding modal"
+      ],
+      "description": "Shows a blocking modal on the dashboard when the user has no saved profile, collects required fields, and saves them via a backend mutation.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-7",
+      "title": "User dashboard for profile, subscription status, and submissions",
+      "synonyms": [
+        "DashboardPage",
+        "My Submissions"
+      ],
+      "description": "Authenticated dashboard that displays stored profile info, whether the user has an active subscription, and the user's submitted articles with status badges and file metadata.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-8",
+      "title": "Subscription plans catalog (public)",
+      "synonyms": [
+        "getSubscriptionPlans",
+        "plans listing"
+      ],
+      "description": "Backend exposes predefined subscription plans (1 article, 10 articles, unlimited, institute), and frontend renders plan cards with pricing and duration.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-9",
+      "title": "Stripe configuration management (admin)",
+      "synonyms": [
+        "StripeSetupDialog",
+        "setStripeConfiguration"
+      ],
+      "description": "Admin can store Stripe secret key and allowed shipping countries in canister state; frontend provides an admin-only setup dialog.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-10",
+      "title": "Stripe Checkout session creation via IC HTTP outcalls",
+      "synonyms": [
+        "createCheckoutSession",
+        "Stripe HTTP outcalls"
+      ],
+      "description": "Backend creates Stripe Checkout sessions using IC http_request outcalls; frontend builds success/cancel URLs from window origin and redirects the user to Stripe-hosted checkout.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-11",
+      "title": "Payment verification and subscription activation flow",
+      "synonyms": [
+        "PaymentSuccessPage",
+        "getStripeSessionStatus",
+        "createSubscription"
+      ],
+      "description": "On return from Stripe, the frontend verifies the session status via the backend and creates a subscription for the chosen plan; includes success and failure pages.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-12",
+      "title": "Subscription-gated article submission",
+      "synonyms": [
+        "hasActiveSubscription",
+        "eligibility check"
+      ],
+      "description": "Frontend and backend enforce that only users with an active subscription can submit research articles.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-13",
+      "title": "Research article submission with DOC/PDF upload and progress",
+      "synonyms": [
+        "submitArticle",
+        "ExternalBlob upload"
+      ],
+      "description": "Users submit DOC/PDF articles with title and file metadata; files are uploaded as ExternalBlob with client-side upload progress reporting; submissions are stored as pending.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-14",
+      "title": "Admin review workflow for pending articles (approve/reject)",
+      "synonyms": [
+        "getAllPendingArticles",
+        "updateArticleStatus"
+      ],
+      "description": "Admin panel lists pending submissions and allows approving or rejecting them, updating the author’s article record status.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-15",
+      "title": "Journal issue upload (PDF) and archive browsing",
+      "synonyms": [
+        "uploadJournal",
+        "journals archive",
+        "current issue"
+      ],
+      "description": "Admins can upload journal issues as PDF blobs with metadata and current/archive flags; public users can view a current issue section and browse/download journals by year.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-16",
+      "title": "News publishing and public browsing",
+      "synonyms": [
+        "addNews",
+        "getLatestNews",
+        "deleteNews"
+      ],
+      "description": "Admins can publish and delete news items; public pages show latest news on the home page and a full news list on the News page.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-17",
+      "title": "Blog post management (CRUD) with optional image blob",
+      "synonyms": [
+        "addBlogPost",
+        "updateBlogPost",
+        "deleteBlogPost"
+      ],
+      "description": "Admins can create/edit/delete blog posts with title/content/author/date/short summary and optional featured image stored as a blob; public pages display latest blogs and full blog lists.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-18",
+      "title": "Blog listing utilities (latest, count, paginated)",
+      "synonyms": [
+        "getLatestBlogPosts",
+        "getBlogPostCount",
+        "getBlogPostsPaginated"
+      ],
+      "description": "Backend provides endpoints for latest blog posts, total count, and a paginated list; frontend exposes matching React Query hooks and invalidates caches on blog mutations.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-19",
+      "title": "Editorial board member directory (CRUD) with blob or static avatar URL",
+      "synonyms": [
+        "Editorial members",
+        "profilePictureUrl",
+        "editorial board page"
+      ],
+      "description": "Admins can add/update/delete editorial members with qualifications, role, expertise, contact info, and either an uploaded blob picture or a stored profilePictureUrl; public page renders members with resolved image sources and contact links.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-20",
+      "title": "Seeded editorial members via canister migration",
+      "synonyms": [
+        "migration seeding",
+        "default editorial board"
+      ],
+      "description": "Migration module seeds 10 default EditorialMember records (IDs 0–9) with prefilled details and static avatar URLs, and sets the editorialMemberIdCounter to 10 while retaining any existing records.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-21",
+      "title": "Terms & Conditions rendering with placeholder substitution and admin management",
+      "synonyms": [
+        "TermsPlaceholders",
+        "getTermsAndConditions",
+        "updateTermsAndConditions"
+      ],
+      "description": "Backend serves Terms & Conditions content with placeholder replacement; admins can view/update placeholder values and update the full terms content; frontend renders backend-provided text without transformations and includes loading/error states.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-22",
+      "title": "Home page dynamic content feeds",
+      "synonyms": [
+        "home feeds",
+        "content cards"
+      ],
+      "description": "Home page composes backend feeds (latest news, latest blog posts, home page magazines, article previews, and user reviews) with loading states and themed card UI.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-23",
+      "title": "User reviews (testimonials) creation and listing",
+      "synonyms": [
+        "createUserReview",
+        "getAllUserReviews"
+      ],
+      "description": "Backend allows authenticated users to create reviews (name/photoUrl/rating/feedback) and provides a public listing endpoint; frontend displays reviews on the home page.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-24",
+      "title": "Blob storage lifecycle and authorization utilities",
+      "synonyms": [
+        "caffeine storage mixin",
+        "dead blob pruning",
+        "gateway principals"
+      ],
+      "description": "Backend includes a storage mixin for updating authorized gateway principals, listing dead blobs, confirming blob deletion with forced GC, checking blob liveness, and topping up a cashier canister with cycles.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-25",
+      "title": "IC HTTP outcall wrapper with response transform",
+      "synonyms": [
+        "OutCall",
+        "http_request wrapper",
+        "transform()"
+      ],
+      "description": "Shared Motoko utilities for HTTP GET/POST outcalls with fixed cycles allocation, default headers (User-Agent, Idempotency-Key), UTF-8 body decoding, and a transform function that clears response headers.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-26",
+      "title": "Global layout, navigation header/footer, and utility widgets",
+      "synonyms": [
+        "Layout",
+        "Header",
+        "Footer",
+        "CountdownTimer",
+        "VisitorCounter"
+      ],
+      "description": "App layout wraps routed pages with a sticky header (navigation, search, auth/admin menu) and footer (countdown timer, contact info, Terms link, social placeholders, local visitor counter).",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-27",
+      "title": "Animated loading splash screen",
+      "synonyms": [
+        "LoadingScreen",
+        "preloader"
+      ],
+      "description": "Displays a plant-growth themed CSS animation for ~3 seconds on app start, then unmounts.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-28",
+      "title": "Static informational pages",
+      "synonyms": [
+        "Author Guidelines",
+        "About & Contact",
+        "Terms page"
+      ],
+      "description": "Provides static Author Guidelines and an About & Contact page with founders/mission content and a client-side-only contact form UX (toast feedback, no backend submission).",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-29",
+      "title": "Email/password auth UI pages (non-functional placeholders)",
+      "synonyms": [
+        "LoginPage",
+        "SignupPage",
+        "ForgotPasswordPage"
+      ],
+      "description": "Implements email/password login, registration, and password reset pages with validation and user guidance, but backend integration is explicitly TODO.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-30",
+      "title": "Production deployment runbook documentation",
+      "synonyms": [
+        "DEPLOYMENT.md",
+        "release promotion guide"
+      ],
+      "description": "Includes a production deployment checklist and smoke-test steps, including explicit verification of the Terms & Conditions page content/placeholder replacement.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "feature-if-any-user-facing-labels-or-strings-are-added-updated-to-support-the-new-editor-in-chief-entry-use-correct-english-spelling-and-capitalization-e-g-editor-in-chief",
+      "title": "If any user-facing labels or strings are added/updated to support the new Editor-in-Chief entry, use correct English spelling and capitalization (e.g., \"Editor-in-Chief\").",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add Editorial Board member (Editor-in-Chief): Dr. Dinesh Kumar Singh, Asst. Professor, National P.G. College, Barahalganj, Gorakhpur",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add a new editorial member record for the Editor-in-Chief with the following user-facing details: Name: \"Dr. Dinesh Kumar Singh\"; Role: \"Editor-in-Chief\"; Qualification/Affiliation text: \"Asst. Professor, National P.G. College, Barahalganj, Gorakhpur,\". Ensure the record is persisted and returned by the existing public editorial member listing APIs so it appears on the Editorial Board page and in the Admin Panel editorial member list.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    }
+  ],
+  "architectural_notes": [
+    "Frontend uses TanStack Router for routing and @tanstack/react-query for all backend queries/mutations with cache invalidation after writes.",
+    "Authentication is via DFINITY Internet Identity (AuthClient) with delegation persistence; identity is exposed through a React context hook.",
+    "Backend actor creation is identity-aware (authenticated vs anonymous) and triggers access-control initialization after login.",
+    "Backend authorization is role-based (admin/user/guest) using AccessControl + a Motoko mixin that bootstraps the first admin via CAFFEINE_ADMIN_TOKEN.",
+    "Backend stores domain state in in-memory Map structures (profiles, subscriptions, articles, news, journals, editorial members, blog posts, etc.) with local counters for IDs.",
+    "File uploads are handled as blob-storage ExternalBlob values passed from frontend to backend; frontend tracks upload progress via ExternalBlob.withUploadProgress.",
+    "Stripe integration is implemented in Motoko via IC management canister http_request outcalls, using a transform function to strip headers from responses.",
+    "Backend includes a blob-storage mixin for gateway principal authorization refresh, dead blob listing/pruning, and cashier cycles top-ups.",
+    "Sensitive bootstrap parameters (e.g., caffeineAdminToken) are taken from the URL hash, persisted in sessionStorage, and removed from the URL.",
+    "UI is built with TailwindCSS + shadcn/ui and supports light/dark themes via next-themes, plus app-wide animations (fade/slide) and a splash LoadingScreen."
+  ],
+  "known_issues": [
+    "Email/password login, signup, and forgot-password flows are UI-only placeholders; no backend password auth/reset implementation exists.",
+    "getCurrentJournal() is hardcoded to year=2024 and month=6 instead of using the isCurrent flag or current date, so the 'Current Issue' can become incorrect.",
+    "Subscription lifecycle is incomplete: subscriptions are not expired/deactivated based on endDate, and article submissions do not decrement remainingArticles.",
+    "getRemainingArticles() returns the count of active subscriptions rather than remainingArticles quota, producing incorrect quota information.",
+    "Stripe checkout session body builder sets shipping_address_collection[allowed_countries][0] for every country, likely resulting in only one country being honored.",
+    "Blog pagination endpoint returns an empty array when end index exceeds total size, instead of returning the final partial page.",
+    "Blob storage cashier env var is spelled CAFFFEINE_STORAGE_CASHIER_PRINCIPAL (triple 'F'); deployments must match this exact key or storage functions will trap.",
+    "Some page source files are empty placeholders in this snapshot (e.g., frontend/src/pages/ContactPage.tsx, AboutPage.tsx, NoticeBoardPage.tsx), suggesting unfinished or inconsistent route/page content."
+  ],
+  "isFixRequest": false,
+  "gameProjectType": "none",
+  "projectName": "Agrigence",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

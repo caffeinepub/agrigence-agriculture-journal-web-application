@@ -19,6 +19,8 @@ import type {
   HomePageArticle,
   UserReview,
   ArticlePreview,
+  TermsPlaceholders,
+  BlogPost,
 } from '../backend';
 
 export function useGetCallerUserProfile() {
@@ -123,6 +125,146 @@ export function useDeleteNews() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['news'] });
       queryClient.invalidateQueries({ queryKey: ['latestNews'] });
+    },
+  });
+}
+
+// Blog Management Hooks
+export function useGetAllBlogPosts() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<BlogPost[]>({
+    queryKey: ['blogPosts'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllBlogPosts();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetLatestBlogPosts(count: number) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<BlogPost[]>({
+    queryKey: ['latestBlogPosts', count],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getLatestBlogPosts(BigInt(count));
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetBlogPostsPaginated(page: number, pageSize: number) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<BlogPost[]>({
+    queryKey: ['blogPostsPaginated', page, pageSize],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getBlogPostsPaginated(BigInt(page), BigInt(pageSize));
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetBlogPostCount() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<bigint>({
+    queryKey: ['blogPostCount'],
+    queryFn: async () => {
+      if (!actor) return BigInt(0);
+      return actor.getBlogPostCount();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useAddBlogPost() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      title,
+      content,
+      authorName,
+      imageUrl,
+      publicationDate,
+      blob,
+      shortSummary,
+    }: {
+      title: string;
+      content: string;
+      authorName: string;
+      imageUrl: string | null;
+      publicationDate: bigint;
+      blob: ExternalBlob | null;
+      shortSummary: string;
+    }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.addBlogPost(title, content, authorName, imageUrl, publicationDate, blob, shortSummary);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['latestBlogPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['blogPostsPaginated'] });
+      queryClient.invalidateQueries({ queryKey: ['blogPostCount'] });
+    },
+  });
+}
+
+export function useUpdateBlogPost() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      blogPostId,
+      title,
+      content,
+      authorName,
+      publicationDate,
+      imageUrl,
+      blob,
+      shortSummary,
+    }: {
+      blogPostId: bigint;
+      title: string;
+      content: string;
+      authorName: string;
+      publicationDate: bigint;
+      imageUrl: string | null;
+      blob: ExternalBlob | null;
+      shortSummary: string;
+    }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.updateBlogPost(blogPostId, title, content, authorName, publicationDate, imageUrl, blob, shortSummary);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['latestBlogPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['blogPostsPaginated'] });
+    },
+  });
+}
+
+export function useDeleteBlogPost() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (blogPostId: bigint) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.deleteBlogPost(blogPostId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['latestBlogPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['blogPostsPaginated'] });
+      queryClient.invalidateQueries({ queryKey: ['blogPostCount'] });
     },
   });
 }
@@ -267,6 +409,61 @@ export function useAddEditorialMember() {
   });
 }
 
+export function useUpdateEditorialMember() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      editorialMemberId,
+      name,
+      qualification,
+      role,
+      expertise,
+      email,
+      phone,
+      isEditorialBoardAuthor,
+      isEditorInChief,
+      isReviewerBoardMember,
+      profilePictureUrl,
+      profilePicture,
+    }: {
+      editorialMemberId: bigint;
+      name: string;
+      qualification: string;
+      role: string;
+      expertise: string;
+      email: string;
+      phone: string;
+      isEditorialBoardAuthor: boolean;
+      isEditorInChief: boolean;
+      isReviewerBoardMember: boolean;
+      profilePictureUrl: string;
+      profilePicture: ExternalBlob | null;
+    }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.updateEditorialMember(
+        editorialMemberId,
+        name,
+        qualification,
+        role,
+        expertise,
+        email,
+        phone,
+        isEditorialBoardAuthor,
+        isEditorInChief,
+        isReviewerBoardMember,
+        profilePictureUrl,
+        profilePicture
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['editorialBoardMembers'] });
+      queryClient.invalidateQueries({ queryKey: ['allEditorialMembers'] });
+    },
+  });
+}
+
 export function useDeleteEditorialMember() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
@@ -296,7 +493,6 @@ export function useGetSubscriptionPlans() {
   });
 }
 
-// Get user-specific articles (requires authentication)
 export function useGetUserArticles(user: Principal | null) {
   const { actor, isFetching } = useActor();
 
@@ -310,7 +506,6 @@ export function useGetUserArticles(user: Principal | null) {
   });
 }
 
-// Get all approved articles (public search)
 export function useGetAllArticles() {
   const { actor, isFetching } = useActor();
 
@@ -324,7 +519,6 @@ export function useGetAllArticles() {
   });
 }
 
-// Get all article previews for homepage
 export function useGetAllArticlePreviews() {
   const { actor, isFetching } = useActor();
 
@@ -521,5 +715,62 @@ export function useGetAllUserReviews() {
       return actor.getAllUserReviews();
     },
     enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetTermsAndConditions() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<string>({
+    queryKey: ['termsAndConditions'],
+    queryFn: async () => {
+      if (!actor) return '';
+      return actor.getTermsAndConditions();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetTermsPlaceholders() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<TermsPlaceholders>({
+    queryKey: ['termsPlaceholders'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getTermsPlaceholders();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useSetTermsPlaceholders() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (placeholders: TermsPlaceholders) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.setTermsPlaceholders(placeholders);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['termsPlaceholders'] });
+      queryClient.invalidateQueries({ queryKey: ['termsAndConditions'] });
+    },
+  });
+}
+
+export function useUpdateTermsAndConditions() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (content: string) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.updateTermsAndConditions(content);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['termsAndConditions'] });
+    },
   });
 }

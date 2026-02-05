@@ -1,0 +1,28 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-if-any-user-facing-labels-or-strings-are-added-updated-to-support-the-new-editor-in-chief-entry-use-correct-english-spelling-and-capitalization-e-g-editor-in-chief",
+      "featureTitle": "If any user-facing labels or strings are added/updated to support the new Editor-in-Chief entry, use correct English spelling and capitalization (e.g., \"Editor-in-Chief\").",
+      "files": [
+        "frontend/src/pages/AdminPanelPage.tsx",
+        "frontend/src/pages/EditorialBoardPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "http-outcalls@3.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

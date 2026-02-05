@@ -30,6 +30,16 @@ export interface ArticlePreview {
   'description' : string,
   'author' : string,
 }
+export interface BlogPost {
+  'id' : bigint,
+  'title' : string,
+  'content' : string,
+  'blob' : [] | [ExternalBlob],
+  'authorName' : string,
+  'shortSummary' : string,
+  'imageUrl' : [] | [string],
+  'publicationDate' : Time,
+}
 export interface EditorialMember {
   'id' : bigint,
   'blob' : [] | [ExternalBlob],
@@ -141,6 +151,14 @@ export interface SubscriptionPlan {
   'price' : bigint,
   'isInstitute' : boolean,
 }
+export interface TermsPlaceholders {
+  'websiteName' : string,
+  'companyEmail' : string,
+  'lastUpdateDate' : string,
+  'addressCity' : string,
+  'companyName' : string,
+  'companyAddress' : string,
+}
 export type Time = bigint;
 export interface TransformationInput {
   'context' : Uint8Array,
@@ -211,6 +229,10 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addBlogPost' : ActorMethod<
+    [string, string, string, [] | [string], Time, [] | [ExternalBlob], string],
+    undefined
+  >,
   'addEditorialMember' : ActorMethod<
     [
       string,
@@ -256,10 +278,12 @@ export interface _SERVICE {
     undefined
   >,
   'deleteArticle' : ActorMethod<[string], undefined>,
+  'deleteBlogPost' : ActorMethod<[bigint], undefined>,
   'deleteEditorialMember' : ActorMethod<[bigint], undefined>,
   'deleteNews' : ActorMethod<[string], undefined>,
   'getAllArticlePreviews' : ActorMethod<[], Array<ArticlePreview>>,
   'getAllArticles' : ActorMethod<[], Array<Article>>,
+  'getAllBlogPosts' : ActorMethod<[], Array<BlogPost>>,
   'getAllEditorialMembers' : ActorMethod<[], Array<EditorialMember>>,
   'getAllJournalsByYear' : ActorMethod<[bigint], Array<Journal>>,
   'getAllMagazines' : ActorMethod<[], Array<Magazine>>,
@@ -267,6 +291,9 @@ export interface _SERVICE {
   'getAllPendingArticles' : ActorMethod<[], Array<Article>>,
   'getAllUserReviews' : ActorMethod<[], Array<UserReview>>,
   'getArticlePreview' : ActorMethod<[bigint], ArticlePreview>,
+  'getBlogPost' : ActorMethod<[bigint], BlogPost>,
+  'getBlogPostCount' : ActorMethod<[], bigint>,
+  'getBlogPostsPaginated' : ActorMethod<[bigint, bigint], Array<BlogPost>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getCurrentJournal' : ActorMethod<[], [] | [Journal]>,
@@ -280,6 +307,7 @@ export interface _SERVICE {
   'getHomePageMagazines' : ActorMethod<[], Array<HomePageMagazine>>,
   'getJournal' : ActorMethod<[bigint], Journal>,
   'getJournalCount' : ActorMethod<[], bigint>,
+  'getLatestBlogPosts' : ActorMethod<[bigint], Array<BlogPost>>,
   'getLatestNews' : ActorMethod<[bigint], Array<News>>,
   'getMagazine' : ActorMethod<[bigint], Magazine>,
   'getNews' : ActorMethod<[string], News>,
@@ -291,6 +319,8 @@ export interface _SERVICE {
   'getStripeSessionStatus' : ActorMethod<[string], StripeSessionStatus>,
   'getSubscriptionPlanObject' : ActorMethod<[string], SubscriptionPlan>,
   'getSubscriptionPlans' : ActorMethod<[], Array<SubscriptionPlan>>,
+  'getTermsAndConditions' : ActorMethod<[], string>,
+  'getTermsPlaceholders' : ActorMethod<[], TermsPlaceholders>,
   'getUserArticles' : ActorMethod<[Principal], Array<Article>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'getUserReview' : ActorMethod<[bigint], UserReview>,
@@ -301,6 +331,7 @@ export interface _SERVICE {
   'isStripeConfigured' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[ProfileInput], undefined>,
   'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,
+  'setTermsPlaceholders' : ActorMethod<[TermsPlaceholders], undefined>,
   'submitArticle' : ActorMethod<
     [string, { 'doc' : null } | { 'pdf' : null }, string, bigint, ExternalBlob],
     undefined
@@ -310,7 +341,38 @@ export interface _SERVICE {
     [Principal, string, { 'approved' : null } | { 'rejected' : null }],
     undefined
   >,
+  'updateBlogPost' : ActorMethod<
+    [
+      bigint,
+      string,
+      string,
+      string,
+      Time,
+      [] | [string],
+      [] | [ExternalBlob],
+      string,
+    ],
+    undefined
+  >,
+  'updateEditorialMember' : ActorMethod<
+    [
+      bigint,
+      string,
+      string,
+      string,
+      string,
+      string,
+      string,
+      boolean,
+      boolean,
+      boolean,
+      string,
+      [] | [ExternalBlob],
+    ],
+    undefined
+  >,
   'updateSubscriptionsTimestamp' : ActorMethod<[], undefined>,
+  'updateTermsAndConditions' : ActorMethod<[string], undefined>,
   'updateVisitorCounter' : ActorMethod<
     [bigint, bigint, bigint, bigint, [] | [bigint]],
     undefined
