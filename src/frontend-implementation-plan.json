@@ -1,66 +1,96 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update existing /author-guidelines page content, semantics, and SEO (no route changes)",
+  "title": "Offline-ready static website bundle (standalone index.html with local CSS/JS/assets)",
   "requirements": [
     {
       "id": "REQ-42",
-      "summary": "Replace all existing /author-guidelines on-page content with the exact provided policy text, using correct heading hierarchy and semantic lists.",
+      "summary": "Create a complete standalone offline static site bundle (index.html + local CSS/JS/assets) that runs by double-clicking index.html with no server and no network.",
       "acceptanceCriteria": [
-        "Navigating to \"/author-guidelines\" shows an H1 with the exact text: \"Author Guidelines, Editorial & Publication Policy — Agrigence\".",
-        "The introductory paragraphs and the 3 bullet points are rendered exactly as provided, preserving punctuation and curly quotes (e.g., “Popular Articles”).",
-        "The \"Publication Policy\" section is an H2 followed by a single ordered list containing items 1–12 exactly as provided.",
-        "The \"Formatting Guidelines\" section is an H2 followed by a single ordered list containing items 13–20 exactly as provided.",
-        "The page uses semantic HTML lists (<ul>/<ol>) rather than visually simulated lists."
+        "A new folder exists that contains a complete offline site with this structure:\n/project-root\n  index.html\n  /css\n  /js\n  /assets\n  /images\n  /fonts",
+        "Opening the offline bundle’s index.html via double-click works in a modern browser (Chrome/Edge/Firefox) with no network access required",
+        "No external (CDN) dependencies are used; all libraries, icons, and fonts referenced by the offline site are present locally and linked via relative paths",
+        "No absolute paths (e.g., /css/app.css) or localhost/server URLs are used in HTML/CSS/JS; only relative paths work from the offline bundle root",
+        "The offline site loads without console errors on first load"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/AuthorGuidelinesPage.tsx",
-          "operation": "modify",
-          "description": "Replace the current card-based guidelines content with the verbatim user-provided policy text for the existing /author-guidelines page, ensuring: single H1 exactly \"Author Guidelines, Editorial & Publication Policy — Agrigence\"; intro paragraphs rendered as paragraphs; the 3 intro bullets rendered as a single <ul>; \"Publication Policy\" rendered as an H2 followed by one <ol> containing items 1–12 exactly; \"Formatting Guidelines\" rendered as an H2 followed by one <ol> containing items 13–20 exactly; preserve punctuation/curly quotes exactly as provided; remove unrelated existing sections (e.g., WhatsApp help, subscription limits) if they are not part of the provided text."
+          "path": "frontend/offline-bundle/index.html",
+          "operation": "create",
+          "description": "Create the offline bundle entrypoint HTML with semantic structure (header/nav/main/footer), and link local stylesheet and scripts via relative paths (e.g., ./css/styles.css and ./js/app.js) so it works by double-clicking without any server."
+        },
+        {
+          "path": "frontend/offline-bundle/css/styles.css",
+          "operation": "create",
+          "description": "Create a self-contained stylesheet for the offline bundle using only local assets (no @import URLs) and ensuring the layout is readable and responsive without relying on any framework CDN."
+        },
+        {
+          "path": "frontend/offline-bundle/js/app.js",
+          "operation": "create",
+          "description": "Create a self-contained vanilla JS file that initializes after DOM load (or via deferred script) and powers any interactive UI elements (nav toggles, accordion/faq, form validation) with defensive null-checks to avoid runtime errors."
+        },
+        {
+          "path": "frontend/offline-bundle/assets/.gitkeep",
+          "operation": "create",
+          "description": "Add a placeholder file to ensure the offline bundle /assets directory exists in version control."
+        },
+        {
+          "path": "frontend/offline-bundle/images/logo.svg",
+          "operation": "create",
+          "description": "Add a local logo image asset referenced from index.html using a relative path (e.g., ./images/logo.svg), ensuring no external image URLs are required."
+        },
+        {
+          "path": "frontend/offline-bundle/images/hero-illustration.svg",
+          "operation": "create",
+          "description": "Add a local hero/cover image asset referenced from index.html using a relative path, ensuring the offline bundle renders a complete design without network dependencies."
+        },
+        {
+          "path": "frontend/offline-bundle/fonts/.gitkeep",
+          "operation": "create",
+          "description": "Add a placeholder file to ensure the offline bundle /fonts directory exists even if the bundle uses system fonts initially (and therefore does not reference external font URLs)."
         }
       ]
     },
     {
       "id": "REQ-43",
-      "summary": "Keep the existing green agriculture theme, spacing, and typography for the updated page and ensure mobile responsiveness.",
+      "summary": "Ensure semantic HTML validity, stable CSS/JS loading order, and eliminate conflicting/duplicate libraries so offline interactions work without errors.",
       "acceptanceCriteria": [
-        "The page continues to use the existing container widths and vertical spacing consistent with other informational pages.",
-        "On small screens, headings and lists reflow without horizontal scrolling and maintain readable line-length (no clipped text).",
-        "Heading levels are used in order (single H1, H2 for main sections; no H3 unless needed for sub-sections, and if used they must appear under an H2)."
+        "CSS is loaded before JS in index.html, and JS is loaded in a way that does not require a server (e.g., deferred scripts)",
+        "No duplicate library bundles are included in the offline bundle (e.g., multiple copies of the same framework)",
+        "HTML validates structurally (no broken/unclosed tags that break layout)",
+        "Navigation elements and interactive elements in the offline bundle do not throw runtime exceptions when clicked/used"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/AuthorGuidelinesPage.tsx",
+          "path": "frontend/offline-bundle/index.html",
           "operation": "modify",
-          "description": "Apply the app’s existing layout patterns (e.g., container + max-width + vertical spacing) and existing typography classes so the updated content matches the current site theme; ensure lists and long lines wrap properly on small screens (no horizontal scrolling) and keep heading hierarchy strictly H1 then H2 (only introduce H3 if the provided text requires sub-sections under an H2)."
+          "description": "Ensure stable loading order (CSS in <head>, JS included with defer), semantic landmarks (<header>, <nav>, <main>, <section>, <footer>), valid markup, and only relative links to local files (no leading slashes, no external URLs, no server-only assumptions)."
+        },
+        {
+          "path": "frontend/offline-bundle/js/app.js",
+          "operation": "modify",
+          "description": "Harden interactive logic so all click/submit handlers guard against missing elements, prevent default where appropriate, and avoid uncaught exceptions; keep the bundle framework-free (or, if any third-party JS is added later, ensure it is only included once and stored locally)."
+        },
+        {
+          "path": "frontend/offline-bundle/css/styles.css",
+          "operation": "modify",
+          "description": "Review and adjust CSS to avoid reliance on external assets, remove unused selectors, and ensure consistent rendering without requiring additional libraries (no duplicate/conflicting stylesheets)."
         }
       ]
     },
     {
       "id": "REQ-44",
-      "summary": "Make /author-guidelines SEO-friendly without changing the URL: set document title to match the H1 and provide a meta description derived from the provided introduction (without altering on-page text).",
+      "summary": "Add an English README inside the offline bundle explaining offline usage (double-click index.html) and documenting the folder structure.",
       "acceptanceCriteria": [
-        "The route remains \"/author-guidelines\" (no new page and no route change).",
-        "When visiting \"/author-guidelines\", the browser tab title/document.title equals: \"Author Guidelines, Editorial & Publication Policy — Agrigence\".",
-        "A meta description tag is present for this route/page and reflects the provided introductory content without changing the on-page text.",
-        "The on-page content includes the keywords naturally only where they already appear in the provided text (no extra keyword-stuffing sentences added)."
+        "README exists inside the offline bundle folder",
+        "README instructions explicitly say that users can double-click index.html to run the site offline",
+        "README lists or illustrates the offline bundle folder structure"
       ],
       "file_operations": [
         {
-          "path": "frontend/index.html",
-          "operation": "modify",
-          "description": "Ensure a base <meta name='description'> tag exists in the document <head> so the app has a description tag available for route-level updates."
-        },
-        {
-          "path": "frontend/src/utils/seo.ts",
+          "path": "frontend/offline-bundle/README.md",
           "operation": "create",
-          "description": "Add a small SEO utility to set document.title and to create/update the <meta name='description'> tag content at runtime for a given route (used by the Author Guidelines page)."
-        },
-        {
-          "path": "frontend/src/pages/AuthorGuidelinesPage.tsx",
-          "operation": "modify",
-          "description": "Set document.title exactly to \"Author Guidelines, Editorial & Publication Policy — Agrigence\" when this page is mounted, and set the meta description content using text derived from the provided introductory paragraph(s) (e.g., reuse the first intro paragraph verbatim or a contiguous excerpt), without modifying the on-page rendered text; do not add extra keyword sentences beyond what already exists in the provided content."
+          "description": "Create a short English README describing how to run the site offline by double-clicking index.html, stating that no server/network is required, and documenting the final folder structure (index.html, css/, js/, assets/, images/, fonts/)."
         }
       ]
     }

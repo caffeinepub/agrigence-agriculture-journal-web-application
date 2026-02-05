@@ -1,33 +1,49 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T14:51:13.510Z",
-  "summary": "The diff adds an SEO utility and updates the existing AuthorGuidelinesPage to set document title/meta description and render guideline content with semantic headings and lists. However, at least one acceptance detail (curly quotes) is not met based on the shown content, and the full ordered list items 13–20 cannot be verified due to truncation.",
+  "generatedAt": "2026-02-05T15:04:38.772Z",
+  "summary": "Diff adds a new offline static site bundle under frontend/offline-bundle with index.html, local CSS/JS, and local images, plus a README. However, the diff summary is truncated for index.html/JS/README, so several acceptance-criteria details (JS loading method/order, absence of CDN/absolute paths, and README folder-structure listing) cannot be fully verified from the provided evidence.",
   "missing_requirements": [
     {
-      "id": "REQ-42",
-      "requirement": "Render the introductory paragraphs and the 3 bullet points exactly as provided, preserving punctuation and curly quotes (e.g., “Popular Articles”).",
-      "reason": "The page content shown uses straight quotes around \"Popular Articles\" and \"Technical Articles\" rather than curly quotes, which violates the requirement to preserve curly quotes verbatim.",
+      "id": "REQ-43",
+      "requirement": "CSS is loaded before JS in index.html, and JS is loaded in a way that does not require a server (e.g., deferred scripts).",
+      "reason": "index.html is truncated and does not show any <script> tags, so JS loading order and whether scripts are deferred/appropriate for file:// cannot be confirmed from the diff summary.",
       "evidence": [
-        "frontend/src/pages/AuthorGuidelinesPage.tsx"
+        "frontend/offline-bundle/index.html (truncated)"
       ]
     },
     {
       "id": "REQ-42",
-      "requirement": "The \"Formatting Guidelines\" section is an H2 followed by a single ordered list containing items 13–20 exactly as provided.",
-      "reason": "The diff output is truncated mid-way through the Formatting Guidelines list (after item 17/18 begins), so items 13–20 being present and exact cannot be confirmed from the provided evidence.",
+      "requirement": "No external (CDN) dependencies are used; all libraries, icons, and fonts referenced by the offline site are present locally and linked via relative paths; no absolute paths or localhost/server URLs are used.",
+      "reason": "index.html/css/js are truncated and do not show the full set of referenced resources/URLs; the diff summary does not explicitly demonstrate that no external URLs/CDNs/absolute paths are present across the whole bundle.",
       "evidence": [
-        "frontend/src/pages/AuthorGuidelinesPage.tsx"
+        "frontend/offline-bundle/index.html (truncated)",
+        "frontend/offline-bundle/css/styles.css (truncated)",
+        "frontend/offline-bundle/js/app.js (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-44",
+      "requirement": "README lists or illustrates the offline bundle folder structure.",
+      "reason": "README.md is shown only up to the '## Folder Structure' heading and an opening code fence; the actual structure listing is not present in the provided diff summary.",
+      "evidence": [
+        "frontend/offline-bundle/README.md"
       ]
     }
   ],
   "hallucinated_features": [],
-  "confidence": 0.62,
+  "confidence": 0.64,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/index.html",
-    "frontend/src/pages/AuthorGuidelinesPage.tsx",
-    "frontend/src/utils/seo.ts",
+    "frontend/offline-bundle/README.md",
+    "frontend/offline-bundle/assets/.gitkeep",
+    "frontend/offline-bundle/css/styles.css",
+    "frontend/offline-bundle/fonts/.gitkeep",
+    "frontend/offline-bundle/images/hero-illustration.svg",
+    "frontend/offline-bundle/images/journal-placeholder.svg",
+    "frontend/offline-bundle/images/logo.svg",
+    "frontend/offline-bundle/index.html",
+    "frontend/offline-bundle/js/app.js",
     "project_state.json"
   ]
 }

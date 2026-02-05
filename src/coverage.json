@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T14:51:13.558Z",
+  "generatedAt": "2026-02-05T15:04:38.776Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,51 +12,70 @@
     "items": [
       {
         "id": "REQ-42",
-        "summary": "Update the existing Author Guidelines page at the current route \"/author-guidelines\" to replace all current on-page content with the exact user-provided text (no rewriting, no paraphrasing), using proper heading hierarchy and list semantics.",
+        "summary": "Create a fully offline-ready static website project bundle from scratch inside the repository, including all required files (index.html, CSS, JS, and local assets) so the site works when opening index.html directly in a browser without any server.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/AuthorGuidelinesPage.tsx"
+          "frontend/offline-bundle/index.html",
+          "frontend/offline-bundle/css/styles.css",
+          "frontend/offline-bundle/js/app.js",
+          "frontend/offline-bundle/assets/.gitkeep",
+          "frontend/offline-bundle/images/logo.svg",
+          "frontend/offline-bundle/images/hero-illustration.svg",
+          "frontend/offline-bundle/fonts/.gitkeep"
         ],
         "matchedFiles": [
-          "frontend/src/pages/AuthorGuidelinesPage.tsx"
+          "frontend/offline-bundle/index.html",
+          "frontend/offline-bundle/css/styles.css",
+          "frontend/offline-bundle/js/app.js",
+          "frontend/offline-bundle/assets/.gitkeep",
+          "frontend/offline-bundle/images/logo.svg",
+          "frontend/offline-bundle/images/hero-illustration.svg",
+          "frontend/offline-bundle/fonts/.gitkeep"
         ]
       },
       {
         "id": "REQ-43",
-        "summary": "Preserve the site’s existing green agriculture theme, spacing, and typography on the updated Author Guidelines page, and ensure the layout is mobile responsive.",
+        "summary": "Ensure the offline static site has correct semantic HTML structure, stable CSS/JS loading order, and no duplicate/conflicting libraries within the offline bundle.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/AuthorGuidelinesPage.tsx"
+          "frontend/offline-bundle/index.html",
+          "frontend/offline-bundle/js/app.js",
+          "frontend/offline-bundle/css/styles.css"
         ],
         "matchedFiles": [
-          "frontend/src/pages/AuthorGuidelinesPage.tsx"
+          "frontend/offline-bundle/index.html",
+          "frontend/offline-bundle/js/app.js",
+          "frontend/offline-bundle/css/styles.css"
         ]
       },
       {
         "id": "REQ-44",
-        "summary": "Make the updated Author Guidelines page SEO-friendly while keeping the URL unchanged: set the document title to the exact H1 text and include an appropriate meta description derived from the provided introduction; ensure the content contains the specified keywords without altering the provided text.",
+        "summary": "Add a short, human-readable README (English) inside the offline bundle describing how to open the site offline and describing the final folder structure.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/index.html",
-          "frontend/src/utils/seo.ts",
-          "frontend/src/pages/AuthorGuidelinesPage.tsx"
+          "frontend/offline-bundle/README.md"
         ],
         "matchedFiles": [
-          "frontend/index.html",
-          "frontend/src/utils/seo.ts",
-          "frontend/src/pages/AuthorGuidelinesPage.tsx"
+          "frontend/offline-bundle/README.md"
         ]
       }
     ]
   },
   "changedFiles": [
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/index.html",
-    "frontend/src/pages/AuthorGuidelinesPage.tsx",
-    "frontend/src/utils/seo.ts",
+    "frontend/offline-bundle/README.md",
+    "frontend/offline-bundle/assets/.gitkeep",
+    "frontend/offline-bundle/css/styles.css",
+    "frontend/offline-bundle/fonts/.gitkeep",
+    "frontend/offline-bundle/images/hero-illustration.svg",
+    "frontend/offline-bundle/images/journal-placeholder.svg",
+    "frontend/offline-bundle/images/logo.svg",
+    "frontend/offline-bundle/index.html",
+    "frontend/offline-bundle/js/app.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -1,12 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Replace the existing on-page content of the Author Guidelines page (same URL: `/author-guidelines`) with the exact user-provided “Author Guidelines, Editorial & Publication Policy — Agrigence” policy text, keeping the site’s current look and improving SEO metadata.
+**Goal:** Add a complete, offline-ready static website bundle (HTML/CSS/JS/assets) that runs by double-clicking `index.html`, with no server and no network access required.
 
 **Planned changes:**
-- Update the existing `/author-guidelines` page to render the provided text verbatim (no rewriting/paraphrasing), including an H1, introductory paragraphs with a 3-item bullet list, and two H2 sections.
-- Implement semantic HTML structure for the content: proper heading hierarchy and real `<ul>/<ol>` lists, including ordered list items 1–12 under “Publication Policy” and 13–20 under “Formatting Guidelines”.
-- Preserve the existing green agriculture theme, spacing, typography, and ensure the page remains mobile responsive (no horizontal scrolling/clipped text).
-- Make the page SEO-friendly without changing the URL: set `document.title` to the exact H1 text and add a meta description derived from the provided introduction (without altering on-page text).
+- Create a new standalone folder in the repository containing an offline site bundle with: `index.html`, `/css`, `/js`, `/assets`, `/images`, and `/fonts`.
+- Ensure all CSS/JS/images/fonts/videos are referenced via relative paths only (no absolute paths, no localhost URLs).
+- Avoid all CDN dependencies; include any third-party libraries, icons, and fonts locally inside the bundle and link them locally.
+- Ensure correct loading order (CSS before JS; JS loaded safely such as with `defer`), semantic/valid HTML structure, and remove any duplicate/conflicting libraries within the bundle.
+- Add a short English `README` inside the offline bundle explaining how to open the site offline and showing the final folder structure.
 
-**User-visible outcome:** Visiting `/author-guidelines` shows the updated Author Guidelines, Editorial & Publication Policy content exactly as provided, with clean headings and proper bullet/numbered lists, consistent styling across devices, and updated page title/meta description for SEO.
+**User-visible outcome:** Users can download the new offline bundle folder and open `index.html` directly (double-click) in a modern browser to use the site fully offline without console errors.

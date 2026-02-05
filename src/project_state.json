@@ -1,7 +1,49 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 77,
+  "projectStateVersion": 81,
   "summary": "Agrigence is an agriculture journal/publication web app built on the Internet Computer with a Motoko backend canister and a React (TanStack Router) frontend. It supports public browsing of content (home feeds, news, blog posts, journals archive, editorial board, author guidelines, terms) and an authenticated user experience via Internet Identity for profile creation, subscription purchase/activation via Stripe Checkout (IC HTTP outcalls), and research article submission (DOC/PDF) using IC blob storage. Admins (bootstrapped via an environment token + user-provided secret) can manage operational content through an admin panel: publish/delete news, CRUD blog posts (optional image blob), upload journal issues (PDF blob) and mark as current/archive, review pending article submissions (approve/reject), CRUD editorial board members (optional uploaded photo blob or static avatar URL), and manage Terms & Conditions placeholders/content.",
+  "architectural_notes": [
+    "Frontend uses TanStack Router for routing and @tanstack/react-query for all backend queries/mutations with cache invalidation after writes.",
+    "Authentication is via DFINITY Internet Identity (AuthClient) with delegation persistence; identity is exposed through a React context hook.",
+    "Backend actor creation is identity-aware (authenticated vs anonymous) and triggers access-control initialization after login.",
+    "Backend authorization is role-based (admin/user/guest) using AccessControl + a Motoko mixin that bootstraps the first admin via CAFFEINE_ADMIN_TOKEN.",
+    "Backend stores domain state in in-memory Map structures (profiles, subscriptions, articles, news, journals, editorial members, blog posts, etc.) with local counters for IDs.",
+    "File uploads are handled as blob-storage ExternalBlob values passed from frontend to backend; frontend tracks upload progress via ExternalBlob.withUploadProgress.",
+    "Stripe integration is implemented in Motoko via IC management canister http_request outcalls, using a transform function to strip headers from responses.",
+    "Backend includes a blob-storage mixin for gateway principal authorization refresh, dead blob listing/pruning, and cashier cycles top-ups.",
+    "Sensitive bootstrap parameters (e.g., caffeineAdminToken) are taken from the URL hash, persisted in sessionStorage, and removed from the URL.",
+    "UI is built with TailwindCSS + shadcn/ui and supports light/dark themes via next-themes, plus app-wide animations (fade/slide) and a splash LoadingScreen."
+  ],
+  "known_issues": [
+    "Email/password login, signup, and forgot-password flows are UI-only placeholders; no backend password auth/reset implementation exists.",
+    "getCurrentJournal() is hardcoded to year=2024 and month=6 instead of using the isCurrent flag or current date, so the 'Current Issue' can become incorrect.",
+    "Subscription lifecycle is incomplete: subscriptions are not expired/deactivated based on endDate, and article submissions do not decrement remainingArticles.",
+    "getRemainingArticles() returns the count of active subscriptions rather than remainingArticles quota, producing incorrect quota information.",
+    "Stripe checkout session body builder sets shipping_address_collection[allowed_countries][0] for every country, likely resulting in only one country being honored.",
+    "Blog pagination endpoint returns an empty array when end index exceeds total size, instead of returning the final partial page.",
+    "Blob storage cashier env var is spelled CAFFFEINE_STORAGE_CASHIER_PRINCIPAL (triple 'F'); deployments must match this exact key or storage functions will trap."
+  ],
+  "isFixRequest": false,
+  "generatedImages": [
+    {
+      "filename": "frontend/public/assets/generated/agrigence-field-texture.dim_2400x1400.png",
+      "description": "Dimmed field texture background used for subtle agriculture-themed section styling.",
+      "targetWidth": 2400,
+      "targetHeight": 1400
+    },
+    {
+      "filename": "frontend/public/assets/generated/agrigence-leaf-pattern.dim_2400x1400.png",
+      "description": "Dimmed leaf pattern background used for subtle agriculture-themed section styling.",
+      "targetWidth": 2400,
+      "targetHeight": 1400
+    },
+    {
+      "filename": "frontend/public/assets/generated/agrigence-soil-texture.dim_2400x1400.png",
+      "description": "Dimmed soil texture background used for subtle agriculture-themed section styling.",
+      "targetWidth": 2400,
+      "targetHeight": 1400
+    }
+  ],
   "existing_features": [
     {
       "id": "IF-1",
@@ -413,24 +455,35 @@
       "version": 1
     },
     {
-      "id": "feature-update-the-existing-author-guidelines-page-at-the-current-route-author-guidelines-to-replace-all-current-on-page-content-with-the-exact-user-provided-text-no-rewriting-no-paraphrasing-using-proper-heading-hierarchy-and-list-semantics",
-      "title": "Update the existing Author Guidelines page at the current route \"/author-guidelines\" to replace all current on-page content with the exact user-provided text (no rewriting, no paraphrasing), using proper heading hierarchy and list semantics.",
+      "id": "IF-36",
+      "title": "Client-side SEO utility for setting page meta tags",
+      "synonyms": [
+        "seo.ts",
+        "meta title/description utility"
+      ],
+      "description": "Adds a frontend utility for applying basic SEO-related document metadata (e.g., title/description and related tags) from routed pages, centralizing meta tag updates in one place.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-fully-offline-ready-static-website-project-bundle-from-scratch-inside-the-repository-including-all-required-files-index-html-css-js-and-local-assets-so-the-site-works-when-opening-index-html-directly-in-a-browser-without-any-server",
+      "title": "Create a fully offline-ready static website project bundle from scratch inside the repository, including all required files (index.html, CSS, JS, and local assets) so the site works when opening index.html directly in a browser without any server.",
       "reqIds": [
         "REQ-42"
       ],
       "version": 1
     },
     {
-      "id": "feature-preserve-the-site-s-existing-green-agriculture-theme-spacing-and-typography-on-the-updated-author-guidelines-page-and-ensure-the-layout-is-mobile-responsive",
-      "title": "Preserve the site’s existing green agriculture theme, spacing, and typography on the updated Author Guidelines page, and ensure the layout is mobile responsive.",
+      "id": "feature-ensure-the-offline-static-site-has-correct-semantic-html-structure-stable-css-js-loading-order-and-no-duplicate-conflicting-libraries-within-the-offline-bundle",
+      "title": "Ensure the offline static site has correct semantic HTML structure, stable CSS/JS loading order, and no duplicate/conflicting libraries within the offline bundle.",
       "reqIds": [
         "REQ-43"
       ],
       "version": 1
     },
     {
-      "id": "feature-make-the-updated-author-guidelines-page-seo-friendly-while-keeping-the-url-unchanged-set-the-document-title-to-the-exact-h1-text-and-include-an-appropriate-meta-description-derived-from-the-provided-introduction-ensure-the-content-contains-the-specified-keywords-without-altering-the-provided-text",
-      "title": "Make the updated Author Guidelines page SEO-friendly while keeping the URL unchanged: set the document title to the exact H1 text and include an appropriate meta description derived from the provided introduction; ensure the content contains the specified keywords without altering the provided text.",
+      "id": "feature-add-a-short-human-readable-readme-english-inside-the-offline-bundle-describing-how-to-open-the-site-offline-and-describing-the-final-folder-structure",
+      "title": "Add a short, human-readable README (English) inside the offline bundle describing how to open the site offline and describing the final folder structure.",
       "reqIds": [
         "REQ-44"
       ],
@@ -818,51 +871,9 @@
     },
     {
       "id": "AR-52",
-      "summary": "Update the existing Author Guidelines page content to the provided exact text (no rewrite, same URL) with proper heading hierarchy (H1/H2/H3), lists, green theme styling, mobile responsiveness, and basic SEO keyword optimization.",
+      "summary": "Create a complete offline-ready static website project from scratch (index.html + local CSS/JS + local assets/fonts/libs), with clean folder structure and no server/CDN dependencies, so double-clicking index.html works without broken links or console errors.",
       "reqIds": [],
       "status": "pending"
-    }
-  ],
-  "architectural_notes": [
-    "Frontend uses TanStack Router for routing and @tanstack/react-query for all backend queries/mutations with cache invalidation after writes.",
-    "Authentication is via DFINITY Internet Identity (AuthClient) with delegation persistence; identity is exposed through a React context hook.",
-    "Backend actor creation is identity-aware (authenticated vs anonymous) and triggers access-control initialization after login.",
-    "Backend authorization is role-based (admin/user/guest) using AccessControl + a Motoko mixin that bootstraps the first admin via CAFFEINE_ADMIN_TOKEN.",
-    "Backend stores domain state in in-memory Map structures (profiles, subscriptions, articles, news, journals, editorial members, blog posts, etc.) with local counters for IDs.",
-    "File uploads are handled as blob-storage ExternalBlob values passed from frontend to backend; frontend tracks upload progress via ExternalBlob.withUploadProgress.",
-    "Stripe integration is implemented in Motoko via IC management canister http_request outcalls, using a transform function to strip headers from responses.",
-    "Backend includes a blob-storage mixin for gateway principal authorization refresh, dead blob listing/pruning, and cashier cycles top-ups.",
-    "Sensitive bootstrap parameters (e.g., caffeineAdminToken) are taken from the URL hash, persisted in sessionStorage, and removed from the URL.",
-    "UI is built with TailwindCSS + shadcn/ui and supports light/dark themes via next-themes, plus app-wide animations (fade/slide) and a splash LoadingScreen."
-  ],
-  "known_issues": [
-    "Email/password login, signup, and forgot-password flows are UI-only placeholders; no backend password auth/reset implementation exists.",
-    "getCurrentJournal() is hardcoded to year=2024 and month=6 instead of using the isCurrent flag or current date, so the 'Current Issue' can become incorrect.",
-    "Subscription lifecycle is incomplete: subscriptions are not expired/deactivated based on endDate, and article submissions do not decrement remainingArticles.",
-    "getRemainingArticles() returns the count of active subscriptions rather than remainingArticles quota, producing incorrect quota information.",
-    "Stripe checkout session body builder sets shipping_address_collection[allowed_countries][0] for every country, likely resulting in only one country being honored.",
-    "Blog pagination endpoint returns an empty array when end index exceeds total size, instead of returning the final partial page.",
-    "Blob storage cashier env var is spelled CAFFFEINE_STORAGE_CASHIER_PRINCIPAL (triple 'F'); deployments must match this exact key or storage functions will trap."
-  ],
-  "isFixRequest": false,
-  "generatedImages": [
-    {
-      "filename": "frontend/public/assets/generated/agrigence-field-texture.dim_2400x1400.png",
-      "description": "Dimmed field texture background used for subtle agriculture-themed section styling.",
-      "targetWidth": 2400,
-      "targetHeight": 1400
-    },
-    {
-      "filename": "frontend/public/assets/generated/agrigence-leaf-pattern.dim_2400x1400.png",
-      "description": "Dimmed leaf pattern background used for subtle agriculture-themed section styling.",
-      "targetWidth": 2400,
-      "targetHeight": 1400
-    },
-    {
-      "filename": "frontend/public/assets/generated/agrigence-soil-texture.dim_2400x1400.png",
-      "description": "Dimmed soil texture background used for subtle agriculture-themed section styling.",
-      "targetWidth": 2400,
-      "targetHeight": 1400
     }
   ],
   "gameProjectType": "none",

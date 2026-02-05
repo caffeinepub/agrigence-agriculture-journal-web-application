@@ -35,5 +35,14 @@
   "frontend/src/pages/AdminPanelContent.tsx": "Complete admin dashboard UI with tabs for managing magazines, news, blog posts, editorial members, notice banner, and terms placeholders; includes all forms, tables, dialogs, and admin-only React Query hooks with client-side image optimization integration.",
   "frontend/src/utils/optimizeImage.ts": "Client-side image optimization utility that resizes and compresses images before upload, with proper TypeScript typing for Uint8Array<ArrayBuffer> and fallback support.",
   "frontend/src/utils/seo.ts": "SEO utility module providing functions to set document title and meta description tags dynamically at runtime for route-level SEO optimization.",
-  "frontend/index.html": "HTML entry point with base meta description tag added to support runtime SEO updates."
+  "frontend/index.html": "HTML entry point with base meta description tag added to support runtime SEO updates.",
+  "frontend/offline-bundle/index.html": "Complete standalone HTML page with semantic structure (header, nav, hero, about, journals, submit, contact, footer) using only relative paths to local CSS/JS/assets for offline functionality.",
+  "frontend/offline-bundle/css/styles.css": "Self-contained stylesheet with OKLCH color system, responsive design, animations, and all styling needed for the offline bundle with no external dependencies.",
+  "frontend/offline-bundle/js/app.js": "Vanilla JavaScript providing mobile menu toggle, smooth scrolling, form validation, navigation highlighting, and scroll animations with defensive null-checks.",
+  "frontend/offline-bundle/images/logo.svg": "Local SVG logo featuring a plant/seedling design in the Agrigence color scheme.",
+  "frontend/offline-bundle/images/hero-illustration.svg": "Local SVG hero illustration depicting an agricultural field scene with plants, hills, sun, and tractor.",
+  "frontend/offline-bundle/images/journal-placeholder.svg": "Local SVG placeholder image for journal covers showing a stylized document with plant icon.",
+  "frontend/offline-bundle/README.md": "Documentation explaining how to use the offline bundle by double-clicking index.html, describing the folder structure, and providing customization guidance.",
+  "frontend/offline-bundle/assets/.gitkeep": "Placeholder file ensuring the assets directory exists in version control.",
+  "frontend/offline-bundle/fonts/.gitkeep": "Placeholder file ensuring the fonts directory exists in version control."
 }

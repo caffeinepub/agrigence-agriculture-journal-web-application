@@ -2,10 +2,16 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-existing-author-guidelines-page-at-the-current-route-author-guidelines-to-replace-all-current-on-page-content-with-the-exact-user-provided-text-no-rewriting-no-paraphrasing-using-proper-heading-hierarchy-and-list-semantics",
-      "featureTitle": "Update the existing Author Guidelines page at the current route \"/author-guidelines\" to replace all current on-page content with the exact user-provided text (no rewriting, no paraphrasing), using proper heading hierarchy and list semantics.",
+      "featureId": "feature-create-a-fully-offline-ready-static-website-project-bundle-from-scratch-inside-the-repository-including-all-required-files-index-html-css-js-and-local-assets-so-the-site-works-when-opening-index-html-directly-in-a-browser-without-any-server",
+      "featureTitle": "Create a fully offline-ready static website project bundle from scratch inside the repository, including all required files (index.html, CSS, JS, and local assets) so the site works when opening index.html directly in a browser without any server.",
       "files": [
-        "frontend/src/pages/AuthorGuidelinesPage.tsx"
+        "frontend/offline-bundle/assets/.gitkeep",
+        "frontend/offline-bundle/css/styles.css",
+        "frontend/offline-bundle/fonts/.gitkeep",
+        "frontend/offline-bundle/images/hero-illustration.svg",
+        "frontend/offline-bundle/images/logo.svg",
+        "frontend/offline-bundle/index.html",
+        "frontend/offline-bundle/js/app.js"
       ],
       "components": [
         "authorization@4.0.0",
@@ -24,10 +30,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-preserve-the-site-s-existing-green-agriculture-theme-spacing-and-typography-on-the-updated-author-guidelines-page-and-ensure-the-layout-is-mobile-responsive",
-      "featureTitle": "Preserve the site’s existing green agriculture theme, spacing, and typography on the updated Author Guidelines page, and ensure the layout is mobile responsive.",
+      "featureId": "feature-ensure-the-offline-static-site-has-correct-semantic-html-structure-stable-css-js-loading-order-and-no-duplicate-conflicting-libraries-within-the-offline-bundle",
+      "featureTitle": "Ensure the offline static site has correct semantic HTML structure, stable CSS/JS loading order, and no duplicate/conflicting libraries within the offline bundle.",
       "files": [
-        "frontend/src/pages/AuthorGuidelinesPage.tsx"
+        "frontend/offline-bundle/css/styles.css",
+        "frontend/offline-bundle/index.html",
+        "frontend/offline-bundle/js/app.js"
       ],
       "components": [
         "authorization@4.0.0",
@@ -46,12 +54,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-make-the-updated-author-guidelines-page-seo-friendly-while-keeping-the-url-unchanged-set-the-document-title-to-the-exact-h1-text-and-include-an-appropriate-meta-description-derived-from-the-provided-introduction-ensure-the-content-contains-the-specified-keywords-without-altering-the-provided-text",
-      "featureTitle": "Make the updated Author Guidelines page SEO-friendly while keeping the URL unchanged: set the document title to the exact H1 text and include an appropriate meta description derived from the provided introduction; ensure the content contains the specified keywords without altering the provided text.",
+      "featureId": "feature-add-a-short-human-readable-readme-english-inside-the-offline-bundle-describing-how-to-open-the-site-offline-and-describing-the-final-folder-structure",
+      "featureTitle": "Add a short, human-readable README (English) inside the offline bundle describing how to open the site offline and describing the final folder structure.",
       "files": [
-        "frontend/index.html",
-        "frontend/src/pages/AuthorGuidelinesPage.tsx",
-        "frontend/src/utils/seo.ts"
+        "frontend/offline-bundle/README.md"
       ],
       "components": [
         "authorization@4.0.0",

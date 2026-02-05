@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="oklch(0.95 0.01 145)"/>
+  <g transform="translate(200, 150)">
+    <rect x="-60" y="-80" width="120" height="160" fill="oklch(0.98 0 0)" stroke="oklch(0.55 0.18 145)" stroke-width="3" rx="4"/>
+    <line x1="-40" y1="-60" x2="40" y2="-60" stroke="oklch(0.55 0.18 145)" stroke-width="2"/>
+    <line x1="-40" y1="-40" x2="40" y2="-40" stroke="oklch(0.55 0.18 145)" stroke-width="2"/>
+    <line x1="-40" y1="-20" x2="40" y2="-20" stroke="oklch(0.55 0.18 145)" stroke-width="2"/>
+    <line x1="-40" y1="0" x2="40" y2="0" stroke="oklch(0.55 0.18 145)" stroke-width="2"/>
+    <line x1="-40" y1="20" x2="40" y2="20" stroke="oklch(0.55 0.18 145)" stroke-width="2"/>
+    <circle cx="0" cy="50" r="15" fill="oklch(0.70 0.20 45)"/>
+    <path d="M0 35 Q-8 45 0 55 Q8 45 0 35" fill="oklch(0.55 0.18 145)"/>
+  </g>
+</svg>
