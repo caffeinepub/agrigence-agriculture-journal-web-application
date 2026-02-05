@@ -1,54 +1,89 @@
 {
   "kind": "build_request",
-  "title": "Add Editor-in-Chief entry to Editorial Board (Dr. Dinesh Kumar Singh)",
+  "title": "Replace current GIF LoadingScreen with custom Agrigence book-to-plant SVG preloader",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Add a new editorial member record for the Editor-in-Chief with the following user-facing details: Name: \"Dr. Dinesh Kumar Singh\"; Role: \"Editor-in-Chief\"; Qualification/Affiliation text: \"Asst. Professor, National P.G. College, Barahalganj, Gorakhpur,\". Ensure the record is persisted and returned by the existing public editorial member listing APIs so it appears on the Editorial Board page and in the Admin Panel editorial member list.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "add editor in cheaf \"\" Dr. Dinesh kumar Singh, Asst. Professor, National P.G. College, Barahalganj, Gorakhpur,"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Calling the backend query that powers the Editorial Board UI (currently `getAllEditorialMembers`) returns an entry with `name = \"Dr. Dinesh Kumar Singh\"` and `isEditorInChief = true`.",
-        "The Editorial Board page displays a card for \"Dr. Dinesh Kumar Singh\" with the badge text \"Editor-in-Chief\".",
-        "The entry remains present after canister upgrade/redeploy (i.e., it is not lost on restart/upgrade)."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "If any user-facing labels or strings are added/updated to support the new Editor-in-Chief entry, use correct English spelling and capitalization (e.g., \"Editor-in-Chief\").",
+      "id": "REQ-16",
+      "text": "Replace the current GIF-based fullscreen loader with a custom, lightweight, flat-vector animation for Agrigence: a closed book appears, opens smoothly, soil appears in the center crease, a sprout emerges, then grows into a healthy plant with 3–4 leaves, all centered on a clean white background with a soft shadow and a green agriculture color theme.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "add editor in cheaf"
+          "Create a custom website loading animation (preloader) for the brand “Agrigence”.\n\nConcept:\nAn animated book opens, and from the center of the book, a small green plant sprouts and grows upward.\n\nAnimation sequence:\n1) A closed book appears at the center of the screen on a white background.\n2) The book smoothly opens.\n3) From the middle crease of the open book, soil appears.\n4) A small green sprout emerges from the soil.\n5) The sprout grows into a healthy plant with 3–4 leaves.\n6) As the plant finishes growing, the website loads and fades in.\n\nDesign style:\n- Minimal, smooth, elegant animation\n- Green agriculture color theme\n- Flat vector style (professional, not cartoonish)\n- Clean white background with soft shadow\n\nTechnical requirements:\n- Use lightweight SVG or Lottie animation\n- Must not affect page loading speed\n- Centered on screen\n- Smooth fade-out transition into homepage\n- Fully responsive for mobile and desktop"
         ]
       },
       "acceptanceCriteria": [
-        "All newly introduced user-facing text related to this change is in English and uses the label \"Editor-in-Chief\" (not \"editor in cheaf\")."
+        "The existing loader at frontend/src/components/LoadingScreen.tsx no longer references the current GIF asset and instead renders the specified book→soil→sprout→plant animation in a flat vector style.",
+        "The animation is implemented using a lightweight SVG-based approach (inline SVG or static SVG asset) or Lottie; it does not introduce a heavy runtime or block initial rendering.",
+        "The loader remains centered on screen, uses a white background, includes a subtle soft shadow under the book/plant, and uses a green agriculture palette consistent with the app theme.",
+        "The plant ends with 3–4 leaves clearly visible at the end state.",
+        "The loader scales responsively and stays visually balanced on common mobile and desktop viewport sizes."
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "text": "Implement a smooth fade-out transition from the preloader into the website content: once the animation completes (or the app is ready), the preloader should fade out and then unmount without causing layout shift or interaction issues.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Smooth fade-out transition into homepage",
+          "As the plant finishes growing, the website loads and fades in."
+        ]
+      },
+      "acceptanceCriteria": [
+        "When the loader is dismissed, it fades out smoothly (opacity transition) rather than disappearing abruptly.",
+        "During fade-out, the loader overlay does not allow clicks to pass through until it is fully gone, and it fully unmounts after the transition.",
+        "The homepage/app content is visible immediately after the loader fades out, with no flashing or white-to-white flicker."
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "text": "Ensure the preloader is performance-friendly and does not negatively affect perceived page load speed: keep the implementation small (no large raster animations), avoid unnecessary timers/work on the main thread, and minimize re-renders during the animation.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Must not affect page loading speed",
+          "Use lightweight SVG or Lottie animation"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The preloader implementation does not load large GIF/video assets for the animation.",
+        "The animation runs smoothly on typical devices (no obvious jank) and does not trigger excessive React re-renders (e.g., avoid per-frame setState loops).",
+        "The preloader works reliably across route changes and initial app boot without getting stuck permanently."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single-actor Motoko canister; do not introduce additional backend services.",
-    "Do not edit any files under `frontend/src/components/ui` or other paths listed in `frontend.immutablePaths`."
+    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Respect existing app architecture (React + TypeScript + Tailwind + React Query); implement the loader within current routing/layout without adding unsupported backend services."
   ],
   "nonGoals": [
-    "Do not implement new authentication methods or third-party auth providers.",
-    "Do not redesign the editorial board page layout beyond what is necessary to display the new entry.",
-    "Do not add email/phone/photo data for this member unless explicitly provided by the user."
+    "Do not implement or modify email/password authentication flows, admin CMS expansions, events/media library/SEO features, or other unrelated known-issue fixes as part of this loader change.",
+    "Do not change backend Motoko canister logic or data schemas for this request."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [
+      "Prefer a minimal, elegant, flat-vector green agriculture-themed preloader animation (book opening + plant growth) with smooth fade-out into homepage."
+    ],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

@@ -68,6 +68,7 @@ export function useIsCallerAdmin() {
       return actor.isCallerAdmin();
     },
     enabled: !!actor && !isFetching,
+    retry: false,
   });
 }
 
@@ -81,6 +82,7 @@ export function useGetAllNews() {
       return actor.getAllNews();
     },
     enabled: !!actor && !isFetching,
+    retry: false,
   });
 }
 
@@ -140,6 +142,7 @@ export function useGetAllBlogPosts() {
       return actor.getAllBlogPosts();
     },
     enabled: !!actor && !isFetching,
+    retry: false,
   });
 }
 
@@ -354,6 +357,7 @@ export function useGetAllEditorialMembers() {
       return actor.getAllEditorialMembers();
     },
     enabled: !!actor && !isFetching,
+    retry: false,
   });
 }
 
@@ -583,6 +587,7 @@ export function useGetAllPendingArticles() {
       return actor.getAllPendingArticles();
     },
     enabled: !!actor && !isFetching,
+    retry: false,
   });
 }
 
@@ -741,6 +746,7 @@ export function useGetTermsPlaceholders() {
       return actor.getTermsPlaceholders();
     },
     enabled: !!actor && !isFetching,
+    retry: false,
   });
 }
 

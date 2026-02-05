@@ -13,9 +13,9 @@ import MixinStorage "blob-storage/Mixin";
 import OutCall "http-outcalls/outcall";
 import Nat "mo:core/Nat";
 import Runtime "mo:core/Runtime";
-import Migration "migration";
 
-(with migration = Migration.run)
+
+
 actor {
   type UserRole = AccessControl.UserRole;
 
@@ -482,10 +482,13 @@ actor {
       case (true) {
         switch (end <= allPosts.size()) {
           case (true) {
-            allPosts.sliceToArray(start, end).map(func((_, post)) { post });
+            switch (start == end) {
+              case (true) { allPosts.sliceToArray(start, Nat.min(end + 1, allPosts.size())).map(func((_, post)) { post }) };
+              case (false) { allPosts.sliceToArray(start, end).map(func((_, post)) { post }) };
+            };
           };
           case (false) {
-            [];
+            allPosts.sliceToArray(start, allPosts.size()).map(func((_, post)) { post });
           };
         };
       };
@@ -992,12 +995,10 @@ actor {
 
   public query func getCurrentJournal() : async ?Journal {
     // Public access - no authorization check needed
-    let currentYear = 2024 : Nat;
-    let currentMonth = 6 : Nat;
-    let filtered = journals.values().toArray().filter(func(journal) { journal.year == currentYear and journal.month == currentMonth });
-    switch (filtered.size()) {
+    let currentJournals = journals.values().toArray().filter(func(journal) { journal.isCurrent });
+    switch (currentJournals.size()) {
       case (0) { null };
-      case (_) { ?filtered[0] };
+      case (_) { ?currentJournals[0] };
     };
   };
 
@@ -1118,6 +1119,35 @@ actor {
           }
         );
         articles.add(user, updatedArticles);
+
+        // Decrement remainingArticles when article is approved
+        if (newStatus == #approved) {
+          decrementRemainingArticles(user);
+        };
+      };
+      case (null) {};
+    };
+  };
+
+  // Helper function to decrement remaining articles for non-unlimited subscriptions
+  func decrementRemainingArticles(user : Principal) {
+    switch (subscriptions.get(user)) {
+      case (?userSubs) {
+        let currentTime = Time.now();
+        let updatedSubs = userSubs.map(
+          func(sub : Subscription) : Subscription {
+            // Only decrement for active, non-unlimited subscriptions with remaining articles
+            if (sub.isActive and not sub.isUnlimited and sub.endDate > currentTime and sub.remainingArticles > 0) {
+              {
+                sub with
+                remainingArticles = sub.remainingArticles - 1;
+              }
+            } else {
+              sub
+            }
+          }
+        );
+        subscriptions.add(user, updatedSubs);
       };
       case (null) {};
     };
@@ -1203,11 +1233,22 @@ actor {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can update subscription timestamps");
     };
-    let mapped = subscriptions.toArray();
-    let updated = mapped.map(func((principal, existingSubs)) { (principal, existingSubs) });
-    subscriptions.clear();
-    for ((k, v) in updated.values()) {
-      subscriptions.add(k, v);
+    
+    let currentTime = Time.now();
+    let allSubs = subscriptions.toArray();
+    
+    for ((principal, userSubs) in allSubs.values()) {
+      let updatedSubs = userSubs.map(
+        func(sub : Subscription) : Subscription {
+          // Deactivate subscriptions that have expired
+          if (sub.isActive and sub.endDate <= currentTime) {
+            { sub with isActive = false }
+          } else {
+            sub
+          }
+        }
+      );
+      subscriptions.add(principal, updatedSubs);
     };
   };
 
@@ -1219,23 +1260,32 @@ actor {
   };
 
   func hasActiveSubscriptionInternal(user : Principal) : Bool {
+    let currentTime = Time.now();
     switch (subscriptions.get(user)) {
       case (null) { false };
       case (?userSubs) {
-        userSubs.find(func(sub) { sub.isActive }) != null;
+        userSubs.find(func(sub) { sub.isActive and sub.endDate > currentTime }) != null;
       };
     };
   };
 
-  public query ({ caller }) func getRemainingArticles(user : Principal) : async Nat {
+  public shared ({ caller }) func getRemainingArticles(user : Principal) : async Nat {
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Can only check your own remaining articles");
     };
+
+    var remainingArticlesSum : Nat = 0;
+    let currentTime = Time.now();
+
     switch (subscriptions.get(user)) {
-      case (null) { 0 };
+      case (null) { remainingArticlesSum };
       case (?userSubs) {
-        let active = userSubs.filter(func(sub) { sub.isActive });
-        active.size();
+        for (sub in userSubs.values()) {
+          if (sub.isActive and (sub.endDate > currentTime)) {
+            remainingArticlesSum += sub.remainingArticles;
+          };
+        };
+        remainingArticlesSum;
       };
     };
   };
@@ -1273,10 +1323,7 @@ actor {
     configuration := ?config;
   };
 
-  public query ({ caller }) func isStripeConfigured() : async Bool {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
-      Runtime.trap("Unauthorized: Only admins can check Stripe configuration status");
-    };
+  public query func isStripeConfigured() : async Bool {
     configuration != null;
   };
 
@@ -1336,10 +1383,9 @@ actor {
     };
   };
 
-  // Helpers
-  public query ({ caller }) func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
-    // Public access - required for HTTP outcalls
+  // Transform function for HTTP outcalls - must be public and have no authorization
+  public query func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
+    // No authorization check - required for HTTP outcalls to work
     OutCall.transform(input);
   };
 };
-

@@ -366,7 +366,7 @@ export const idlService = IDL.Service({
   'getNewsCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getPendingArticleCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getPlanCount' : IDL.Func([], [IDL.Nat], ['query']),
-  'getRemainingArticles' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
+  'getRemainingArticles' : IDL.Func([IDL.Principal], [IDL.Nat], []),
   'getReviewerBoardMembers' : IDL.Func(
       [],
       [IDL.Vec(EditorialMember)],
@@ -843,7 +843,7 @@ export const idlFactory = ({ IDL }) => {
     'getNewsCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getPendingArticleCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getPlanCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'getRemainingArticles' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
+    'getRemainingArticles' : IDL.Func([IDL.Principal], [IDL.Nat], []),
     'getReviewerBoardMembers' : IDL.Func(
         [],
         [IDL.Vec(EditorialMember)],

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 24,
+  "projectStateVersion": 63,
   "summary": "Agrigence is an agriculture journal/publication web app built on the Internet Computer with a Motoko backend canister and a React (TanStack Router) frontend. It supports public browsing of content (home feeds, news, blog posts, journals archive, editorial board, author guidelines, terms) and an authenticated user experience via Internet Identity for profile creation, subscription purchase/activation via Stripe Checkout (IC HTTP outcalls), and research article submission (DOC/PDF) using IC blob storage. Admins (bootstrapped via an environment token + user-provided secret) can manage operational content through an admin panel: publish/delete news, CRUD blog posts (optional image blob), upload journal issues (PDF blob) and mark as current/archive, review pending article submissions (approve/reject), CRUD editorial board members (optional uploaded photo blob or static avatar URL), and manage Terms & Conditions placeholders/content.",
   "existing_features": [
     {
@@ -351,10 +351,88 @@
       "version": 1
     },
     {
-      "id": "feature-if-any-user-facing-labels-or-strings-are-added-updated-to-support-the-new-editor-in-chief-entry-use-correct-english-spelling-and-capitalization-e-g-editor-in-chief",
-      "title": "If any user-facing labels or strings are added/updated to support the new Editor-in-Chief entry, use correct English spelling and capitalization (e.g., \"Editor-in-Chief\").",
+      "id": "IF-31",
+      "title": "Reusable build-template scaffold for IC + React deployments",
+      "synonyms": [
+        "build-template",
+        "project template",
+        "deployment scaffold"
+      ],
+      "description": "Repository now includes a build-template directory with a full reproducible scaffold (Dockerfile, icp.yaml, deploy.sh, workspace/package configs, frontend/backend canister.yaml, shadcn/ui component set, and image pruning/resizing scripts) to standardize building and deploying the app.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-32",
+      "title": "GIF-based fullscreen LoadingScreen with determinate/indeterminate progress support",
+      "synonyms": [
+        "preloader GIF",
+        "LoadingScreen progress prop"
+      ],
+      "description": "Updates the app preloader to render a full-screen centered GIF while preserving existing behavior: supports a determinate progress prop and an indeterminate mode that auto-completes and dismisses.",
       "reqIds": [
-        "REQ-2"
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-33",
+      "title": "Completed routed informational pages (About, Contact, Notice Board)",
+      "synonyms": [
+        "filled placeholder pages",
+        "production-ready static pages"
+      ],
+      "description": "Replaces previously empty placeholder routed pages with coherent, production-ready content for AboutPage, ContactPage, and NoticeBoardPage so they no longer render empty screens.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "IF-34",
+      "title": "Pre-footer marketing sections with textured backgrounds (Why Choose Agrigence / What We Do)",
+      "synonyms": [
+        "pre-footer sections",
+        "marketing card grids",
+        "textured background panels"
+      ],
+      "description": "Adds two full-width sections above the footer—'Why Choose Agrigence' and 'What We Do'—rendered as responsive card grids (3-column desktop / 1-column mobile) with agriculture-themed icons, subtle green background textures/patterns, and soft hover/spacing styling integrated into the main layout.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-35",
+      "title": "Home page 'Main Objective' full-width section with subtle field texture background",
+      "synonyms": [
+        "Main Objective section",
+        "home marketing objective panel",
+        "field texture background"
+      ],
+      "description": "Adds a full-width 'Main Objective' section to the Home page above the footer, using a subtle low-opacity agriculture-themed field background image/texture with clean green styling, professional typography/spacing, centered heading, and responsive layout while rendering the provided text verbatim.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-gif-based-fullscreen-loader-with-a-custom-lightweight-flat-vector-animation-for-agrigence-a-closed-book-appears-opens-smoothly-soil-appears-in-the-center-crease-a-sprout-emerges-then-grows-into-a-healthy-plant-with-3-4-leaves-all-centered-on-a-clean-white-background-with-a-soft-shadow-and-a-green-agriculture-color-theme",
+      "title": "Replace the current GIF-based fullscreen loader with a custom, lightweight, flat-vector animation for Agrigence: a closed book appears, opens smoothly, soil appears in the center crease, a sprout emerges, then grows into a healthy plant with 3–4 leaves, all centered on a clean white background with a soft shadow and a green agriculture color theme.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-smooth-fade-out-transition-from-the-preloader-into-the-website-content-once-the-animation-completes-or-the-app-is-ready-the-preloader-should-fade-out-and-then-unmount-without-causing-layout-shift-or-interaction-issues",
+      "title": "Implement a smooth fade-out transition from the preloader into the website content: once the animation completes (or the app is ready), the preloader should fade out and then unmount without causing layout shift or interaction issues.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-preloader-is-performance-friendly-and-does-not-negatively-affect-perceived-page-load-speed-keep-the-implementation-small-no-large-raster-animations-avoid-unnecessary-timers-work-on-the-main-thread-and-minimize-re-renders-during-the-animation",
+      "title": "Ensure the preloader is performance-friendly and does not negatively affect perceived page load speed: keep the implementation small (no large raster animations), avoid unnecessary timers/work on the main thread, and minimize re-renders during the animation.",
+      "reqIds": [
+        "REQ-18"
       ],
       "version": 1
     }
@@ -362,16 +440,178 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add Editorial Board member (Editor-in-Chief): Dr. Dinesh Kumar Singh, Asst. Professor, National P.G. College, Barahalganj, Gorakhpur",
+      "summary": "Full-stack code review/audit and fix any errors/bugs found (backend + frontend), including addressing existing known issues where applicable.",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Add a new editorial member record for the Editor-in-Chief with the following user-facing details: Name: \"Dr. Dinesh Kumar Singh\"; Role: \"Editor-in-Chief\"; Qualification/Affiliation text: \"Asst. Professor, National P.G. College, Barahalganj, Gorakhpur,\". Ensure the record is persisted and returned by the existing public editorial member listing APIs so it appears on the Editorial Board page and in the Admin Panel editorial member list.",
+      "summary": "Fix all known issues in the project state and also implement/complete currently placeholder or unfinished functionality (e.g., email/password auth flows and other incomplete pages/features).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Use the specified plant-growing (seed/roots/shoot/leaves) minimal vector loading animation as the site preloader (ideally percentage/frame controllable via Lottie/SVG sequence).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Perform a full codebase audit and fix all errors/bugs, explicitly including all known issues listed in project_state.json for both backend and frontend.",
       "reqIds": [
-        "REQ-1"
+        "REQ-2"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Implement and complete currently placeholder or unfinished functionality, including the email/password login, signup, and forgot-password flows, making them functional end-to-end with Motoko backend support and React UI integration (no longer UI-only placeholders).",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Build a secure Admin Dashboard (CMS) with email/password admin authentication and a Super Admin role for full dynamic control of Agrigence website content without code changes.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add Events/Programs management in CMS (CRUD events like conferences/trainings/workshops/seminars with images, date, venue, description, and status: upcoming/ongoing/completed).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add CMS-managed editable page sections (homepage sections like Why Choose/What We Do/Main Objective, including editable text, images, and icons) to avoid source code edits for content changes.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Implement a CMS Media Library for uploading/managing/reusing images, PDFs, and documents across pages and content types.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Add SEO controls in CMS (meta title/description, image alt text, and URL slug control per page/content).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add homepage composition controls in CMS (choose featured magazine/event/news content and allow section/content reordering).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Add Contact/Collaboration form submissions management in CMS (view/manage/export inquiries) with a backend persistence layer.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add CMS security/performance/ops features: secure auth, fast admin UX, and backup-ready structure for CMS-managed content and media.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Implement secure email/password authentication for admin access, with a single \"Super Admin\" role that has full CMS permissions, and gate all admin-only backend mutations/queries behind this authorization.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add full Magazine Management in the CMS: create, edit, delete magazine issues with PDF upload, cover image upload, title, description, and publish date; and support feature/unfeature controls for homepage display.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Add Events/Programs Management to the CMS: create, edit, delete events (conference/training/workshop/seminar) with image upload, date/time (or date range), venue, description, and a status flag (upcoming/ongoing/completed).",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Extend the existing News/Updates CMS so admins can edit previously published news items in addition to creating and deleting them.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Implement CMS-managed editable page sections for the homepage (including “Why Choose Agrigence”, “What We Do”, “Main Objective”, and other homepage sections currently hardcoded) so admins can update section text and associated media/icons without code changes.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Add a CMS Media Library that allows Super Admin to upload, list, search/filter, view details, and delete media assets (images, PDFs, and documents), and reuse selected media across magazines, events, pages, news/blog content where applicable.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Add SEO controls for CMS-managed pages and content: editable meta title, meta description, and image alt text; and allow admins to control URL slugs for relevant content types and pages where routing supports it.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Implement Homepage composition controls in the CMS: choose which magazine/event/news items appear on homepage, set featured items, and support reordering of homepage sections.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Persist and manage Contact/Collaboration form submissions in the backend, add an admin UI to view and manage inquiries, and support exporting inquiries to a downloadable format (e.g., CSV).",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Upgrade the Admin Dashboard UI into a simple, clean, non-technical CMS experience that consolidates all content controls (magazines, events, news, editorial board, pages, media library, SEO, homepage, inquiries) into an intuitive navigation structure.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Add CMS operational safety features: provide an admin-only export of CMS-managed data (content + configuration metadata) to a structured JSON format suitable for backup and restore, and ensure admin pages load quickly using React Query caching and incremental loading states.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Create a custom Agrigence website preloader animation: book opens, soil appears, sprout grows into plant (3–4 leaves), then fades out into homepage; minimal flat vector style on white background with soft shadow; lightweight SVG or Lottie, centered, responsive, and performance-friendly.",
+      "reqIds": [],
       "status": "pending"
     }
   ],
@@ -394,10 +634,29 @@
     "getRemainingArticles() returns the count of active subscriptions rather than remainingArticles quota, producing incorrect quota information.",
     "Stripe checkout session body builder sets shipping_address_collection[allowed_countries][0] for every country, likely resulting in only one country being honored.",
     "Blog pagination endpoint returns an empty array when end index exceeds total size, instead of returning the final partial page.",
-    "Blob storage cashier env var is spelled CAFFFEINE_STORAGE_CASHIER_PRINCIPAL (triple 'F'); deployments must match this exact key or storage functions will trap.",
-    "Some page source files are empty placeholders in this snapshot (e.g., frontend/src/pages/ContactPage.tsx, AboutPage.tsx, NoticeBoardPage.tsx), suggesting unfinished or inconsistent route/page content."
+    "Blob storage cashier env var is spelled CAFFFEINE_STORAGE_CASHIER_PRINCIPAL (triple 'F'); deployments must match this exact key or storage functions will trap."
   ],
   "isFixRequest": false,
+  "generatedImages": [
+    {
+      "filename": "frontend/public/assets/generated/agrigence-field-texture.dim_2400x1400.png",
+      "description": "Dimmed field texture background used for subtle agriculture-themed section styling.",
+      "targetWidth": 2400,
+      "targetHeight": 1400
+    },
+    {
+      "filename": "frontend/public/assets/generated/agrigence-leaf-pattern.dim_2400x1400.png",
+      "description": "Dimmed leaf pattern background used for subtle agriculture-themed section styling.",
+      "targetWidth": 2400,
+      "targetHeight": 1400
+    },
+    {
+      "filename": "frontend/public/assets/generated/agrigence-soil-texture.dim_2400x1400.png",
+      "description": "Dimmed soil texture background used for subtle agriculture-themed section styling.",
+      "targetWidth": 2400,
+      "targetHeight": 1400
+    }
+  ],
   "gameProjectType": "none",
   "projectName": "Agrigence",
   "clarification_mode": "instant",

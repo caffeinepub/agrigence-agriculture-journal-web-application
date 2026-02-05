@@ -2,11 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-if-any-user-facing-labels-or-strings-are-added-updated-to-support-the-new-editor-in-chief-entry-use-correct-english-spelling-and-capitalization-e-g-editor-in-chief",
-      "featureTitle": "If any user-facing labels or strings are added/updated to support the new Editor-in-Chief entry, use correct English spelling and capitalization (e.g., \"Editor-in-Chief\").",
+      "featureId": "feature-replace-the-current-gif-based-fullscreen-loader-with-a-custom-lightweight-flat-vector-animation-for-agrigence-a-closed-book-appears-opens-smoothly-soil-appears-in-the-center-crease-a-sprout-emerges-then-grows-into-a-healthy-plant-with-3-4-leaves-all-centered-on-a-clean-white-background-with-a-soft-shadow-and-a-green-agriculture-color-theme",
+      "featureTitle": "Replace the current GIF-based fullscreen loader with a custom, lightweight, flat-vector animation for Agrigence: a closed book appears, opens smoothly, soil appears in the center crease, a sprout emerges, then grows into a healthy plant with 3–4 leaves, all centered on a clean white background with a soft shadow and a green agriculture color theme.",
       "files": [
-        "frontend/src/pages/AdminPanelPage.tsx",
-        "frontend/src/pages/EditorialBoardPage.tsx"
+        "frontend/src/components/LoadingScreen.tsx",
+        "frontend/src/index.css"
       ],
       "components": [
         "authorization@4.0.0",
@@ -20,7 +20,52 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-16"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-smooth-fade-out-transition-from-the-preloader-into-the-website-content-once-the-animation-completes-or-the-app-is-ready-the-preloader-should-fade-out-and-then-unmount-without-causing-layout-shift-or-interaction-issues",
+      "featureTitle": "Implement a smooth fade-out transition from the preloader into the website content: once the animation completes (or the app is ready), the preloader should fade out and then unmount without causing layout shift or interaction issues.",
+      "files": [
+        "frontend/src/components/LoadingScreen.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "http-outcalls@3.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-17"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-preloader-is-performance-friendly-and-does-not-negatively-affect-perceived-page-load-speed-keep-the-implementation-small-no-large-raster-animations-avoid-unnecessary-timers-work-on-the-main-thread-and-minimize-re-renders-during-the-animation",
+      "featureTitle": "Ensure the preloader is performance-friendly and does not negatively affect perceived page load speed: keep the implementation small (no large raster animations), avoid unnecessary timers/work on the main thread, and minimize re-renders during the animation.",
+      "files": [
+        "frontend/src/components/LoadingScreen.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "http-outcalls@3.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
       ],
       "confidence": "high"
     }

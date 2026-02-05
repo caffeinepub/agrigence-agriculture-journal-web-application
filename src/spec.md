@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add a persisted Editor-in-Chief entry for Dr. Dinesh Kumar Singh so it appears on the Editorial Board page and in the Admin Panel editorial member list.
+**Goal:** Replace the current GIF-based fullscreen LoadingScreen with a lightweight Agrigence-themed flat-vector book→sprout→plant preloader and add a smooth fade-out into the app.
 
 **Planned changes:**
-- Add a new editorial member record with: name "Dr. Dinesh Kumar Singh", role/badge "Editor-in-Chief", and qualification/affiliation text "Asst. Professor, National P.G. College, Barahalganj, Gorakhpur,".
-- Ensure the new record is persisted across canister upgrades/redeploys and is returned by the existing editorial member listing API used by the Editorial Board UI (e.g., `getAllEditorialMembers`), including `isEditorInChief = true`.
-- Ensure any newly introduced/updated user-facing text uses correct English spelling and capitalization (specifically "Editor-in-Chief").
+- Update `frontend/src/components/LoadingScreen.tsx` to remove the existing GIF reference and render a custom SVG (or Lottie) animation: closed book appears, opens, soil appears in the crease, sprout emerges, and grows into a plant with 3–4 leaves, centered on a clean white background with a subtle soft shadow and green agriculture palette.
+- Implement a smooth dismissal flow where, when the animation completes (or the app is ready), the loader fades out (opacity transition), blocks interaction until fully gone, then unmounts without layout shift or flicker.
+- Keep the preloader implementation performance-friendly by avoiding large raster assets and minimizing main-thread work and React re-renders during the animation.
 
-**User-visible outcome:** The Editorial Board page and Admin Panel editorial member list show Dr. Dinesh Kumar Singh with an "Editor-in-Chief" badge, and the entry remains present after redeploy/upgrade.
+**User-visible outcome:** On initial load, users see a centered Agrigence book-to-plant animation on a white background that smoothly fades out into the website content once ready.

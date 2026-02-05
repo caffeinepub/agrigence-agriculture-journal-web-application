@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useGetLatestNews, useGetHomePageMagazines, useGetAllUserReviews, useGetAllArticlePreviews, useGetLatestBlogPosts } from '../hooks/useQueries';
-import { Newspaper, Calendar, User, Star, Quote, BookMarked, Library, FileText } from 'lucide-react';
+import { Newspaper, Calendar, User, Star, Quote, BookMarked, Library, FileText, Leaf, BookOpen, Users, Microscope, Sprout, MessageCircle, Award, GraduationCap, Lightbulb, Handshake, TrendingUp } from 'lucide-react';
 import React from 'react';
 
 export default function HomePage() {
@@ -366,6 +366,264 @@ export default function HomePage() {
               </CardContent>
             </Card>
           )}
+        </div>
+      </section>
+
+      {/* Why Choose Agrigence Section */}
+      <section className="relative container py-16 animate-fade-in overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+          <img
+            src="/assets/generated/agrigence-leaf-pattern.dim_2400x1400.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="relative z-10">
+          <h2 className="text-3xl font-bold text-primary mb-8 text-center">Why Choose Agrigence</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <BookOpen className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Expert-curated, practical agricultural content
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Users className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Strong readership of farmers, students, agri-startups, and institutions
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Lightbulb className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Coverage of new varieties, technologies, government schemes, and innovations
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Award className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Regional relevance for North Indian agriculture
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <MessageCircle className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Multi-format presence: magazine, social media, seminars, and field events
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <GraduationCap className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Platform for students, researchers, and professionals to publish
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Sprout className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Focus on sustainable and climate-smart farming
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Leaf className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Trusted, unbiased, easy-to-understand agricultural knowledge
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* What We Do Section */}
+      <section className="relative bg-muted/30 py-16 animate-fade-in overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+          <img
+            src="/assets/generated/agrigence-field-texture.dim_2400x1400.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="container relative z-10">
+          <h2 className="text-3xl font-bold text-primary mb-8 text-center">What We Do</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <BookOpen className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Publish a dedicated agriculture magazine with field-relevant insights
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <TrendingUp className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Highlight agri innovations, new crop varieties, technologies, and government schemes
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Award className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Document success stories of progressive farmers and agri-startups
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Users className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Conduct conferences on modern agriculture and emerging trends
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <GraduationCap className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Organize training programs for farmers, students, and agri-entrepreneurs
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Microscope className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Host practical workshops on farming techniques and agri technologies
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <MessageCircle className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Deliver seminars in universities, colleges, villages, and cities
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Handshake className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Collaborate with agri companies, institutions, and startups for knowledge outreach
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Sprout className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Promote scientific, sustainable, and climate-smart farming practices
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="bg-card hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-primary/10">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Lightbulb className="h-6 w-6 text-primary" />
+                </div>
+                <CardDescription className="text-sm text-foreground leading-relaxed">
+                  Provide a publishing platform for experts, researchers, and students
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Objective Section */}
+      <section className="relative w-full py-20 animate-fade-in overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
+          <img
+            src="/assets/generated/agrigence-field-texture.dim_2400x1400.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="container relative z-10 px-4 md:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-10 text-center">
+            Main Objective
+          </h2>
+          <div className="max-w-4xl mx-auto space-y-6">
+            <p className="text-base md:text-lg leading-relaxed text-foreground">
+              The primary objective of Agrigence is to establish a credible, high-impact agriculture magazine and knowledge platform that seamlessly connects agricultural research, innovation, and practical field application.
+            </p>
+            <p className="text-base md:text-lg leading-relaxed text-foreground">
+              Agrigence is committed to publishing practical, field-relevant agricultural content and delivering structured trainings, workshops, conferences, and seminars that translate knowledge into measurable outcomes for farmers, students, agri-entrepreneurs, and institutions.
+            </p>
+            <p className="text-base md:text-lg leading-relaxed text-foreground">
+              Through expert contributions, real success stories, and regionally relevant insights, Agrigence promotes modern, sustainable, and climate-smart farming practices tailored to Indian agriculture—especially the needs of North Indian farming systems.
+            </p>
+            <p className="text-base md:text-lg leading-relaxed text-foreground font-medium">
+              Agrigence exists to connect knowledge with the field and transform learning into agricultural progress.
+            </p>
+          </div>
         </div>
       </section>
     </div>

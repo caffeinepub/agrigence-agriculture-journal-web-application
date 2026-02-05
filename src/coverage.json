@@ -1,46 +1,62 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T07:55:04.753Z",
+  "generatedAt": "2026-02-05T13:54:43.179Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 1,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-1",
-        "summary": "Add a new editorial member record for the Editor-in-Chief with the following user-facing details: Name: \"Dr. Dinesh Kumar Singh\"; Role: \"Editor-in-Chief\"; Qualification/Affiliation text: \"Asst. Professor, National P.G. College, Barahalganj, Gorakhpur,\". Ensure the record is persisted and returned by the existing public editorial member listing APIs so it appears on the Editorial Board page and in the Admin Panel editorial member list.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-2",
-        "summary": "If any user-facing labels or strings are added/updated to support the new Editor-in-Chief entry, use correct English spelling and capitalization (e.g., \"Editor-in-Chief\").",
+        "id": "REQ-16",
+        "summary": "Replace the current GIF-based fullscreen loader with a custom, lightweight, flat-vector animation for Agrigence: a closed book appears, opens smoothly, soil appears in the center crease, a sprout emerges, then grows into a healthy plant with 3–4 leaves, all centered on a clean white background with a soft shadow and a green agriculture color theme.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/EditorialBoardPage.tsx",
-          "frontend/src/pages/AdminPanelPage.tsx"
+          "frontend/src/components/LoadingScreen.tsx",
+          "frontend/src/index.css"
         ],
         "matchedFiles": [
-          "frontend/src/pages/EditorialBoardPage.tsx",
-          "frontend/src/pages/AdminPanelPage.tsx"
+          "frontend/src/components/LoadingScreen.tsx",
+          "frontend/src/index.css"
+        ]
+      },
+      {
+        "id": "REQ-17",
+        "summary": "Implement a smooth fade-out transition from the preloader into the website content: once the animation completes (or the app is ready), the preloader should fade out and then unmount without causing layout shift or interaction issues.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/LoadingScreen.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/LoadingScreen.tsx"
+        ]
+      },
+      {
+        "id": "REQ-18",
+        "summary": "Ensure the preloader is performance-friendly and does not negatively affect perceived page load speed: keep the implementation small (no large raster animations), avoid unnecessary timers/work on the main thread, and minimize re-renders during the animation.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/LoadingScreen.tsx",
+          "frontend/src/index.css"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/LoadingScreen.tsx",
+          "frontend/src/index.css"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/pages/AdminPanelPage.tsx",
-    "frontend/src/pages/EditorialBoardPage.tsx",
+    "frontend/src/components/LoadingScreen.tsx",
+    "frontend/src/index.css",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

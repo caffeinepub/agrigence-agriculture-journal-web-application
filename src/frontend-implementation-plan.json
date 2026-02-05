@@ -1,24 +1,70 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Ensure correct Editor-in-Chief labeling in editorial member UI",
+  "title": "Custom Agrigence SVG preloader (book → plant) with smooth fade-out",
   "requirements": [
     {
-      "id": "REQ-2",
-      "summary": "Ensure any user-facing labels added/updated for the new Editor-in-Chief entry use correct English spelling and capitalization (\"Editor-in-Chief\").",
+      "id": "REQ-16",
+      "summary": "Replace GIF fullscreen loader with a responsive, flat-vector SVG animation of a book opening and a plant growing (3–4 leaves) on a clean white background with soft shadow and green palette.",
       "acceptanceCriteria": [
-        "All newly introduced user-facing text related to this change is in English and uses the label \"Editor-in-Chief\" (not \"editor in cheaf\")."
+        "The existing loader at frontend/src/components/LoadingScreen.tsx no longer references the current GIF asset and instead renders the specified book→soil→sprout→plant animation in a flat vector style.",
+        "The animation is implemented using a lightweight SVG-based approach (inline SVG or static SVG asset) or Lottie; it does not introduce a heavy runtime or block initial rendering.",
+        "The loader remains centered on screen, uses a white background, includes a subtle soft shadow under the book/plant, and uses a green agriculture palette consistent with the app theme.",
+        "The plant ends with 3–4 leaves clearly visible at the end state.",
+        "The loader scales responsively and stays visually balanced on common mobile and desktop viewport sizes."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/EditorialBoardPage.tsx",
+          "path": "frontend/src/components/LoadingScreen.tsx",
           "operation": "modify",
-          "description": "Update role badge rendering to prefer the canonical label \"Editor-in-Chief\" when member.isEditorInChief is true, ensuring correct spelling/capitalization even if the persisted role string differs."
+          "description": "Remove the GIF-based loader and implement an inline-SVG, flat-vector animation depicting: closed book → opening book → soil in the crease → sprout emerging → plant growing to 3–4 leaves, centered on a white overlay with a subtle soft shadow and green agriculture palette. Ensure the SVG scales responsively (e.g., via viewBox + max-width constraints) and remains visually balanced across mobile/desktop."
         },
         {
-          "path": "frontend/src/pages/AdminPanelPage.tsx",
+          "path": "frontend/src/index.css",
           "operation": "modify",
-          "description": "Update editorial member list role display to prefer the canonical label \"Editor-in-Chief\" when member.isEditorInChief is true, ensuring consistent correct spelling/capitalization in the Admin Panel."
+          "description": "Add CSS keyframes/utility classes (Tailwind-compatible) used by LoadingScreen’s inline SVG to drive the book opening, soil reveal, sprout emergence, and leaf growth animations, plus shared shadow styling; keep styles lightweight and scoped to the loader to avoid affecting the rest of the app."
+        }
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "summary": "Add a smooth fade-out transition that blocks interactions during fade, then unmounts the loader without layout shift or flicker.",
+      "acceptanceCriteria": [
+        "When the loader is dismissed, it fades out smoothly (opacity transition) rather than disappearing abruptly.",
+        "During fade-out, the loader overlay does not allow clicks to pass through until it is fully gone, and it fully unmounts after the transition.",
+        "The homepage/app content is visible immediately after the loader fades out, with no flashing or white-to-white flicker."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/LoadingScreen.tsx",
+          "operation": "modify",
+          "description": "Implement a two-phase loader lifecycle (visible → fading → unmounted) using an opacity transition on the fixed overlay. Keep the overlay capturing pointer events until the fade transition completes, then unmount to restore interactions. Trigger fade-out when the SVG animation completes (or after a small fixed duration) and ensure no layout shift by keeping the loader as a fixed inset overlay."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure LoadingScreen remains mounted above routed content (current placement) and, if needed, pass a minimal readiness signal/prop so the loader can dismiss when the app is ready, while preserving immediate rendering of RouterProvider beneath to avoid flicker."
+        }
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "summary": "Keep the preloader performance-friendly: avoid heavy assets, avoid per-frame React state updates, and ensure it doesn’t get stuck across initial boot and navigation.",
+      "acceptanceCriteria": [
+        "The preloader implementation does not load large GIF/video assets for the animation.",
+        "The animation runs smoothly on typical devices (no obvious jank) and does not trigger excessive React re-renders (e.g., avoid per-frame setState loops).",
+        "The preloader works reliably across route changes and initial app boot without getting stuck permanently."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/LoadingScreen.tsx",
+          "operation": "modify",
+          "description": "Refactor loader logic to avoid per-frame timers/setInterval-driven progress state; drive visuals via CSS/SVG animations and use at most a small number of state transitions (e.g., start/fade/unmount). Add defensive completion handling (animationend and/or a single fallback timeout) so the loader cannot get stuck. Respect prefers-reduced-motion by shortening/simplifying animation when enabled."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Add any minimal reduced-motion overrides for the loader animation classes (e.g., shorten durations / disable nonessential motion) to improve perceived performance on constrained devices and accessibility settings."
         }
       ]
     }
