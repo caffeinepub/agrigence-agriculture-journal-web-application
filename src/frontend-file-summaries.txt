@@ -44,5 +44,17 @@
   "frontend/offline-bundle/images/journal-placeholder.svg": "Local SVG placeholder image for journal covers showing a stylized document with plant icon.",
   "frontend/offline-bundle/README.md": "Documentation explaining how to use the offline bundle by double-clicking index.html, describing the folder structure, and providing customization guidance.",
   "frontend/offline-bundle/assets/.gitkeep": "Placeholder file ensuring the assets directory exists in version control.",
-  "frontend/offline-bundle/fonts/.gitkeep": "Placeholder file ensuring the fonts directory exists in version control."
+  "frontend/offline-bundle/fonts/.gitkeep": "Placeholder file ensuring the fonts directory exists in version control.",
+  "frontend/project/index.html": "Authentication page with login, registration, and forgot password views using pure HTML with relative paths to local CSS/JS files.",
+  "frontend/project/dashboard.html": "User dashboard page displaying profile, payment status, receipt details, submissions table with re-upload functionality, and password change form.",
+  "frontend/project/admin.html": "Admin panel page with user management, profile viewing, payment updates, submission management, and password reset capabilities.",
+  "frontend/project/css/main.css": "Complete stylesheet implementing professional journal portal design system with responsive layouts, form styles, tables, badges, modals, and consistent color scheme.",
+  "frontend/project/js/db.js": "Dummy database module providing localStorage-based data persistence with seed data and CRUD operations for users, payments, and submissions with clear backend integration comments.",
+  "frontend/project/js/auth.js": "Authentication module handling login, registration, forgot password verification, password changes, session management, and route guards.",
+  "frontend/project/js/dashboard.js": "Dashboard functionality module managing profile editing with photo upload, payment display, receipt details, submissions table, re-upload modal, and password changes.",
+  "frontend/project/js/admin.js": "Admin panel module implementing user search/selection, profile viewing, payment management, submission status updates, remarks editing, and password reset functionality.",
+  "frontend/project/js/main.js": "Main application entry point detecting current page and initializing appropriate authentication flows with view switching and form handling.",
+  "frontend/project/assets/.gitkeep": "Placeholder ensuring assets directory exists in version control.",
+  "frontend/project/receipts/.gitkeep": "Placeholder ensuring receipts directory exists in version control.",
+  "frontend/project/README.md": "Complete documentation describing offline portal features, usage instructions, default accounts, testing flows, folder structure, and backend integration points."
 }

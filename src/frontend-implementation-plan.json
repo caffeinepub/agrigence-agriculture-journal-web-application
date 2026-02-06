@@ -1,96 +1,311 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Offline-ready static website bundle (standalone index.html with local CSS/JS/assets)",
+  "title": "Offline-ready journal portal mini-app (pure HTML/CSS/JS) under frontend/project",
   "requirements": [
     {
-      "id": "REQ-42",
-      "summary": "Create a complete standalone offline static site bundle (index.html + local CSS/JS/assets) that runs by double-clicking index.html with no server and no network.",
+      "id": "REQ-54",
+      "summary": "Create a standalone offline-ready journal portal mini-app with index/dashboard/admin pages and required folder structure, runnable via file:// with no external dependencies.",
       "acceptanceCriteria": [
-        "A new folder exists that contains a complete offline site with this structure:\n/project-root\n  index.html\n  /css\n  /js\n  /assets\n  /images\n  /fonts",
-        "Opening the offline bundle’s index.html via double-click works in a modern browser (Chrome/Edge/Firefox) with no network access required",
-        "No external (CDN) dependencies are used; all libraries, icons, and fonts referenced by the offline site are present locally and linked via relative paths",
-        "No absolute paths (e.g., /css/app.css) or localhost/server URLs are used in HTML/CSS/JS; only relative paths work from the offline bundle root",
-        "The offline site loads without console errors on first load"
+        "A `/project` directory exists at repo root with the requested structure: `/project/index.html`, `/project/dashboard.html`, `/project/admin.html`, and subfolders `/project/css`, `/project/js`, `/project/assets`, `/project/receipts`.",
+        "All pages load and function when opened directly from the filesystem (file://) with correct relative paths.",
+        "No external libraries/frameworks are used (no React, no Tailwind, no CDN script/style tags).",
+        "No console errors occur in a modern browser when using the flows in each page.",
+        "All user-facing text in the offline mini-app is in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/offline-bundle/index.html",
+          "path": "frontend/project/index.html",
           "operation": "create",
-          "description": "Create the offline bundle entrypoint HTML with semantic structure (header/nav/main/footer), and link local stylesheet and scripts via relative paths (e.g., ./css/styles.css and ./js/app.js) so it works by double-clicking without any server."
+          "description": "Create offline mini-app authentication shell page with relative links to ./css/main.css and ./js/main.js and navigation between Login/Register/Forgot Password views without any external dependencies."
         },
         {
-          "path": "frontend/offline-bundle/css/styles.css",
+          "path": "frontend/project/dashboard.html",
           "operation": "create",
-          "description": "Create a self-contained stylesheet for the offline bundle using only local assets (no @import URLs) and ensuring the layout is readable and responsive without relying on any framework CDN."
+          "description": "Create offline mini-app user dashboard page with relative links to ./css/main.css and ./js/main.js; include containers for Profile, Payment, Receipt, Submissions, Admin Remarks, Re-upload, and Password controls."
         },
         {
-          "path": "frontend/offline-bundle/js/app.js",
+          "path": "frontend/project/admin.html",
           "operation": "create",
-          "description": "Create a self-contained vanilla JS file that initializes after DOM load (or via deferred script) and powers any interactive UI elements (nav toggles, accordion/faq, form validation) with defensive null-checks to avoid runtime errors."
+          "description": "Create offline mini-app admin panel page with relative links to ./css/main.css and ./js/main.js; include admin-only management UI containers."
         },
         {
-          "path": "frontend/offline-bundle/assets/.gitkeep",
+          "path": "frontend/project/css/main.css",
           "operation": "create",
-          "description": "Add a placeholder file to ensure the offline bundle /assets directory exists in version control."
+          "description": "Create a single shared CSS file implementing a consistent professional journal-portal visual system for forms, tables, cards, badges, buttons, layouts, and responsive behavior."
         },
         {
-          "path": "frontend/offline-bundle/images/logo.svg",
+          "path": "frontend/project/js/main.js",
           "operation": "create",
-          "description": "Add a local logo image asset referenced from index.html using a relative path (e.g., ./images/logo.svg), ensuring no external image URLs are required."
+          "description": "Create single main JS entry that detects which page is open (index/dashboard/admin) and initializes the appropriate UI logic, routing, and guards for file:// usage."
         },
         {
-          "path": "frontend/offline-bundle/images/hero-illustration.svg",
+          "path": "frontend/project/assets/.gitkeep",
           "operation": "create",
-          "description": "Add a local hero/cover image asset referenced from index.html using a relative path, ensuring the offline bundle renders a complete design without network dependencies."
+          "description": "Ensure the offline mini-app assets directory is tracked in git and available for local downloads."
         },
         {
-          "path": "frontend/offline-bundle/fonts/.gitkeep",
+          "path": "frontend/project/receipts/.gitkeep",
           "operation": "create",
-          "description": "Add a placeholder file to ensure the offline bundle /fonts directory exists even if the bundle uses system fonts initially (and therefore does not reference external font URLs)."
+          "description": "Ensure the offline mini-app receipts directory is tracked in git and available for local receipt downloads."
         }
       ]
     },
     {
-      "id": "REQ-43",
-      "summary": "Ensure semantic HTML validity, stable CSS/JS loading order, and eliminate conflicting/duplicate libraries so offline interactions work without errors.",
+      "id": "REQ-55",
+      "summary": "Implement index.html authentication flows (Login, Register, Forgot Password) against a dummy local JSON DB with session simulation and redirects.",
       "acceptanceCriteria": [
-        "CSS is loaded before JS in index.html, and JS is loaded in a way that does not require a server (e.g., deferred scripts)",
-        "No duplicate library bundles are included in the offline bundle (e.g., multiple copies of the same framework)",
-        "HTML validates structurally (no broken/unclosed tags that break layout)",
-        "Navigation elements and interactive elements in the offline bundle do not throw runtime exceptions when clicked/used"
+        "Register creates a new user record in the local dummy DB (simulation persisted via localStorage and/or an in-memory seed with localStorage override) and then allows login.",
+        "Login validates credentials against the dummy DB and creates a session token in web storage; authenticated users are redirected to `dashboard.html`.",
+        "Forgot Password flow (no OTP) requires Email, Phone, Date of Birth, and Occupation; if all match a user record, the user can set a new password and then log in with it.",
+        "If the user is already authenticated, opening `index.html` routes them to `dashboard.html` without re-login.",
+        "Unauthenticated users attempting to open `dashboard.html` or `admin.html` are redirected back to `index.html`."
       ],
       "file_operations": [
         {
-          "path": "frontend/offline-bundle/index.html",
+          "path": "frontend/project/index.html",
           "operation": "modify",
-          "description": "Ensure stable loading order (CSS in <head>, JS included with defer), semantic landmarks (<header>, <nav>, <main>, <section>, <footer>), valid markup, and only relative links to local files (no leading slashes, no external URLs, no server-only assumptions)."
+          "description": "Add Login/Register/Forgot Password view markup (single-page view switching) with English labels, validation message containers, and links for switching views; ensure all resource paths are relative."
         },
         {
-          "path": "frontend/offline-bundle/js/app.js",
-          "operation": "modify",
-          "description": "Harden interactive logic so all click/submit handlers guard against missing elements, prevent default where appropriate, and avoid uncaught exceptions; keep the bundle framework-free (or, if any third-party JS is added later, ensure it is only included once and stored locally)."
+          "path": "frontend/project/js/auth.js",
+          "operation": "create",
+          "description": "Implement offline authentication logic: register user, validate login credentials, create/clear session token in web storage, auto-redirect authenticated users to dashboard.html, and redirect/guard for dashboard/admin access when unauthenticated."
         },
         {
-          "path": "frontend/offline-bundle/css/styles.css",
+          "path": "frontend/project/js/main.js",
           "operation": "modify",
-          "description": "Review and adjust CSS to avoid reliance on external assets, remove unused selectors, and ensure consistent rendering without requiring additional libraries (no duplicate/conflicting stylesheets)."
+          "description": "Wire index.html UI events (login/register/forgot flows) to auth helpers; run initial auth state check to redirect authenticated users to dashboard.html; ensure no console errors in file:// context."
         }
       ]
     },
     {
-      "id": "REQ-44",
-      "summary": "Add an English README inside the offline bundle explaining offline usage (double-click index.html) and documenting the folder structure.",
+      "id": "REQ-56",
+      "summary": "Implement dashboard.html sections for payment status, receipt view, submissions table with downloads, admin remarks, revision re-upload simulation, and logout.",
       "acceptanceCriteria": [
-        "README exists inside the offline bundle folder",
-        "README instructions explicitly say that users can double-click index.html to run the site offline",
-        "README lists or illustrates the offline bundle folder structure"
+        "Dashboard shows data specific to the currently logged-in user from the dummy DB.",
+        "'Download Receipt' triggers a download/open of a local PDF file located under `/project/receipts` using a relative path.",
+        "Submission table renders all required columns and provides a working local download link for the referenced submitted file (use `/project/assets` as needed).",
+        "If a submission status is 'Revision Required', selecting a replacement file updates the submission record in the dummy DB (simulation) so the UI reflects the new filename and download link immediately and after refresh (if persisted).",
+        "A visible logout action clears the session token and returns the user to `index.html`."
       ],
       "file_operations": [
         {
-          "path": "frontend/offline-bundle/README.md",
+          "path": "frontend/project/dashboard.html",
+          "operation": "modify",
+          "description": "Add structured dashboard markup for: (A) Payment Status with fields + Download Receipt action; (B) Receipt System details card; (C) Submissions table with required columns and download links; (D) Admin Remarks per submission plus conditional re-upload control for 'Revision Required'; include a visible Logout action."
+        },
+        {
+          "path": "frontend/project/js/dashboard.js",
           "operation": "create",
-          "description": "Create a short English README describing how to run the site offline by double-clicking index.html, stating that no server/network is required, and documenting the final folder structure (index.html, css/, js/, assets/, images/, fonts/)."
+          "description": "Implement dashboard rendering and interactions: load current user data from dummy DB, render payment/receipt/submissions/remarks, handle receipt download link wiring, handle logout, and implement revision-required re-upload simulation that updates persisted dummy DB and refreshes UI."
+        },
+        {
+          "path": "frontend/project/js/main.js",
+          "operation": "modify",
+          "description": "Wire dashboard.html initialization to require an authenticated session, load dashboard module, and redirect unauthenticated users to index.html in file:// context."
+        },
+        {
+          "path": "frontend/project/receipts/mock-receipt.pdf",
+          "operation": "create",
+          "description": "Add a local mock PDF receipt file used by the dashboard 'Download Receipt' action via a relative path."
+        },
+        {
+          "path": "frontend/project/assets/sample-submission.pdf",
+          "operation": "create",
+          "description": "Add a local sample submitted file used by the submissions table download links via a relative path."
+        },
+        {
+          "path": "frontend/project/assets/reupload-placeholder.txt",
+          "operation": "create",
+          "description": "Add a local placeholder file used as the stable download target for re-upload simulations (the UI should show the selected filename while linking to this local placeholder so download stays functional in file:// mode)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-57",
+      "summary": "Add editable My Profile section to the dashboard (email read-only) including offline profile photo upload simulation; ensure admin can view the same profile data for any user.",
+      "acceptanceCriteria": [
+        "Email is displayed but cannot be edited in the profile editor.",
+        "Edit Profile toggles fields into an editable state; Save Changes validates inputs and writes changes to the dummy DB (simulation).",
+        "Profile photo upload is supported as an offline simulation (e.g., storing a data URL or filename reference in localStorage) and is displayed after saving.",
+        "Admin view (in `admin.html`) can select any user and see the same profile fields and saved values."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/project/dashboard.html",
+          "operation": "modify",
+          "description": "Add 'My Profile' section markup with required fields, Email read-only display, Edit Profile / Save Changes controls, and profile photo upload control + preview container."
+        },
+        {
+          "path": "frontend/project/js/dashboard.js",
+          "operation": "modify",
+          "description": "Implement profile edit state toggling, field validation, persisting updates to dummy DB, and offline profile photo upload simulation using FileReader to store a data URL in localStorage-backed dummy DB; render saved photo on load."
+        },
+        {
+          "path": "frontend/project/admin.html",
+          "operation": "modify",
+          "description": "Add admin UI section to view a selected user's full profile fields (including stored profile photo) in a readable layout."
+        },
+        {
+          "path": "frontend/project/js/admin.js",
+          "operation": "modify",
+          "description": "Render selected user's profile details from dummy DB (same fields as dashboard) and keep view in sync with any updates."
+        }
+      ]
+    },
+    {
+      "id": "REQ-58",
+      "summary": "Implement password management: change password in dashboard, forgot password match flow in index, and admin password reset control.",
+      "acceptanceCriteria": [
+        "Change Password rejects incorrect current password and rejects mismatched new/confirm values with clear English error messages.",
+        "Successful Change Password updates the dummy DB (simulation) and allows login using the new password afterward.",
+        "Admin password reset updates the target user's password in the dummy DB (simulation) and the user can log in with the new password afterward.",
+        "Password fields are never displayed in plaintext in the UI outside their input controls."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/project/dashboard.html",
+          "operation": "modify",
+          "description": "Add a 'Change Password' section with current/new/confirm password inputs (type=password), submit control, and English validation/error message area."
+        },
+        {
+          "path": "frontend/project/js/dashboard.js",
+          "operation": "modify",
+          "description": "Implement Change Password flow: verify current password against dummy DB, enforce new/confirm match, persist update to localStorage-backed dummy DB, and show clear English success/error states."
+        },
+        {
+          "path": "frontend/project/js/auth.js",
+          "operation": "modify",
+          "description": "Implement/ensure Forgot Password match logic using Email + Phone + Date of Birth + Occupation and password reset persistence to dummy DB, without exposing passwords outside password inputs."
+        },
+        {
+          "path": "frontend/project/admin.html",
+          "operation": "modify",
+          "description": "Add admin password reset UI allowing admin to search/select a user and set a new password using password-type inputs and clear confirmation messaging."
+        },
+        {
+          "path": "frontend/project/js/admin.js",
+          "operation": "modify",
+          "description": "Implement admin password reset logic with dummy DB persistence and UI+logic checks ensuring only admin sessions can execute it."
+        }
+      ]
+    },
+    {
+      "id": "REQ-59",
+      "summary": "Implement offline admin panel gated by admin session with capabilities to manage users, profiles, payments, submissions/remarks/statuses, password resets, and optional receipt attachment reference.",
+      "acceptanceCriteria": [
+        "Opening `admin.html` without an admin session redirects to `index.html` (or shows an admin login gate that requires authentication).",
+        "Admin can list users and select a user to view profile, payments, and submissions in a readable layout.",
+        "Admin updates to payment status/details and submission remarks/status persist to the dummy DB simulation and are visible in the user’s `dashboard.html` after refresh.",
+        "Optional receipt attachment allows admin to store a relative path reference under `/project/receipts` and the user dashboard 'Download Receipt' uses that reference when present.",
+        "All admin-only actions are blocked for non-admin sessions (UI and logic checks)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/project/admin.html",
+          "operation": "modify",
+          "description": "Add admin panel layout including: admin gate message area, user list/search, selected user details (profile/payments/submissions), controls for payment status/details, submission status, remarks editing, receipt reference attachment, and password reset."
+        },
+        {
+          "path": "frontend/project/js/admin.js",
+          "operation": "create",
+          "description": "Implement admin panel logic: require admin session, list/select users, edit payment status/details, edit submission remarks and status, reset passwords, attach receipt reference (relative path under ./receipts), persist changes to dummy DB, and block admin-only actions for non-admin sessions."
+        },
+        {
+          "path": "frontend/project/js/main.js",
+          "operation": "modify",
+          "description": "Wire admin.html initialization to enforce admin gating (redirect to index.html if not admin) and initialize the admin module when authorized."
+        },
+        {
+          "path": "frontend/project/js/dashboard.js",
+          "operation": "modify",
+          "description": "Update dashboard receipt download wiring to prefer a per-user receipt reference set by admin in the dummy DB when present; otherwise fall back to the default local mock receipt."
+        }
+      ]
+    },
+    {
+      "id": "REQ-60",
+      "summary": "Create and use a shared dummy local JSON database module (seed + read/write helpers) for users, payments, submissions, and remarks with integration-point comments.",
+      "acceptanceCriteria": [
+        "A dedicated JS module/file exists for the dummy database seed and read/write helpers used by all three pages.",
+        "Sample dummy data includes at least: one admin user and at least one normal user; payment records with different statuses; submissions covering all required statuses; remarks associated to submissions.",
+        "Code contains clear English comments marking integration points for future backend APIs.",
+        "Data updates performed in dashboard/admin flows are reflected consistently across pages (and persist across refreshes if implemented via localStorage)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/project/js/db.js",
+          "operation": "create",
+          "description": "Create dummy DB seed + helpers module that loads/saves a JSON object via localStorage (with seed fallback) for users, payments, submissions, and remarks; include clear English comments indicating future backend integration points."
+        },
+        {
+          "path": "frontend/project/js/auth.js",
+          "operation": "modify",
+          "description": "Use the shared dummy DB helpers for registration, login validation, forgot password matching, and session-linked user lookup so all auth flows consistently read/write the same persisted dummy DB."
+        },
+        {
+          "path": "frontend/project/js/dashboard.js",
+          "operation": "modify",
+          "description": "Use the shared dummy DB helpers to read current user data and persist changes (profile updates, change password, revision re-upload filename updates) consistently across refreshes."
+        },
+        {
+          "path": "frontend/project/js/admin.js",
+          "operation": "modify",
+          "description": "Use the shared dummy DB helpers to read all users and persist admin changes (payment updates, remarks/status changes, receipt attachment references, password resets) consistently across refreshes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-61",
+      "summary": "Provide professional, consistent journal-portal styling using one main CSS file and one main JS entry, with clear UI journey and responsive layouts.",
+      "acceptanceCriteria": [
+        "All three pages share the same visual system (typography, spacing, button styles, inputs, table styles, status badges).",
+        "Status badges are visually distinct for Pending/Paid/Failed and for the submission statuses.",
+        "Layouts are responsive and usable on mobile and desktop without overflowing content.",
+        "All UI labels, headings, errors, and help text are in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/project/css/main.css",
+          "operation": "modify",
+          "description": "Implement a shared design system: typography scale, spacing, app shell (header/nav), cards, form controls, tables, button variants, alert/toast style messaging, and status badges for payment/submission states; ensure responsive layouts and no overflow."
+        },
+        {
+          "path": "frontend/project/index.html",
+          "operation": "modify",
+          "description": "Ensure index page uses shared layout components/classes (app shell, card-based auth panels, consistent buttons/inputs) and English UI copy aligned to the Profile→Payment→Receipt→Submission→Remark→Re-upload→Password journey."
+        },
+        {
+          "path": "frontend/project/dashboard.html",
+          "operation": "modify",
+          "description": "Ensure dashboard sections are ordered and labeled to clearly communicate the user journey and use shared CSS component classes (cards, tables, badges, actions)."
+        },
+        {
+          "path": "frontend/project/admin.html",
+          "operation": "modify",
+          "description": "Ensure admin panel uses the same shared styling system and provides readable management layouts for users, payments, submissions, and profile viewing."
+        },
+        {
+          "path": "frontend/project/js/main.js",
+          "operation": "modify",
+          "description": "Centralize common UI behavior (e.g., minimal tab/view switching, safe DOM querying, unified error/success message rendering) while delegating page-specific logic to helper modules; ensure no console errors."
+        }
+      ]
+    },
+    {
+      "id": "REQ-62",
+      "summary": "Add project README documenting offline portal features, how to open/test, and final folder structure.",
+      "acceptanceCriteria": [
+        "README exists at `/project/README.md` and is written in English.",
+        "README includes steps to open `index.html` offline and describes how to test the main flows (user + admin).",
+        "README includes the final folder tree for `/project`."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/project/README.md",
+          "operation": "create",
+          "description": "Write an English README describing: registration/login/session simulation, dashboard sections, profile editing + photo simulation, receipt download mock, submissions/remarks/re-upload simulation, change password, forgot password matching fields, admin management capabilities, exact steps to open via file://, and the final /project folder tree."
         }
       ]
     }

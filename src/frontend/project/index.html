@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Portal - Login</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="container">
+                <h1 class="logo">Journal Portal</h1>
+                <p class="tagline">Academic Research & Publication System</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <!-- Login View -->
+                <div id="login-view" class="auth-card">
+                    <h2>Login</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <div class="message-area" id="login-message"></div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <div class="auth-links">
+                            <a href="#" id="show-register">Create Account</a>
+                            <a href="#" id="show-forgot">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Register View -->
+                <div id="register-view" class="auth-card" style="display: none;">
+                    <h2>Create Account</h2>
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="register-name">Full Name</label>
+                            <input type="text" id="register-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email</label>
+                            <input type="email" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-phone">Phone</label>
+                            <input type="tel" id="register-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-dob">Date of Birth</label>
+                            <input type="date" id="register-dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-gender">Gender</label>
+                            <select id="register-gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-occupation">Occupation Type</label>
+                            <select id="register-occupation" required>
+                                <option value="">Select Occupation</option>
+                                <option value="Student">Student</option>
+                                <option value="Researcher">Researcher</option>
+                                <option value="Professor">Professor</option>
+                                <option value="Farmer">Farmer</option>
+                                <option value="Agri-Entrepreneur">Agri-Entrepreneur</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-organization">Organization</label>
+                            <input type="text" id="register-organization">
+                        </div>
+                        <div class="form-group">
+                            <label for="register-address">Address</label>
+                            <textarea id="register-address" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input type="password" id="register-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-confirm-password">Confirm Password</label>
+                            <input type="password" id="register-confirm-password" required>
+                        </div>
+                        <div class="message-area" id="register-message"></div>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <div class="auth-links">
+                            <a href="#" id="show-login-from-register">Already have an account? Login</a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Forgot Password View -->
+                <div id="forgot-view" class="auth-card" style="display: none;">
+                    <h2>Reset Password</h2>
+                    <p class="help-text">Enter your details to reset your password</p>
+                    <form id="forgot-form">
+                        <div class="form-group">
+                            <label for="forgot-email">Email</label>
+                            <input type="email" id="forgot-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="forgot-phone">Phone</label>
+                            <input type="tel" id="forgot-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="forgot-dob">Date of Birth</label>
+                            <input type="date" id="forgot-dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="forgot-occupation">Occupation</label>
+                            <select id="forgot-occupation" required>
+                                <option value="">Select Occupation</option>
+                                <option value="Student">Student</option>
+                                <option value="Researcher">Researcher</option>
+                                <option value="Professor">Professor</option>
+                                <option value="Farmer">Farmer</option>
+                                <option value="Agri-Entrepreneur">Agri-Entrepreneur</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="message-area" id="forgot-message"></div>
+                        <button type="submit" class="btn btn-primary">Verify & Reset</button>
+                        <div class="auth-links">
+                            <a href="#" id="show-login-from-forgot">Back to Login</a>
+                        </div>
+                    </form>
+
+                    <!-- New Password Form (shown after verification) -->
+                    <form id="new-password-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <input type="password" id="new-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-new-password">Confirm New Password</label>
+                            <input type="password" id="confirm-new-password" required>
+                        </div>
+                        <div class="message-area" id="new-password-message"></div>
+                        <button type="submit" class="btn btn-primary">Set New Password</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="container">
+                <p>&copy; 2026 Journal Portal. Built with love using <a href="https://caffeine.ai" target="_blank">caffeine.ai</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="./js/db.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Portal - Admin Panel</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="container">
+                <h1 class="logo">Journal Portal - Admin Panel</h1>
+                <div class="header-actions">
+                    <span id="admin-name-display" class="user-name"></span>
+                    <button id="admin-logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <div id="admin-gate" class="alert alert-error" style="display: none;">
+                    <h3>Access Denied</h3>
+                    <p>You do not have admin privileges. Redirecting to login...</p>
+                </div>
+
+                <div id="admin-content" style="display: none;">
+                    <h2 class="page-title">Admin Dashboard</h2>
+
+                    <!-- User Management Section -->
+                    <section class="dashboard-section">
+                        <h3>User Management</h3>
+                        <div class="search-bar">
+                            <input type="text" id="user-search" placeholder="Search users by name or email...">
+                            <button id="search-users-btn" class="btn btn-primary">Search</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Occupation</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-tbody">
+                                    <!-- Populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Selected User Details -->
+                    <section id="user-details-section" class="dashboard-section" style="display: none;">
+                        <div class="section-header">
+                            <h3>User Details: <span id="selected-user-name"></span></h3>
+                            <button id="close-user-details" class="btn btn-secondary">Close</button>
+                        </div>
+
+                        <!-- User Profile View -->
+                        <div class="profile-card">
+                            <h4>Profile Information</h4>
+                            <div class="profile-photo-container">
+                                <img id="admin-view-profile-photo" src="./assets/default-avatar.png" alt="Profile Photo" class="profile-photo">
+                            </div>
+                            <div class="profile-details">
+                                <div class="profile-field">
+                                    <label>Full Name:</label>
+                                    <span id="admin-view-name"></span>
+                                </div>
+                                <div class="profile-field">
+                                    <label>Email:</label>
+                                    <span id="admin-view-email"></span>
+                                </div>
+                                <div class="profile-field">
+                                    <label>Phone:</label>
+                                    <span id="admin-view-phone"></span>
+                                </div>
+                                <div class="profile-field">
+                                    <label>Gender:</label>
+                                    <span id="admin-view-gender"></span>
+                                </div>
+                                <div class="profile-field">
+                                    <label>Date of Birth:</label>
+                                    <span id="admin-view-dob"></span>
+                                </div>
+                                <div class="profile-field">
+                                    <label>Occupation:</label>
+                                    <span id="admin-view-occupation"></span>
+                                </div>
+                                <div class="profile-field">
+                                    <label>Organization:</label>
+                                    <span id="admin-view-organization"></span>
+                                </div>
+                                <div class="profile-field">
+                                    <label>Address:</label>
+                                    <span id="admin-view-address"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Management -->
+                        <div class="payment-card">
+                            <h4>Payment Management</h4>
+                            <form id="admin-payment-form">
+                                <div class="form-group">
+                                    <label for="admin-payment-status">Status</label>
+                                    <select id="admin-payment-status" required>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Paid">Paid</option>
+                                        <option value="Failed">Failed</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-payment-amount">Amount</label>
+                                    <input type="text" id="admin-payment-amount" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-payment-date">Date</label>
+                                    <input type="date" id="admin-payment-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-payment-id">Payment ID</label>
+                                    <input type="text" id="admin-payment-id" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-payment-method">Method</label>
+                                    <input type="text" id="admin-payment-method" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-receipt-path">Receipt Path (optional)</label>
+                                    <input type="text" id="admin-receipt-path" placeholder="./receipts/receipt-001.pdf">
+                                    <small>Relative path to receipt file in ./receipts folder</small>
+                                </div>
+                                <div class="message-area" id="payment-update-message"></div>
+                                <button type="submit" class="btn btn-primary">Update Payment</button>
+                            </form>
+                        </div>
+
+                        <!-- Submission Management -->
+                        <div class="submissions-card">
+                            <h4>User Submissions</h4>
+                            <div class="table-container">
+                                <table class="submissions-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Title</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-submissions-tbody">
+                                        <!-- Populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Password Reset -->
+                        <div class="password-card">
+                            <h4>Reset User Password</h4>
+                            <form id="admin-password-reset-form">
+                                <div class="form-group">
+                                    <label for="admin-new-password">New Password</label>
+                                    <input type="password" id="admin-new-password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-confirm-password">Confirm Password</label>
+                                    <input type="password" id="admin-confirm-password" required>
+                                </div>
+                                <div class="message-area" id="admin-password-message"></div>
+                                <button type="submit" class="btn btn-primary">Reset Password</button>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="container">
+                <p>&copy; 2026 Journal Portal. Built with love using <a href="https://caffeine.ai" target="_blank">caffeine.ai</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Submission Edit Modal -->
+    <div id="submission-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3>Edit Submission</h3>
+            <form id="submission-edit-form">
+                <input type="hidden" id="edit-submission-id">
+                <div class="form-group">
+                    <label for="edit-submission-status">Status</label>
+                    <select id="edit-submission-status" required>
+                        <option value="Under Review">Under Review</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Revision Required">Revision Required</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-submission-remarks">Admin Remarks</label>
+                    <textarea id="edit-submission-remarks" rows="4" required></textarea>
+                </div>
+                <div class="message-area" id="submission-edit-message"></div>
+                <button type="submit" class="btn btn-primary">Update Submission</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/db.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/admin.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>

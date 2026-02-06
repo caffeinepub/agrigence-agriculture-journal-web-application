@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 81,
+  "projectStateVersion": 85,
   "summary": "Agrigence is an agriculture journal/publication web app built on the Internet Computer with a Motoko backend canister and a React (TanStack Router) frontend. It supports public browsing of content (home feeds, news, blog posts, journals archive, editorial board, author guidelines, terms) and an authenticated user experience via Internet Identity for profile creation, subscription purchase/activation via Stripe Checkout (IC HTTP outcalls), and research article submission (DOC/PDF) using IC blob storage. Admins (bootstrapped via an environment token + user-provided secret) can manage operational content through an admin panel: publish/delete news, CRUD blog posts (optional image blob), upload journal issues (PDF blob) and mark as current/archive, review pending article submissions (approve/reject), CRUD editorial board members (optional uploaded photo blob or static avatar URL), and manage Terms & Conditions placeholders/content.",
   "architectural_notes": [
     "Frontend uses TanStack Router for routing and @tanstack/react-query for all backend queries/mutations with cache invalidation after writes.",
@@ -488,6 +488,150 @@
         "REQ-44"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-an-offline-ready-pure-html-css-javascript-mini-app-no-frameworks-no-cdn-dependencies-for-a-journal-portal-user-account-system-consisting-of-three-pages-index-html-auth-dashboard-html-user-dashboard-and-admin-html-admin-panel-the-entire-mini-app-must-work-by-double-clicking-index-html-with-dummy-data-and-proper-relative-paths-and-must-produce-no-console-errors",
+      "title": "Create an offline-ready, pure HTML/CSS/JavaScript mini-app (no frameworks, no CDN dependencies) for a journal portal user account system consisting of three pages: index.html (auth), dashboard.html (user dashboard), and admin.html (admin panel). The entire mini-app must work by double-clicking index.html with dummy data and proper relative paths, and must produce no console errors.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-authentication-on-index-html-with-user-registration-and-login-using-email-password-against-a-dummy-json-database-stored-locally-in-a-js-file-include-links-to-register-and-forgot-password-views-on-the-same-page-or-navigable-within-index-html-simulate-a-secure-session-using-javascript-e-g-session-token-stored-in-sessionstorage-localstorage-and-redirect-authenticated-users-to-dashboard-html",
+      "title": "Implement Authentication on index.html with user registration and login using email + password against a dummy JSON database stored locally (in a JS file). Include links to Register and Forgot Password views on the same page (or navigable within index.html). Simulate a secure session using JavaScript (e.g., session token stored in sessionStorage/localStorage) and redirect authenticated users to dashboard.html.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-user-dashboard-on-dashboard-html-that-displays-for-the-logged-in-user-the-following-sections-a-payment-status-pending-paid-failed-with-amount-date-payment-id-method-include-a-download-receipt-action-that-downloads-a-local-mock-pdf-from-the-receipts-folder-b-receipt-system-view-that-shows-receipt-details-user-details-payment-details-unique-receipt-number-date-amount-c-submission-section-table-listing-submission-id-title-date-status-under-review-accepted-rejected-revision-required-and-a-download-link-to-the-submitted-file-d-admin-remarks-per-submission-if-status-is-revision-required-show-a-re-upload-file-control-that-updates-the-dummy-data-to-reference-a-newly-selected-local-file-name-simulation",
+      "title": "Implement User Dashboard on dashboard.html that displays, for the logged-in user, the following sections: (A) Payment Status (Pending/Paid/Failed) with amount, date, payment ID, method; include a 'Download Receipt' action that downloads a local mock PDF from the receipts folder. (B) Receipt System view that shows receipt details (user details, payment details, unique receipt number, date, amount). (C) Submission Section table listing submission ID, title, date, status (Under Review/Accepted/Rejected/Revision Required) and a download link to the submitted file. (D) Admin Remarks per submission; if status is 'Revision Required', show a re-upload file control that updates the dummy data to reference a newly selected local file name (simulation).",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-my-profile-section-on-dashboard-html-with-editable-personal-information-full-name-email-read-only-phone-gender-date-of-birth-occupation-type-student-researcher-professor-farmer-agri-entrepreneur-other-organization-address-and-profile-photo-upload-include-edit-profile-and-save-changes-controls-ensure-the-admin-panel-can-view-this-profile-data-for-any-user",
+      "title": "Add a 'My Profile' section on dashboard.html with editable personal information: Full Name, Email (read-only), Phone, Gender, Date of Birth, Occupation Type (Student/Researcher/Professor/Farmer/Agri-Entrepreneur/Other), Organization, Address, and Profile photo upload. Include 'Edit Profile' and 'Save Changes' controls. Ensure the Admin Panel can view this profile data for any user.",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-password-management-flows-a-change-password-in-dashboard-html-requiring-current-password-new-password-confirm-password-and-validating-matches-b-forgot-password-flow-on-index-html-without-otp-user-provides-email-phone-date-of-birth-occupation-if-all-match-a-user-record-allow-setting-a-new-password-c-admin-password-control-in-admin-html-admin-can-search-for-any-user-and-manually-reset-that-user-s-password",
+      "title": "Implement Password Management flows: (A) Change Password in dashboard.html requiring current password, new password, confirm password, and validating matches. (B) Forgot Password flow on index.html without OTP: user provides Email, Phone, Date of Birth, Occupation; if all match a user record, allow setting a new password. (C) Admin password control in admin.html: admin can search for any user and manually reset that user's password.",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-offline-admin-panel-on-admin-html-that-allows-an-admin-user-to-view-all-users-view-user-profiles-update-payment-status-pending-paid-failed-and-payment-details-add-edit-submission-remarks-change-submission-status-under-review-accepted-rejected-revision-required-reset-user-passwords-and-optionally-upload-attach-a-receipt-reference-for-a-user-simulation-pointing-to-a-local-file-under-receipts-gate-admin-html-behind-an-admin-login-session-simulation-using-the-same-dummy-db-so-non-admin-users-cannot-access-it",
+      "title": "Implement an offline Admin Panel on admin.html that allows an admin user to: view all users, view user profiles, update payment status (Pending/Paid/Failed) and payment details, add/edit submission remarks, change submission status (Under Review/Accepted/Rejected/Revision Required), reset user passwords, and optionally upload/attach a receipt reference for a user (simulation pointing to a local file under /receipts). Gate admin.html behind an admin login/session simulation (using the same dummy DB) so non-admin users cannot access it.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-and-document-the-required-offline-folder-structure-and-files-inside-the-repository-matching-the-user-s-requested-layout-project-with-index-html-dashboard-html-admin-html-css-js-assets-receipts-include-a-single-main-css-file-and-a-single-main-js-file-plus-optional-small-helper-js-modules-if-needed-a-dummy-json-database-in-js-and-sample-dummy-data-for-users-payments-submissions-and-remarks-include-clear-code-comments-indicating-where-backend-connections-would-be-integrated-later",
+      "title": "Create and document the required offline folder structure and files inside the repository matching the user's requested layout: /project with index.html, dashboard.html, admin.html, /css, /js, /assets, /receipts. Include a single main CSS file and a single main JS file (plus optional small helper JS modules if needed), a dummy JSON database in JS, and sample dummy data for users, payments, submissions, and remarks. Include clear code comments indicating where backend connections would be integrated later.",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-a-short-human-readable-feature-list-for-the-offline-portal-as-a-readme-inside-project-enumerating-the-implemented-flows-registration-login-session-simulation-user-dashboard-sections-profile-payment-receipt-submissions-remarks-re-upload-change-password-forgot-password-match-by-email-phone-dob-occupation-and-admin-management-capabilities-users-profiles-payments-submissions-remarks-password-reset-optional-receipt-reference-all-user-facing-text-must-be-in-english",
+      "title": "Provide a short, human-readable feature list for the offline portal (as a README inside /project) enumerating the implemented flows: registration/login/session simulation, user dashboard sections (profile/payment/receipt/submissions/remarks/re-upload), change password, forgot password (match by email/phone/DOB/occupation), and admin management capabilities (users/profiles/payments/submissions/remarks/password reset/optional receipt reference). All user-facing text must be in English.",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-the-offline-portal-ui-to-look-like-a-professional-journal-portal-using-clean-typography-spacing-and-a-consistent-component-style-forms-tables-cards-status-badges-buttons-ensure-the-ui-clearly-communicates-the-user-journey-profile-payment-receipt-submission-admin-remark-re-upload-password-control",
+      "title": "Design the offline portal UI to look like a professional journal portal using clean typography, spacing, and a consistent component style (forms, tables, cards, status badges, buttons). Ensure the UI clearly communicates the user journey: Profile → Payment → Receipt → Submission → Admin Remark → Re-upload → Password control.",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-offline-ready-mini-app-under-project-that-works-by-double-clicking-project-index-html-no-server-no-cdn-no-build-step-and-implements-a-journal-portal-user-account-dashboard-admin-panel-using-pure-html-css-and-javascript-only",
+      "title": "Create a new offline-ready mini-app under `/project` that works by double-clicking `/project/index.html` (no server, no CDN, no build step) and implements a journal portal User Account Dashboard + Admin Panel using pure HTML, CSS, and JavaScript only.",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-project-index-html-authentication-ui-and-flows-login-register-and-forgot-password-views-same-page-or-navigable-within-index-html-using-email-password-against-a-dummy-local-json-database-stored-in-a-js-file-simulate-a-secure-session-using-javascript-e-g-session-token-stored-in-sessionstorage-localstorage-and-redirect-authenticated-users-to-project-dashboard-html",
+      "title": "Implement `/project/index.html` authentication UI and flows: Login, Register, and Forgot Password views (same page or navigable within index.html) using email + password against a dummy local JSON database stored in a JS file; simulate a secure session using JavaScript (e.g., session token stored in sessionStorage/localStorage) and redirect authenticated users to `/project/dashboard.html`.",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-project-dashboard-html-user-dashboard-for-the-logged-in-user-with-these-sections-a-payment-status-pending-paid-failed-showing-amount-date-payment-id-method-and-a-download-receipt-action-that-downloads-a-local-mock-pdf-from-project-receipts-b-receipt-system-view-that-shows-receipt-details-user-details-payment-details-unique-receipt-number-date-amount-c-submission-section-table-listing-submission-id-title-date-status-under-review-accepted-rejected-revision-required-and-a-download-link-to-the-submitted-file-d-admin-remarks-shown-per-submission-and-if-status-is-revision-required-show-a-re-upload-file-control-that-updates-dummy-data-to-reference-the-newly-selected-local-file-name-simulation",
+      "title": "Implement `/project/dashboard.html` user dashboard for the logged-in user with these sections: (A) Payment Status (Pending/Paid/Failed) showing amount, date, payment ID, method and a 'Download Receipt' action that downloads a local mock PDF from `/project/receipts`; (B) Receipt System view that shows receipt details (user details, payment details, unique receipt number, date, amount); (C) Submission Section table listing submission ID, title, date, status (Under Review/Accepted/Rejected/Revision Required) and a download link to the submitted file; (D) Admin Remarks shown per submission, and if status is 'Revision Required' show a re-upload file control that updates dummy data to reference the newly selected local file name (simulation).",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-my-profile-section-on-project-dashboard-html-with-editable-personal-information-full-name-email-read-only-phone-gender-date-of-birth-occupation-type-student-researcher-professor-farmer-agri-entrepreneur-other-organization-address-and-profile-photo-upload-include-edit-profile-and-save-changes-controls-ensure-the-offline-admin-panel-can-view-this-profile-data-for-any-user",
+      "title": "Add a 'My Profile' section on `/project/dashboard.html` with editable personal information: Full Name, Email (read-only), Phone, Gender, Date of Birth, Occupation Type (Student/Researcher/Professor/Farmer/Agri-Entrepreneur/Other), Organization, Address, and Profile photo upload; include 'Edit Profile' and 'Save Changes' controls; ensure the offline Admin Panel can view this profile data for any user.",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-password-management-flows-for-the-offline-mini-app-a-change-password-inside-project-dashboard-html-requiring-current-password-new-password-confirm-password-and-validating-matches-b-forgot-password-flow-on-project-index-html-no-otp-using-email-phone-date-of-birth-occupation-match-c-admin-password-control-in-project-admin-html-where-admin-can-search-for-any-user-and-manually-reset-that-user-s-password",
+      "title": "Implement password management flows for the offline mini-app: (A) Change Password inside `/project/dashboard.html` requiring current password, new password, confirm password, and validating matches; (B) Forgot Password flow on `/project/index.html` (no OTP) using Email + Phone + Date of Birth + Occupation match; (C) Admin password control in `/project/admin.html` where admin can search for any user and manually reset that user's password.",
+      "reqIds": [
+        "REQ-58"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-project-admin-html-as-an-offline-admin-panel-gated-behind-an-admin-login-session-simulation-using-the-same-dummy-db-so-non-admin-users-cannot-access-it-admin-capabilities-must-include-view-all-users-view-user-profiles-update-payment-status-details-pending-paid-failed-add-edit-submission-remarks-change-submission-statuses-under-review-accepted-rejected-revision-required-reset-user-passwords-and-optionally-upload-attach-a-receipt-reference-for-a-user-simulation-pointing-to-a-local-file-under-project-receipts",
+      "title": "Implement `/project/admin.html` as an offline Admin Panel gated behind an admin login/session simulation using the same dummy DB so non-admin users cannot access it; admin capabilities must include: view all users, view user profiles, update payment status/details (Pending/Paid/Failed), add/edit submission remarks, change submission statuses (Under Review/Accepted/Rejected/Revision Required), reset user passwords, and optionally upload/attach a receipt reference for a user (simulation pointing to a local file under `/project/receipts`).",
+      "reqIds": [
+        "REQ-59"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-the-dummy-local-json-database-in-a-js-file-under-project-js-containing-sample-data-for-users-payments-submissions-and-remarks-with-clear-code-comments-indicating-where-backend-connections-would-be-integrated-later-ensure-the-offline-app-uses-this-dummy-db-consistently-across-index-dashboard-admin-pages",
+      "title": "Create the dummy local JSON database (in a JS file under `/project/js`) containing sample data for users, payments, submissions, and remarks, with clear code comments indicating where backend connections would be integrated later; ensure the offline app uses this dummy DB consistently across index/dashboard/admin pages.",
+      "reqIds": [
+        "REQ-60"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-professional-journal-portal-ui-styling-for-the-offline-mini-app-using-a-single-main-css-file-under-project-css-and-a-single-main-js-entry-file-under-project-js-optional-small-helper-js-modules-allowed-ensuring-consistent-component-styling-forms-tables-cards-status-badges-buttons-and-a-clear-user-journey-profile-payment-receipt-submission-admin-remark-re-upload-password-control",
+      "title": "Provide professional journal-portal UI styling for the offline mini-app using a single main CSS file under `/project/css` and a single main JS entry file under `/project/js` (optional small helper JS modules allowed), ensuring consistent component styling (forms, tables, cards, status badges, buttons) and a clear user journey: Profile → Payment → Receipt → Submission → Admin Remark → Re-upload → Password control.",
+      "reqIds": [
+        "REQ-61"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-project-readme-md-that-lists-the-implemented-offline-portal-features-registration-login-session-simulation-dashboard-sections-profile-editing-receipt-download-mock-submissions-remarks-re-upload-change-password-forgot-password-match-by-email-phone-dob-occupation-and-admin-management-capabilities-and-documents-exactly-how-to-open-and-test-the-offline-app-plus-the-final-folder-structure",
+      "title": "Add `/project/README.md` that lists the implemented offline portal features (registration/login/session simulation, dashboard sections, profile editing, receipt download mock, submissions/remarks/re-upload, change password, forgot password match by email/phone/DOB/occupation, and admin management capabilities) and documents exactly how to open and test the offline app plus the final folder structure.",
+      "reqIds": [
+        "REQ-62"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -872,6 +1016,12 @@
     {
       "id": "AR-52",
       "summary": "Create a complete offline-ready static website project from scratch (index.html + local CSS/JS + local assets/fonts/libs), with clean folder structure and no server/CDN dependencies, so double-clicking index.html works without broken links or console errors.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-53",
+      "summary": "Create an offline-ready (open index.html directly) pure HTML/CSS/JS User Account Dashboard + Admin Panel for a journal portal with dummy JSON DB: registration/login, session simulation, forgot/reset/change password flows, user dashboard (payment status + receipt download mock, submissions + remarks + re-upload), editable profile with photo upload, and admin panel to manage users/profiles/payments/submission statuses/remarks/password resets/optional receipt upload; clean UI, no console errors, proper relative paths, and required folder structure/files.",
       "reqIds": [],
       "status": "pending"
     }

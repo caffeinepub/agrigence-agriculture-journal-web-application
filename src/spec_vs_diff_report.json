@@ -1,49 +1,81 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T15:04:38.772Z",
-  "summary": "Diff adds a new offline static site bundle under frontend/offline-bundle with index.html, local CSS/JS, and local images, plus a README. However, the diff summary is truncated for index.html/JS/README, so several acceptance-criteria details (JS loading method/order, absence of CDN/absolute paths, and README folder-structure listing) cannot be fully verified from the provided evidence.",
+  "generatedAt": "2026-02-05T15:28:06.649Z",
+  "summary": "The diff adds an offline journal portal mini-app, but it is created under `frontend/project/` rather than the requested repo-root `/project/` path. Several unrelated modifications to the existing React app are also present, which conflicts with the request to keep the production app unchanged.",
   "missing_requirements": [
     {
-      "id": "REQ-43",
-      "requirement": "CSS is loaded before JS in index.html, and JS is loaded in a way that does not require a server (e.g., deferred scripts).",
-      "reason": "index.html is truncated and does not show any <script> tags, so JS loading order and whether scripts are deferred/appropriate for file:// cannot be confirmed from the diff summary.",
+      "id": "REQ-54",
+      "requirement": "Create the offline-ready mini-app under `/project` at the repo root with `/project/index.html`, `/project/dashboard.html`, `/project/admin.html`, and subfolders `/project/css`, `/project/js`, `/project/assets`, `/project/receipts`.",
+      "reason": "All added files appear under `frontend/project/...` rather than `/project/...` at the repository root.",
       "evidence": [
-        "frontend/offline-bundle/index.html (truncated)"
+        "frontend/project/index.html",
+        "frontend/project/dashboard.html",
+        "frontend/project/admin.html",
+        "frontend/project/css/main.css",
+        "frontend/project/js/main.js",
+        "frontend/project/assets/.gitkeep",
+        "frontend/project/receipts/.gitkeep"
       ]
     },
     {
-      "id": "REQ-42",
-      "requirement": "No external (CDN) dependencies are used; all libraries, icons, and fonts referenced by the offline site are present locally and linked via relative paths; no absolute paths or localhost/server URLs are used.",
-      "reason": "index.html/css/js are truncated and do not show the full set of referenced resources/URLs; the diff summary does not explicitly demonstrate that no external URLs/CDNs/absolute paths are present across the whole bundle.",
+      "id": "REQ-56",
+      "requirement": "'Download Receipt' action downloads/opens a local mock PDF from `/project/receipts` using a relative path.",
+      "reason": "The DB seed references `./receipts/mock-receipt.pdf`, but the diff only shows `frontend/project/receipts/.gitkeep` and does not show an actual PDF file being added.",
       "evidence": [
-        "frontend/offline-bundle/index.html (truncated)",
-        "frontend/offline-bundle/css/styles.css (truncated)",
-        "frontend/offline-bundle/js/app.js (truncated)"
+        "frontend/project/js/db.js",
+        "frontend/project/receipts/.gitkeep"
       ]
     },
     {
-      "id": "REQ-44",
-      "requirement": "README lists or illustrates the offline bundle folder structure.",
-      "reason": "README.md is shown only up to the '## Folder Structure' heading and an opening code fence; the actual structure listing is not present in the provided diff summary.",
+      "id": "REQ-56",
+      "requirement": "Submission table provides a working local download link for the referenced submitted file (use `/project/assets` as needed).",
+      "reason": "The DB seed references `./assets/sample-submission.pdf`, but the diff only shows `frontend/project/assets/.gitkeep` and does not show the referenced sample submission file being added.",
       "evidence": [
-        "frontend/offline-bundle/README.md"
+        "frontend/project/js/db.js",
+        "frontend/project/assets/.gitkeep"
+      ]
+    },
+    {
+      "id": "REQ-62",
+      "requirement": "README includes the final folder tree for `/project`.",
+      "reason": "The README's 'Folder Structure' section is present but the diff content is truncated right after the opening code block, so the required folder tree is not evidenced.",
+      "evidence": [
+        "frontend/project/README.md"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.64,
+  "hallucinated_features": [
+    {
+      "description": "Multiple changes to the existing React/TanStack Router production app (routes, header/footer, Stripe dialogs, admin panel page behavior, etc.).",
+      "reason": "BuildRequest explicitly scopes work to the standalone offline mini-app under `/project` and says to keep the Internet Computer React+Motoko production app unchanged unless strictly necessary; these React app changes are unrelated to the offline mini-app implementation.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Updated `project_state.json` description/summary and existing feature catalog entries.",
+      "reason": "The BuildRequest does not request modifications to project metadata/state tracking; it focuses on implementing the offline mini-app under `/project`.",
+      "evidence": [
+        "project_state.json"
+      ]
+    }
+  ],
+  "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/offline-bundle/README.md",
-    "frontend/offline-bundle/assets/.gitkeep",
-    "frontend/offline-bundle/css/styles.css",
-    "frontend/offline-bundle/fonts/.gitkeep",
-    "frontend/offline-bundle/images/hero-illustration.svg",
-    "frontend/offline-bundle/images/journal-placeholder.svg",
-    "frontend/offline-bundle/images/logo.svg",
-    "frontend/offline-bundle/index.html",
-    "frontend/offline-bundle/js/app.js",
+    "frontend/project/README.md",
+    "frontend/project/admin.html",
+    "frontend/project/assets/.gitkeep",
+    "frontend/project/css/main.css",
+    "frontend/project/dashboard.html",
+    "frontend/project/index.html",
+    "frontend/project/js/admin.js",
+    "frontend/project/js/auth.js",
+    "frontend/project/js/dashboard.js",
+    "frontend/project/js/db.js",
+    "frontend/project/js/main.js",
+    "frontend/project/receipts/.gitkeep",
     "project_state.json"
   ]
 }

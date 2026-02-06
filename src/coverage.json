@@ -1,81 +1,190 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T15:04:38.776Z",
+  "generatedAt": "2026-02-05T15:28:06.658Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 9,
+    "implemented": 9,
     "items": [
       {
-        "id": "REQ-42",
-        "summary": "Create a fully offline-ready static website project bundle from scratch inside the repository, including all required files (index.html, CSS, JS, and local assets) so the site works when opening index.html directly in a browser without any server.",
+        "id": "REQ-54",
+        "summary": "Create a new offline-ready mini-app under `/project` that works by double-clicking `/project/index.html` (no server, no CDN, no build step) and implements a journal portal User Account Dashboard + Admin Panel using pure HTML, CSS, and JavaScript only.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/offline-bundle/index.html",
-          "frontend/offline-bundle/css/styles.css",
-          "frontend/offline-bundle/js/app.js",
-          "frontend/offline-bundle/assets/.gitkeep",
-          "frontend/offline-bundle/images/logo.svg",
-          "frontend/offline-bundle/images/hero-illustration.svg",
-          "frontend/offline-bundle/fonts/.gitkeep"
+          "frontend/project/index.html",
+          "frontend/project/dashboard.html",
+          "frontend/project/admin.html",
+          "frontend/project/css/main.css",
+          "frontend/project/js/main.js",
+          "frontend/project/assets/.gitkeep",
+          "frontend/project/receipts/.gitkeep"
         ],
         "matchedFiles": [
-          "frontend/offline-bundle/index.html",
-          "frontend/offline-bundle/css/styles.css",
-          "frontend/offline-bundle/js/app.js",
-          "frontend/offline-bundle/assets/.gitkeep",
-          "frontend/offline-bundle/images/logo.svg",
-          "frontend/offline-bundle/images/hero-illustration.svg",
-          "frontend/offline-bundle/fonts/.gitkeep"
+          "frontend/project/index.html",
+          "frontend/project/dashboard.html",
+          "frontend/project/admin.html",
+          "frontend/project/css/main.css",
+          "frontend/project/js/main.js",
+          "frontend/project/assets/.gitkeep",
+          "frontend/project/receipts/.gitkeep"
         ]
       },
       {
-        "id": "REQ-43",
-        "summary": "Ensure the offline static site has correct semantic HTML structure, stable CSS/JS loading order, and no duplicate/conflicting libraries within the offline bundle.",
+        "id": "REQ-55",
+        "summary": "Implement `/project/index.html` authentication UI and flows: Login, Register, and Forgot Password views (same page or navigable within index.html) using email + password against a dummy local JSON database stored in a JS file; simulate a secure session using JavaScript (e.g., session token stored in sessionStorage/localStorage) and redirect authenticated users to `/project/dashboard.html`.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/offline-bundle/index.html",
-          "frontend/offline-bundle/js/app.js",
-          "frontend/offline-bundle/css/styles.css"
+          "frontend/project/index.html",
+          "frontend/project/js/auth.js",
+          "frontend/project/js/main.js"
         ],
         "matchedFiles": [
-          "frontend/offline-bundle/index.html",
-          "frontend/offline-bundle/js/app.js",
-          "frontend/offline-bundle/css/styles.css"
+          "frontend/project/index.html",
+          "frontend/project/js/auth.js",
+          "frontend/project/js/main.js"
         ]
       },
       {
-        "id": "REQ-44",
-        "summary": "Add a short, human-readable README (English) inside the offline bundle describing how to open the site offline and describing the final folder structure.",
+        "id": "REQ-56",
+        "summary": "Implement `/project/dashboard.html` user dashboard for the logged-in user with these sections: (A) Payment Status (Pending/Paid/Failed) showing amount, date, payment ID, method and a 'Download Receipt' action that downloads a local mock PDF from `/project/receipts`; (B) Receipt System view that shows receipt details (user details, payment details, unique receipt number, date, amount); (C) Submission Section table listing submission ID, title, date, status (Under Review/Accepted/Rejected/Revision Required) and a download link to the submitted file; (D) Admin Remarks shown per submission, and if status is 'Revision Required' show a re-upload file control that updates dummy data to reference the newly selected local file name (simulation).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/offline-bundle/README.md"
+          "frontend/project/dashboard.html",
+          "frontend/project/js/dashboard.js",
+          "frontend/project/js/main.js",
+          "frontend/project/receipts/mock-receipt.pdf",
+          "frontend/project/assets/sample-submission.pdf",
+          "frontend/project/assets/reupload-placeholder.txt"
         ],
         "matchedFiles": [
-          "frontend/offline-bundle/README.md"
+          "frontend/project/dashboard.html",
+          "frontend/project/js/dashboard.js",
+          "frontend/project/js/main.js"
+        ]
+      },
+      {
+        "id": "REQ-57",
+        "summary": "Add a 'My Profile' section on `/project/dashboard.html` with editable personal information: Full Name, Email (read-only), Phone, Gender, Date of Birth, Occupation Type (Student/Researcher/Professor/Farmer/Agri-Entrepreneur/Other), Organization, Address, and Profile photo upload; include 'Edit Profile' and 'Save Changes' controls; ensure the offline Admin Panel can view this profile data for any user.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/project/dashboard.html",
+          "frontend/project/js/dashboard.js",
+          "frontend/project/admin.html",
+          "frontend/project/js/admin.js"
+        ],
+        "matchedFiles": [
+          "frontend/project/dashboard.html",
+          "frontend/project/js/dashboard.js",
+          "frontend/project/admin.html",
+          "frontend/project/js/admin.js"
+        ]
+      },
+      {
+        "id": "REQ-58",
+        "summary": "Implement password management flows for the offline mini-app: (A) Change Password inside `/project/dashboard.html` requiring current password, new password, confirm password, and validating matches; (B) Forgot Password flow on `/project/index.html` (no OTP) using Email + Phone + Date of Birth + Occupation match; (C) Admin password control in `/project/admin.html` where admin can search for any user and manually reset that user's password.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/project/dashboard.html",
+          "frontend/project/js/dashboard.js",
+          "frontend/project/js/auth.js",
+          "frontend/project/admin.html",
+          "frontend/project/js/admin.js"
+        ],
+        "matchedFiles": [
+          "frontend/project/dashboard.html",
+          "frontend/project/js/dashboard.js",
+          "frontend/project/js/auth.js",
+          "frontend/project/admin.html",
+          "frontend/project/js/admin.js"
+        ]
+      },
+      {
+        "id": "REQ-59",
+        "summary": "Implement `/project/admin.html` as an offline Admin Panel gated behind an admin login/session simulation using the same dummy DB so non-admin users cannot access it; admin capabilities must include: view all users, view user profiles, update payment status/details (Pending/Paid/Failed), add/edit submission remarks, change submission statuses (Under Review/Accepted/Rejected/Revision Required), reset user passwords, and optionally upload/attach a receipt reference for a user (simulation pointing to a local file under `/project/receipts`).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/project/admin.html",
+          "frontend/project/js/admin.js",
+          "frontend/project/js/main.js",
+          "frontend/project/js/dashboard.js"
+        ],
+        "matchedFiles": [
+          "frontend/project/admin.html",
+          "frontend/project/js/admin.js",
+          "frontend/project/js/main.js",
+          "frontend/project/js/dashboard.js"
+        ]
+      },
+      {
+        "id": "REQ-60",
+        "summary": "Create the dummy local JSON database (in a JS file under `/project/js`) containing sample data for users, payments, submissions, and remarks, with clear code comments indicating where backend connections would be integrated later; ensure the offline app uses this dummy DB consistently across index/dashboard/admin pages.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/project/js/db.js",
+          "frontend/project/js/auth.js",
+          "frontend/project/js/dashboard.js",
+          "frontend/project/js/admin.js"
+        ],
+        "matchedFiles": [
+          "frontend/project/js/db.js",
+          "frontend/project/js/auth.js",
+          "frontend/project/js/dashboard.js",
+          "frontend/project/js/admin.js"
+        ]
+      },
+      {
+        "id": "REQ-61",
+        "summary": "Provide professional journal-portal UI styling for the offline mini-app using a single main CSS file under `/project/css` and a single main JS entry file under `/project/js` (optional small helper JS modules allowed), ensuring consistent component styling (forms, tables, cards, status badges, buttons) and a clear user journey: Profile → Payment → Receipt → Submission → Admin Remark → Re-upload → Password control.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/project/css/main.css",
+          "frontend/project/index.html",
+          "frontend/project/dashboard.html",
+          "frontend/project/admin.html",
+          "frontend/project/js/main.js"
+        ],
+        "matchedFiles": [
+          "frontend/project/css/main.css",
+          "frontend/project/index.html",
+          "frontend/project/dashboard.html",
+          "frontend/project/admin.html",
+          "frontend/project/js/main.js"
+        ]
+      },
+      {
+        "id": "REQ-62",
+        "summary": "Add `/project/README.md` that lists the implemented offline portal features (registration/login/session simulation, dashboard sections, profile editing, receipt download mock, submissions/remarks/re-upload, change password, forgot password match by email/phone/DOB/occupation, and admin management capabilities) and documents exactly how to open and test the offline app plus the final folder structure.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/project/README.md"
+        ],
+        "matchedFiles": [
+          "frontend/project/README.md"
         ]
       }
     ]
   },
   "changedFiles": [
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/offline-bundle/README.md",
-    "frontend/offline-bundle/assets/.gitkeep",
-    "frontend/offline-bundle/css/styles.css",
-    "frontend/offline-bundle/fonts/.gitkeep",
-    "frontend/offline-bundle/images/hero-illustration.svg",
-    "frontend/offline-bundle/images/journal-placeholder.svg",
-    "frontend/offline-bundle/images/logo.svg",
-    "frontend/offline-bundle/index.html",
-    "frontend/offline-bundle/js/app.js",
+    "frontend/project/README.md",
+    "frontend/project/admin.html",
+    "frontend/project/assets/.gitkeep",
+    "frontend/project/css/main.css",
+    "frontend/project/dashboard.html",
+    "frontend/project/index.html",
+    "frontend/project/js/admin.js",
+    "frontend/project/js/auth.js",
+    "frontend/project/js/dashboard.js",
+    "frontend/project/js/db.js",
+    "frontend/project/js/main.js",
+    "frontend/project/receipts/.gitkeep",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

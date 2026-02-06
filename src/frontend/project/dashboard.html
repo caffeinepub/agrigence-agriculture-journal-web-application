@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Portal - Dashboard</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="container">
+                <h1 class="logo">Journal Portal</h1>
+                <div class="header-actions">
+                    <span id="user-name-display" class="user-name"></span>
+                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <h2 class="page-title">User Dashboard</h2>
+
+                <!-- My Profile Section -->
+                <section class="dashboard-section">
+                    <div class="section-header">
+                        <h3>My Profile</h3>
+                        <button id="edit-profile-btn" class="btn btn-secondary">Edit Profile</button>
+                    </div>
+                    <div class="profile-card">
+                        <div class="profile-photo-container">
+                            <img id="profile-photo" src="./assets/default-avatar.png" alt="Profile Photo" class="profile-photo">
+                            <input type="file" id="profile-photo-input" accept="image/*" style="display: none;">
+                            <button id="upload-photo-btn" class="btn btn-small" style="display: none;">Upload Photo</button>
+                        </div>
+                        <div class="profile-details">
+                            <div class="profile-field">
+                                <label>Full Name:</label>
+                                <span id="profile-name" class="profile-value"></span>
+                                <input type="text" id="profile-name-input" class="profile-input" style="display: none;">
+                            </div>
+                            <div class="profile-field">
+                                <label>Email:</label>
+                                <span id="profile-email" class="profile-value"></span>
+                            </div>
+                            <div class="profile-field">
+                                <label>Phone:</label>
+                                <span id="profile-phone" class="profile-value"></span>
+                                <input type="tel" id="profile-phone-input" class="profile-input" style="display: none;">
+                            </div>
+                            <div class="profile-field">
+                                <label>Gender:</label>
+                                <span id="profile-gender" class="profile-value"></span>
+                                <select id="profile-gender-input" class="profile-input" style="display: none;">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="profile-field">
+                                <label>Date of Birth:</label>
+                                <span id="profile-dob" class="profile-value"></span>
+                                <input type="date" id="profile-dob-input" class="profile-input" style="display: none;">
+                            </div>
+                            <div class="profile-field">
+                                <label>Occupation:</label>
+                                <span id="profile-occupation" class="profile-value"></span>
+                                <select id="profile-occupation-input" class="profile-input" style="display: none;">
+                                    <option value="Student">Student</option>
+                                    <option value="Researcher">Researcher</option>
+                                    <option value="Professor">Professor</option>
+                                    <option value="Farmer">Farmer</option>
+                                    <option value="Agri-Entrepreneur">Agri-Entrepreneur</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="profile-field">
+                                <label>Organization:</label>
+                                <span id="profile-organization" class="profile-value"></span>
+                                <input type="text" id="profile-organization-input" class="profile-input" style="display: none;">
+                            </div>
+                            <div class="profile-field">
+                                <label>Address:</label>
+                                <span id="profile-address" class="profile-value"></span>
+                                <textarea id="profile-address-input" class="profile-input" rows="3" style="display: none;"></textarea>
+                            </div>
+                        </div>
+                        <div class="profile-actions" style="display: none;">
+                            <button id="save-profile-btn" class="btn btn-primary">Save Changes</button>
+                            <button id="cancel-profile-btn" class="btn btn-secondary">Cancel</button>
+                        </div>
+                        <div class="message-area" id="profile-message"></div>
+                    </div>
+                </section>
+
+                <!-- Payment Status Section -->
+                <section class="dashboard-section">
+                    <h3>Payment Status</h3>
+                    <div class="payment-card">
+                        <div class="payment-field">
+                            <label>Status:</label>
+                            <span id="payment-status" class="badge"></span>
+                        </div>
+                        <div class="payment-field">
+                            <label>Amount:</label>
+                            <span id="payment-amount"></span>
+                        </div>
+                        <div class="payment-field">
+                            <label>Date:</label>
+                            <span id="payment-date"></span>
+                        </div>
+                        <div class="payment-field">
+                            <label>Payment ID:</label>
+                            <span id="payment-id"></span>
+                        </div>
+                        <div class="payment-field">
+                            <label>Method:</label>
+                            <span id="payment-method"></span>
+                        </div>
+                        <a id="download-receipt-btn" href="#" class="btn btn-primary">Download Receipt</a>
+                    </div>
+                </section>
+
+                <!-- Receipt System Section -->
+                <section class="dashboard-section">
+                    <h3>Receipt Details</h3>
+                    <div class="receipt-card">
+                        <div class="receipt-field">
+                            <label>Receipt Number:</label>
+                            <span id="receipt-number"></span>
+                        </div>
+                        <div class="receipt-field">
+                            <label>User Name:</label>
+                            <span id="receipt-user-name"></span>
+                        </div>
+                        <div class="receipt-field">
+                            <label>Email:</label>
+                            <span id="receipt-email"></span>
+                        </div>
+                        <div class="receipt-field">
+                            <label>Amount Paid:</label>
+                            <span id="receipt-amount"></span>
+                        </div>
+                        <div class="receipt-field">
+                            <label>Date:</label>
+                            <span id="receipt-date"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Submissions Section -->
+                <section class="dashboard-section">
+                    <h3>My Submissions</h3>
+                    <div class="table-container">
+                        <table class="submissions-table">
+                            <thead>
+                                <tr>
+                                    <th>Submission ID</th>
+                                    <th>Title</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>File</th>
+                                    <th>Admin Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="submissions-tbody">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Change Password Section -->
+                <section class="dashboard-section">
+                    <h3>Change Password</h3>
+                    <form id="change-password-form" class="password-form">
+                        <div class="form-group">
+                            <label for="current-password">Current Password</label>
+                            <input type="password" id="current-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password-change">New Password</label>
+                            <input type="password" id="new-password-change" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password-change">Confirm New Password</label>
+                            <input type="password" id="confirm-password-change" required>
+                        </div>
+                        <div class="message-area" id="change-password-message"></div>
+                        <button type="submit" class="btn btn-primary">Change Password</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="container">
+                <p>&copy; 2026 Journal Portal. Built with love using <a href="https://caffeine.ai" target="_blank">caffeine.ai</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Re-upload Modal -->
+    <div id="reupload-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3>Re-upload Submission</h3>
+            <form id="reupload-form">
+                <input type="hidden" id="reupload-submission-id">
+                <div class="form-group">
+                    <label for="reupload-file">Select New File</label>
+                    <input type="file" id="reupload-file" accept=".pdf,.doc,.docx" required>
+                </div>
+                <div class="message-area" id="reupload-message"></div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/db.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/dashboard.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
