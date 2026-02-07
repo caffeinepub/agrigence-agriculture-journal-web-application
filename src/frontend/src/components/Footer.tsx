@@ -32,19 +32,49 @@ export default function Footer() {
               <p className="text-sm text-muted-foreground mb-4">Email: agrigence@gmail.com</p>
               <h4 className="font-semibold text-sm mb-2">Follow Us</h4>
               <div className="flex gap-4">
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="https://www.facebook.com/agrigence.in" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  aria-label="Facebook"
+                >
                   <SiFacebook className="h-5 w-5" />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="https://www.instagram.com/agrigence.in" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  aria-label="Instagram"
+                >
                   <SiInstagram className="h-5 w-5" />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="https://x.com/agrigence" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  aria-label="X (Twitter)"
+                >
                   <SiX className="h-5 w-5" />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="https://www.youtube.com/@agrigence" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  aria-label="YouTube"
+                >
                   <SiYoutube className="h-5 w-5" />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href="https://www.linkedin.com/company/agrigence" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  aria-label="LinkedIn"
+                >
                   <SiLinkedin className="h-5 w-5" />
                 </a>
               </div>

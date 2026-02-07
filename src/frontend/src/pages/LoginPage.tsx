@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { LogIn, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useIsCallerAdmin } from '../hooks/useQueries';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -14,6 +16,10 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isCheckingAdmin, setIsCheckingAdmin] = useState(false);
+
+  const { login, loginStatus, identity } = useInternetIdentity();
+  const { data: isAdmin, refetch: refetchIsAdmin } = useIsCallerAdmin();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +48,47 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  const handleInternetIdentityLogin = async () => {
+    if (isCheckingAdmin) return;
+
+    try {
+      setIsCheckingAdmin(true);
+      setError('');
+
+      // Perform Internet Identity login
+      await login();
+
+      // After successful login, check if user is admin
+      const adminCheckResult = await refetchIsAdmin();
+
+      if (adminCheckResult.isError) {
+        // If admin check fails, show error and don't navigate
+        setError('Unable to verify account permissions. Please try again or contact support.');
+        return;
+      }
+
+      // Navigate based on admin status
+      if (adminCheckResult.data === true) {
+        toast.success('Welcome, Admin!');
+        navigate({ to: '/admin' });
+      } else {
+        toast.success('Login successful!');
+        navigate({ to: '/dashboard' });
+      }
+    } catch (err: any) {
+      console.error('Login error:', err);
+      if (err.message === 'User is already authenticated') {
+        setError('You are already logged in. Please refresh the page.');
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    } finally {
+      setIsCheckingAdmin(false);
+    }
+  };
+
+  const isInternetIdentityLoading = loginStatus === 'logging-in' || isCheckingAdmin;
 
   return (
     <div className="container py-12">
@@ -125,8 +172,13 @@ export default function LoginPage() {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground mb-4">Or continue with</p>
-          <Button variant="outline" className="w-full" onClick={() => navigate({ to: '/' })}>
-            Internet Identity
+          <Button 
+            variant="outline" 
+            className="w-full" 
+            onClick={handleInternetIdentityLogin}
+            disabled={isInternetIdentityLoading}
+          >
+            {isInternetIdentityLoading ? 'Logging in...' : 'Internet Identity'}
           </Button>
         </div>
       </div>

@@ -13,8 +13,8 @@
             {
                 id: 'admin-001',
                 name: 'Admin User',
-                email: 'admin@journal.com',
-                password: 'admin123',
+                email: 'Admin@cv.com',
+                password: 'Shivika@9319',
                 phone: '+1234567890',
                 gender: 'Male',
                 dob: '1985-01-15',
@@ -80,10 +80,41 @@
     function initDB() {
         const stored = localStorage.getItem(DB_KEY);
         if (!stored) {
+            // No existing data, use seed data
             localStorage.setItem(DB_KEY, JSON.stringify(seedData));
             return seedData;
         }
-        return JSON.parse(stored);
+        
+        // Existing data found - migrate admin credentials
+        const existingDB = JSON.parse(stored);
+        
+        // Find and update admin-001 user
+        const adminIndex = existingDB.users.findIndex(u => u.id === 'admin-001');
+        if (adminIndex !== -1) {
+            // Update existing admin user with new credentials
+            existingDB.users[adminIndex].email = 'Admin@cv.com';
+            existingDB.users[adminIndex].password = 'Shivika@9319';
+        } else {
+            // Admin user doesn't exist, add it
+            existingDB.users.push({
+                id: 'admin-001',
+                name: 'Admin User',
+                email: 'Admin@cv.com',
+                password: 'Shivika@9319',
+                phone: '+1234567890',
+                gender: 'Male',
+                dob: '1985-01-15',
+                occupation: 'Professor',
+                organization: 'Journal Portal',
+                address: '123 Admin Street, City, Country',
+                isAdmin: true,
+                profilePhoto: null
+            });
+        }
+        
+        // Save migrated data back to localStorage
+        localStorage.setItem(DB_KEY, JSON.stringify(existingDB));
+        return existingDB;
     }
 
     // Get database

@@ -6,7 +6,7 @@ This guide covers the process of promoting a reviewed build to production for th
 ## Pre-Deployment Checklist
 
 ### 1. Verify Build Artifacts
-- [ ] Confirm the latest build (Version 30) has been reviewed and approved
+- [ ] Confirm the latest build has been reviewed and approved
 - [ ] Ensure all tests pass locally
 - [ ] Verify no console errors in browser developer tools
 
@@ -25,3 +25,5 @@ This guide covers the process of promoting a reviewed build to production for th
 ## Deployment Steps
 
 ### 1. Build Frontend
+
+For Internet Computer deployment:

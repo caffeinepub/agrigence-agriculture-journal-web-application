@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { Mail, Phone, Send, Users, Target } from 'lucide-react';
+import { Mail, Phone, Send, Users, Target, User } from 'lucide-react';
 import { SiWhatsapp } from 'react-icons/si';
 
 export default function AboutContactPage() {
@@ -76,11 +76,9 @@ export default function AboutContactPage() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="text-center hover:scale-105 transition-transform">
                   <div className="mb-4 flex justify-center">
-                    <img
-                      src="/assets/20220525_111130_600-removebg-preview.png"
-                      alt="Sarvesh Kumar Yadav"
-                      className="w-32 h-32 rounded-full object-cover border-4 border-primary/20"
-                    />
+                    <div className="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary/20">
+                      <User className="h-16 w-16 text-primary/40" />
+                    </div>
                   </div>
                   <h3 className="text-xl font-semibold mb-2">Sarvesh Kumar Yadav</h3>
                   <p className="text-primary font-medium mb-2">Founder</p>
