@@ -1,38 +1,73 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Admin-aware Internet Identity login redirect + Agrigence footer social links",
+  "title": "Fix Consultation flow runtime/TS errors and add regression coverage",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "After Internet Identity login from /login, route admins to /admin and non-admin authenticated users to /dashboard, with safe error handling on admin-check failures.",
+      "summary": "Fix Consultation page so it renders without runtime/TypeScript errors, with strict boolean validation gating and correct WhatsApp/mailto actions.",
       "acceptanceCriteria": [
-        "From the /login page, clicking the Internet Identity button completes Internet Identity authentication and then automatically routes an admin identity to /admin.",
-        "From the /login page, clicking the Internet Identity button completes Internet Identity authentication and then automatically routes a non-admin identity to /dashboard.",
-        "If the admin check fails (network/canister error), the UI shows an English error message and does not incorrectly route the user to /admin.",
-        "The existing /admin page continues to enforce access control (non-admins see the access denied screen)."
+        "Visiting the /consultation route does not crash and shows the consultation form.",
+        "The Consultation page has no TypeScript compile errors (including unused imports/variables).",
+        "The form validation state used for disabling/enabling buttons is a strict boolean (not a string/union), and the WhatsApp/Mail buttons enable only when all required fields are valid.",
+        "Clicking “WhatsApp Us” builds a valid wa.me URL and attempts to open it in a new tab; if the popup is blocked, a user-facing error toast is shown (English text).",
+        "Clicking “Mail Us” navigates to a valid mailto: URL with URL-encoded subject/body containing consultation type, name, email, and message."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
+          "path": "frontend/src/pages/ConsultationPage.tsx",
           "operation": "modify",
-          "description": "Replace the current placeholder Internet Identity button behavior with a real Internet Identity login flow using the existing useInternetIdentity hook, then use the existing admin check (useIsCallerAdmin / actor.isCallerAdmin) from the authorization component to decide the post-login redirect (/admin for admins, /dashboard for non-admin authenticated users). Add UI state to (a) prevent double-navigation, and (b) show a clear English error message if the admin check errors, ensuring the user is not routed to /admin on failure. Verify the component's usage instructions before implementing."
+          "description": "Eliminate the current TypeScript/runtime issue by making form validity a strict boolean (avoid truthy string unions from chained &&), remove unused imports (e.g., unused icon imports), and ensure button disabled props and helper text conditions rely on boolean validity. Keep WhatsApp window.open behavior and show an English toast error when a popup is blocked; keep mailto navigation with URL-encoded subject/body including consultation type, name, email, and message."
+        },
+        {
+          "path": "frontend/src/utils/consultationValidation.ts",
+          "operation": "create",
+          "description": "Introduce shared, testable consultation validation helpers (e.g., email validation + full-form validity computation) that return strict booleans, so the Consultation page can use a single source of truth for gating WhatsApp/Mail actions."
+        },
+        {
+          "path": "frontend/src/utils/consultWhatsAppLink.ts",
+          "operation": "modify",
+          "description": "Harden the WhatsApp URL builder to ensure it always returns a valid https://wa.me/<number>?text=<encoded> URL and that the encoded text contains the provided consultation type, name, email, and message (no accidental omission/partial encoding)."
+        },
+        {
+          "path": "frontend/src/utils/consultExpertMailto.ts",
+          "operation": "modify",
+          "description": "Harden the mailto builder to ensure it always returns a valid mailto: URL with URL-encoded subject/body that include consultation type, name, email, and message; keep English-only user-facing content in the generated subject/body."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Update footer social media icons to link to Agrigence’s real social profiles with safe new-tab attributes.",
+      "summary": "Add automated regression tests for consultation link generation and strict validity gating for contact buttons.",
       "acceptanceCriteria": [
-        "Footer social icons are no longer \"#\" and each icon navigates to the correct Agrigence social URL listed in this requirement.",
-        "Each social link uses target=\"_blank\" and rel=\"noopener noreferrer\".",
-        "All user-facing text remains in English."
+        "There is automated coverage (unit and/or lightweight component test) that verifies the WhatsApp URL and mailto URL builders produce encoded output containing the provided fields.",
+        "There is automated coverage that verifies the contact buttons remain disabled when required fields are missing/invalid and become enabled when all required fields are valid."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Footer.tsx",
-          "operation": "modify",
-          "description": "Replace the current placeholder (\"#\") hrefs for Facebook/Instagram/X/YouTube/LinkedIn with the provided Agrigence URLs, and ensure each anchor opens in a new tab with target=\"_blank\" and rel=\"noopener noreferrer\"."
+          "path": "frontend/src/utils/__tests__/consultLinks.test.ts",
+          "operation": "create",
+          "description": "Add unit tests verifying buildConsultWhatsAppLink() and buildConsultExpertMailto() generate URLs that are properly encoded and include the provided consultation type, name, email, and message."
+        },
+        {
+          "path": "frontend/src/utils/__tests__/consultationValidation.test.ts",
+          "operation": "create",
+          "description": "Add unit tests for the shared validation helpers ensuring validity is a strict boolean and toggles correctly for missing fields and invalid email values."
+        },
+        {
+          "path": "frontend/src/pages/__tests__/ConsultationPage.gating.test.tsx",
+          "operation": "create",
+          "description": "Add a lightweight component test that renders the Consultation page and asserts the WhatsApp/Mail buttons are disabled until all required fields are valid, then enabled once valid inputs are provided."
+        },
+        {
+          "path": "frontend/vitest.config.ts",
+          "operation": "create",
+          "description": "Add/standardize a minimal Vitest configuration for running the new unit/component tests in the frontend project (jsdom for component tests if needed)."
+        },
+        {
+          "path": "frontend/src/test/setup.ts",
+          "operation": "create",
+          "description": "Add a test setup file for the frontend test environment (e.g., extending matchers and configuring jsdom-related globals) used by the Consultation regression tests."
         }
       ]
     }

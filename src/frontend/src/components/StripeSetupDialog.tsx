@@ -10,9 +10,10 @@ import { Loader2, AlertCircle } from 'lucide-react';
 
 interface StripeSetupDialogProps {
   open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export default function StripeSetupDialog({ open }: StripeSetupDialogProps) {
+export default function StripeSetupDialog({ open, onOpenChange }: StripeSetupDialogProps) {
   const [secretKey, setSecretKey] = useState('');
   const [countries, setCountries] = useState('IN,US,GB,CA');
   const setStripeConfig = useSetStripeConfiguration();
@@ -45,6 +46,7 @@ export default function StripeSetupDialog({ open }: StripeSetupDialogProps) {
       
       toast.success('Stripe configured successfully!');
       setSecretKey('');
+      onOpenChange(false);
     } catch (error: any) {
       console.error('Stripe configuration error:', error);
       toast.error(error.message || 'Failed to configure Stripe');
@@ -52,8 +54,8 @@ export default function StripeSetupDialog({ open }: StripeSetupDialogProps) {
   };
 
   return (
-    <Dialog open={open}>
-      <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Configure Stripe Payment</DialogTitle>
           <DialogDescription>

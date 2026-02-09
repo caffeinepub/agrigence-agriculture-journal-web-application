@@ -74,7 +74,8 @@ export default {
             },
             boxShadow: {
                 xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
-                soft: '0 2px 8px rgba(0,0,0,0.08)'
+                soft: '0 2px 8px rgba(0,0,0,0.08)',
+                md: '0 4px 12px rgba(0,0,0,0.1)'
             },
             keyframes: {
                 'accordion-down': {

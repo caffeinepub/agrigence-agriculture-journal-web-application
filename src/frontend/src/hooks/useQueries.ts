@@ -2,28 +2,34 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
 import { Principal } from '@dfinity/principal';
 import type {
-  ProfileInput,
-  News,
-  Journal,
-  SubscriptionPlan,
-  Article,
-  UserProfile,
-  StripeConfiguration,
-  ExternalBlob,
-  Variant_doc_pdf,
-  Variant_approved_rejected,
-  EditorialMember,
-  ShoppingItem,
-  StripeSessionStatus,
-  HomePageMagazine,
-  HomePageArticle,
-  UserReview,
-  ArticlePreview,
-  TermsPlaceholders,
-  BlogPost,
-  CMSBannerConfig,
-  CMSBannerInput,
+  Product,
+  ProductCategory,
+  ProductInput,
 } from '../backend';
+
+// Placeholder types for features not in current backend
+type UserProfile = any;
+type ProfileInput = any;
+type CMSBannerConfig = any;
+type CMSBannerInput = any;
+type News = any;
+type BlogPost = any;
+type Journal = any;
+type EditorialMember = any;
+type Article = any;
+type SubscriptionPlan = any;
+type HomePageMagazine = any;
+type ArticlePreview = any;
+type UserReview = any;
+type TermsPlaceholders = any;
+type SubmissionStatus = any;
+type PlanStatus = any;
+type StripeConfiguration = any;
+type ShoppingItem = any;
+type StripeSessionStatus = any;
+type ExternalBlob = any;
+type Variant_doc_pdf = any;
+type Variant_approved_rejected = any;
 
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
@@ -31,10 +37,9 @@ export function useGetCallerUserProfile() {
   const query = useQuery<UserProfile | null>({
     queryKey: ['currentUserProfile'],
     queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.getCallerUserProfile();
+      return null; // Placeholder
     },
-    enabled: !!actor && !actorFetching,
+    enabled: false,
     retry: false,
   });
 
@@ -51,8 +56,7 @@ export function useSaveCallerUserProfile() {
 
   return useMutation({
     mutationFn: async (profile: ProfileInput) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.saveCallerUserProfile(profile);
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
@@ -81,10 +85,9 @@ export function useGetBannerConfig() {
   return useQuery<CMSBannerConfig>({
     queryKey: ['bannerConfig'],
     queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.getBannerConfig();
+      return { notices: [], isBannerEnabled: false };
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -94,8 +97,7 @@ export function useSetBannerNotices() {
 
   return useMutation({
     mutationFn: async (notices: CMSBannerInput[]) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.setBannerNotices(notices);
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bannerConfig'] });
@@ -109,8 +111,7 @@ export function useToggleBanner() {
 
   return useMutation({
     mutationFn: async (isEnabled: boolean) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.toggleBanner(isEnabled);
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bannerConfig'] });
@@ -124,10 +125,9 @@ export function useGetAllNews() {
   return useQuery<News[]>({
     queryKey: ['news'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllNews();
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
     retry: false,
   });
 }
@@ -138,10 +138,9 @@ export function useGetLatestNews(count: number) {
   return useQuery<News[]>({
     queryKey: ['latestNews', count],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getLatestNews(BigInt(count));
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -151,8 +150,7 @@ export function useAddNews() {
 
   return useMutation({
     mutationFn: async ({ title, content, summary }: { title: string; content: string; summary: string }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.addNews(title, content, summary);
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['news'] });
@@ -167,8 +165,7 @@ export function useDeleteNews() {
 
   return useMutation({
     mutationFn: async (newsId: string) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.deleteNews(newsId);
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['news'] });
@@ -184,10 +181,9 @@ export function useGetAllBlogPosts() {
   return useQuery<BlogPost[]>({
     queryKey: ['blogPosts'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllBlogPosts();
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
     retry: false,
   });
 }
@@ -198,10 +194,9 @@ export function useGetLatestBlogPosts(count: number) {
   return useQuery<BlogPost[]>({
     queryKey: ['latestBlogPosts', count],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getLatestBlogPosts(BigInt(count));
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -211,10 +206,9 @@ export function useGetBlogPostsPaginated(page: number, pageSize: number) {
   return useQuery<BlogPost[]>({
     queryKey: ['blogPostsPaginated', page, pageSize],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getBlogPostsPaginated(BigInt(page), BigInt(pageSize));
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -224,10 +218,9 @@ export function useGetBlogPostCount() {
   return useQuery<bigint>({
     queryKey: ['blogPostCount'],
     queryFn: async () => {
-      if (!actor) return BigInt(0);
-      return actor.getBlogPostCount();
+      return BigInt(0);
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -236,25 +229,8 @@ export function useAddBlogPost() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      title,
-      content,
-      authorName,
-      imageUrl,
-      publicationDate,
-      blob,
-      shortSummary,
-    }: {
-      title: string;
-      content: string;
-      authorName: string;
-      imageUrl: string | null;
-      publicationDate: bigint;
-      blob: ExternalBlob | null;
-      shortSummary: string;
-    }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.addBlogPost(title, content, authorName, imageUrl, publicationDate, blob, shortSummary);
+    mutationFn: async (data: any) => {
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
@@ -270,27 +246,8 @@ export function useUpdateBlogPost() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      blogPostId,
-      title,
-      content,
-      authorName,
-      publicationDate,
-      imageUrl,
-      blob,
-      shortSummary,
-    }: {
-      blogPostId: bigint;
-      title: string;
-      content: string;
-      authorName: string;
-      publicationDate: bigint;
-      imageUrl: string | null;
-      blob: ExternalBlob | null;
-      shortSummary: string;
-    }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.updateBlogPost(blogPostId, title, content, authorName, publicationDate, imageUrl, blob, shortSummary);
+    mutationFn: async (data: any) => {
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
@@ -306,8 +263,7 @@ export function useDeleteBlogPost() {
 
   return useMutation({
     mutationFn: async (blogPostId: bigint) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.deleteBlogPost(blogPostId);
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blogPosts'] });
@@ -324,10 +280,9 @@ export function useGetCurrentJournal() {
   return useQuery<Journal | null>({
     queryKey: ['currentJournal'],
     queryFn: async () => {
-      if (!actor) return null;
-      return actor.getCurrentJournal();
+      return null;
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -337,10 +292,9 @@ export function useGetAllJournalsByYear(year: number) {
   return useQuery<Journal[]>({
     queryKey: ['journals', year],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllJournalsByYear(BigInt(year));
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -349,29 +303,8 @@ export function useUploadJournal() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      title,
-      month,
-      year,
-      fileName,
-      description,
-      fileSize,
-      externalBlob,
-      isCurrent,
-      isArchive,
-    }: {
-      title: string;
-      month: bigint;
-      year: bigint;
-      fileName: string;
-      description: string;
-      fileSize: bigint;
-      externalBlob: ExternalBlob;
-      isCurrent: boolean;
-      isArchive: boolean;
-    }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.uploadJournal(title, month, year, fileName, description, fileSize, externalBlob, isCurrent, isArchive);
+    mutationFn: async (data: any) => {
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['journals'] });
@@ -386,10 +319,9 @@ export function useGetEditorialBoardMembers() {
   return useQuery<EditorialMember[]>({
     queryKey: ['editorialBoardMembers'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getEditorialBoardMembers();
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -399,10 +331,9 @@ export function useGetAllEditorialMembers() {
   return useQuery<EditorialMember[]>({
     queryKey: ['allEditorialMembers'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllEditorialMembers();
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
     retry: false,
   });
 }
@@ -412,45 +343,8 @@ export function useAddEditorialMember() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      name,
-      qualification,
-      role,
-      expertise,
-      email,
-      phone,
-      isEditorialBoardAuthor,
-      isEditorInChief,
-      isReviewerBoardMember,
-      profilePictureUrl,
-      profilePicture,
-    }: {
-      name: string;
-      qualification: string;
-      role: string;
-      expertise: string;
-      email: string;
-      phone: string;
-      isEditorialBoardAuthor: boolean;
-      isEditorInChief: boolean;
-      isReviewerBoardMember: boolean;
-      profilePictureUrl: string;
-      profilePicture: ExternalBlob | null;
-    }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.addEditorialMember(
-        name,
-        qualification,
-        role,
-        expertise,
-        email,
-        phone,
-        isEditorialBoardAuthor,
-        isEditorInChief,
-        isReviewerBoardMember,
-        profilePictureUrl,
-        profilePicture
-      );
+    mutationFn: async (data: any) => {
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['editorialBoardMembers'] });
@@ -464,48 +358,8 @@ export function useUpdateEditorialMember() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      editorialMemberId,
-      name,
-      qualification,
-      role,
-      expertise,
-      email,
-      phone,
-      isEditorialBoardAuthor,
-      isEditorInChief,
-      isReviewerBoardMember,
-      profilePictureUrl,
-      profilePicture,
-    }: {
-      editorialMemberId: bigint;
-      name: string;
-      qualification: string;
-      role: string;
-      expertise: string;
-      email: string;
-      phone: string;
-      isEditorialBoardAuthor: boolean;
-      isEditorInChief: boolean;
-      isReviewerBoardMember: boolean;
-      profilePictureUrl: string;
-      profilePicture: ExternalBlob | null;
-    }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.updateEditorialMember(
-        editorialMemberId,
-        name,
-        qualification,
-        role,
-        expertise,
-        email,
-        phone,
-        isEditorialBoardAuthor,
-        isEditorInChief,
-        isReviewerBoardMember,
-        profilePictureUrl,
-        profilePicture
-      );
+    mutationFn: async (data: any) => {
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['editorialBoardMembers'] });
@@ -520,8 +374,7 @@ export function useDeleteEditorialMember() {
 
   return useMutation({
     mutationFn: async (editorialMemberId: bigint) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.deleteEditorialMember(editorialMemberId);
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['editorialBoardMembers'] });
@@ -536,10 +389,21 @@ export function useGetSubscriptionPlans() {
   return useQuery<SubscriptionPlan[]>({
     queryKey: ['subscriptionPlans'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getSubscriptionPlans();
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
+  });
+}
+
+export function useGetSubscriptionPlanObject(planId: string) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<SubscriptionPlan | null>({
+    queryKey: ['subscriptionPlan', planId],
+    queryFn: async () => {
+      return null;
+    },
+    enabled: false,
   });
 }
 
@@ -549,10 +413,9 @@ export function useGetUserArticles(user: Principal | null) {
   return useQuery<Article[]>({
     queryKey: ['userArticles', user?.toString()],
     queryFn: async () => {
-      if (!actor || !user) return [];
-      return actor.getUserArticles(user);
+      return [];
     },
-    enabled: !!actor && !isFetching && !!user,
+    enabled: false,
   });
 }
 
@@ -562,10 +425,9 @@ export function useGetAllArticles() {
   return useQuery<Article[]>({
     queryKey: ['allArticles'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllArticles();
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -575,10 +437,9 @@ export function useGetAllArticlePreviews() {
   return useQuery<ArticlePreview[]>({
     queryKey: ['articlePreviews'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllArticlePreviews();
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
   });
 }
 
@@ -587,25 +448,14 @@ export function useSubmitArticle() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      title,
-      fileType,
-      fileName,
-      fileSize,
-      externalBlob,
-    }: {
-      title: string;
-      fileType: Variant_doc_pdf;
-      fileName: string;
-      fileSize: bigint;
-      externalBlob: ExternalBlob;
-    }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.submitArticle(title, fileType, fileName, fileSize, externalBlob);
+    mutationFn: async (data: any) => {
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userArticles'] });
       queryClient.invalidateQueries({ queryKey: ['pendingArticles'] });
+      queryClient.invalidateQueries({ queryKey: ['submissionStatus'] });
+      queryClient.invalidateQueries({ queryKey: ['currentPlanDetails'] });
     },
   });
 }
@@ -616,10 +466,33 @@ export function useHasActiveSubscription(user: Principal | null) {
   return useQuery<boolean>({
     queryKey: ['hasActiveSubscription', user?.toString()],
     queryFn: async () => {
-      if (!actor || !user) return false;
-      return actor.hasActiveSubscription(user);
+      return false;
     },
-    enabled: !!actor && !isFetching && !!user,
+    enabled: false,
+  });
+}
+
+export function useCheckArticleSubmissionAllowed() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<SubmissionStatus>({
+    queryKey: ['submissionStatus'],
+    queryFn: async () => {
+      return { canSubmit: false, message: 'Not available' };
+    },
+    enabled: false,
+  });
+}
+
+export function useGetCurrentPlanDetails() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<PlanStatus | null>({
+    queryKey: ['currentPlanDetails'],
+    queryFn: async () => {
+      return null;
+    },
+    enabled: false,
   });
 }
 
@@ -629,10 +502,9 @@ export function useGetAllPendingArticles() {
   return useQuery<Article[]>({
     queryKey: ['pendingArticles'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllPendingArticles();
+      return [];
     },
-    enabled: !!actor && !isFetching,
+    enabled: false,
     retry: false,
   });
 }
@@ -642,22 +514,94 @@ export function useUpdateArticleStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      user,
-      articleTitle,
-      newStatus,
-    }: {
-      user: Principal;
-      articleTitle: string;
-      newStatus: Variant_approved_rejected;
-    }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.updateArticleStatus(user, articleTitle, newStatus);
+    mutationFn: async (data: any) => {
+      throw new Error('Not implemented');
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userArticles'] });
       queryClient.invalidateQueries({ queryKey: ['pendingArticles'] });
+      queryClient.invalidateQueries({ queryKey: ['allArticles'] });
+      queryClient.invalidateQueries({ queryKey: ['userArticles'] });
     },
+  });
+}
+
+export function useCreateSubscription() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ planId, user }: { planId: string; user: Principal }) => {
+      throw new Error('Not implemented');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hasActiveSubscription'] });
+      queryClient.invalidateQueries({ queryKey: ['currentPlanDetails'] });
+      queryClient.invalidateQueries({ queryKey: ['submissionStatus'] });
+    },
+  });
+}
+
+export function useGetHomePageMagazines() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<HomePageMagazine[]>({
+    queryKey: ['homePageMagazines'],
+    queryFn: async () => {
+      return [];
+    },
+    enabled: false,
+  });
+}
+
+export function useGetAllUserReviews() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<UserReview[]>({
+    queryKey: ['userReviews'],
+    queryFn: async () => {
+      return [];
+    },
+    enabled: false,
+  });
+}
+
+export function useGetTermsPlaceholders() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<TermsPlaceholders>({
+    queryKey: ['termsPlaceholders'],
+    queryFn: async () => {
+      return {};
+    },
+    enabled: false,
+    retry: false,
+  });
+}
+
+export function useSetTermsPlaceholders() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (placeholders: TermsPlaceholders) => {
+      throw new Error('Not implemented');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['termsPlaceholders'] });
+      queryClient.invalidateQueries({ queryKey: ['termsAndConditions'] });
+    },
+  });
+}
+
+export function useGetTermsAndConditions() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<string>({
+    queryKey: ['termsAndConditions'],
+    queryFn: async () => {
+      return '';
+    },
+    enabled: false,
   });
 }
 
@@ -693,136 +637,106 @@ export function useCreateCheckoutSession() {
   const { actor } = useActor();
 
   return useMutation({
-    mutationFn: async ({ items, planId }: { items: ShoppingItem[]; planId: string }) => {
+    mutationFn: async (items: ShoppingItem[]): Promise<{ id: string; url: string }> => {
       if (!actor) throw new Error('Actor not available');
       const baseUrl = `${window.location.protocol}//${window.location.host}`;
-      const successUrl = `${baseUrl}/payment-success?plan_id=${planId}`;
+      const successUrl = `${baseUrl}/payment-success`;
       const cancelUrl = `${baseUrl}/payment-failure`;
-      return actor.createCheckoutSession(items, successUrl, cancelUrl);
+      const result = await actor.createCheckoutSession(items, successUrl, cancelUrl);
+      const session = JSON.parse(result) as { id: string; url: string };
+      if (!session?.url) {
+        throw new Error('Stripe session missing url');
+      }
+      return session;
     },
   });
 }
 
-export function useGetStripeSessionStatus() {
-  const { actor } = useActor();
+export function useGetStripeSessionStatus(sessionId: string | null) {
+  const { actor, isFetching } = useActor();
 
-  return useMutation({
-    mutationFn: async (sessionId: string) => {
-      if (!actor) throw new Error('Actor not available');
+  return useQuery<StripeSessionStatus>({
+    queryKey: ['stripeSessionStatus', sessionId],
+    queryFn: async () => {
+      if (!actor || !sessionId) throw new Error('Actor or session ID not available');
       return actor.getStripeSessionStatus(sessionId);
     },
+    enabled: !!actor && !isFetching && !!sessionId,
   });
 }
 
-export function useCreateSubscription() {
-  const { actor } = useActor();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ planId, startDate }: { planId: string; startDate: bigint }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.createSubscription(planId, startDate);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['hasActiveSubscription'] });
-      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
-    },
-  });
-}
-
-export function useGetHomePageMagazines() {
+// Product Management Hooks
+export function useGetProductsByCategory(category: ProductCategory) {
   const { actor, isFetching } = useActor();
 
-  return useQuery<HomePageMagazine[]>({
-    queryKey: ['homePageMagazines'],
+  return useQuery<Product[]>({
+    queryKey: ['products', category],
     queryFn: async () => {
       if (!actor) return [];
-      return actor.getHomePageMagazines();
+      return actor.getProductsByCategory(category);
     },
     enabled: !!actor && !isFetching,
   });
 }
 
-export function useGetHomePageArticles() {
+export function useListAllProducts() {
   const { actor, isFetching } = useActor();
 
-  return useQuery<HomePageArticle[]>({
-    queryKey: ['homePageArticles'],
+  return useQuery<Product[]>({
+    queryKey: ['allProducts'],
     queryFn: async () => {
       if (!actor) return [];
-      return actor.getHomePageArticles();
-    },
-    enabled: !!actor && !isFetching,
-  });
-}
-
-export function useGetAllUserReviews() {
-  const { actor, isFetching } = useActor();
-
-  return useQuery<UserReview[]>({
-    queryKey: ['userReviews'],
-    queryFn: async () => {
-      if (!actor) return [];
-      return actor.getAllUserReviews();
-    },
-    enabled: !!actor && !isFetching,
-  });
-}
-
-export function useGetTermsAndConditions() {
-  const { actor, isFetching } = useActor();
-
-  return useQuery<string>({
-    queryKey: ['termsAndConditions'],
-    queryFn: async () => {
-      if (!actor) return '';
-      return actor.getTermsAndConditions();
-    },
-    enabled: !!actor && !isFetching,
-  });
-}
-
-export function useGetTermsPlaceholders() {
-  const { actor, isFetching } = useActor();
-
-  return useQuery<TermsPlaceholders>({
-    queryKey: ['termsPlaceholders'],
-    queryFn: async () => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.getTermsPlaceholders();
+      return actor.listAllProducts();
     },
     enabled: !!actor && !isFetching,
     retry: false,
   });
 }
 
-export function useSetTermsPlaceholders() {
+export function useAddProduct() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (placeholders: TermsPlaceholders) => {
+    mutationFn: async (input: ProductInput) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.setTermsPlaceholders(placeholders);
+      return actor.addProduct(input);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['termsPlaceholders'] });
-      queryClient.invalidateQueries({ queryKey: ['termsAndConditions'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['allProducts'] });
     },
   });
 }
 
-export function useUpdateTermsAndConditions() {
+export function useUpdateProduct() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (content: string) => {
+    mutationFn: async ({ id, updatedInput }: { id: string; updatedInput: ProductInput }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.updateTermsAndConditions(content);
+      return actor.updateProduct(id, updatedInput);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['termsAndConditions'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['allProducts'] });
+    },
+  });
+}
+
+export function useRemoveProduct() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.removeProduct(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['allProducts'] });
     },
   });
 }

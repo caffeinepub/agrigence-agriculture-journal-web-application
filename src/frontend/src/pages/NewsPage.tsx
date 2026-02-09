@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetAllNews, useGetAllBlogPosts } from '../hooks/useQueries';
-import { Newspaper, Calendar, FileText, User } from 'lucide-react';
+import { Newspaper, Calendar, FileText, User, BookOpen } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 
 export default function NewsPage() {
   const { data: news, isLoading: newsLoading } = useGetAllNews();
@@ -78,6 +80,28 @@ export default function NewsPage() {
         </TabsContent>
 
         <TabsContent value="blogs" className="space-y-6">
+          {/* Blog Subscription CTA */}
+          <Card className="border-primary bg-primary/5">
+            <CardContent className="py-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <BookOpen className="h-8 w-8 text-primary shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-lg">Subscribe to Our Blog</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Get access to exclusive blog content with our flexible subscription plans
+                    </p>
+                  </div>
+                </div>
+                <Link to="/subscription">
+                  <Button className="shrink-0">
+                    View Blog Subscription Plans
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
           {blogsLoading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>

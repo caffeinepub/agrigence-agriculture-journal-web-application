@@ -1,58 +1,70 @@
 {
   "kind": "build_request",
-  "title": "Admin login redirect to admin panel + fix Agrigence social media links",
+  "title": "Recheck and fix the consultation flow error",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Enable admins to sign in from the same login entry point as regular users and automatically open the admin interface when the signed-in identity is an admin. Specifically: after a successful Internet Identity login, check admin status via the existing admin check and redirect admins to \"/admin\"; redirect non-admin authenticated users to \"/dashboard\".",
+      "text": "Identify the current error in the deployed consultation flow and fix it so the Consultation page renders and the contact actions work without runtime errors or TypeScript build errors.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "also admin can login where from user login but when admin login the admin iterface will open where admin can use full control of app"
+          "Recheck and fix the error"
         ]
       },
       "acceptanceCriteria": [
-        "From the /login page, clicking the Internet Identity button completes Internet Identity authentication and then automatically routes an admin identity to /admin.",
-        "From the /login page, clicking the Internet Identity button completes Internet Identity authentication and then automatically routes a non-admin identity to /dashboard.",
-        "If the admin check fails (network/canister error), the UI shows an English error message and does not incorrectly route the user to /admin.",
-        "The existing /admin page continues to enforce access control (non-admins see the access denied screen)."
+        "Visiting the /consultation route does not crash and shows the consultation form.",
+        "The Consultation page has no TypeScript compile errors (including unused imports/variables).",
+        "The form validation state used for disabling/enabling buttons is a strict boolean (not a string/union), and the WhatsApp/Mail buttons enable only when all required fields are valid.",
+        "Clicking “WhatsApp Us” builds a valid wa.me URL and attempts to open it in a new tab; if the popup is blocked, a user-facing error toast is shown (English text).",
+        "Clicking “Mail Us” navigates to a valid mailto: URL with URL-encoded subject/body containing consultation type, name, email, and message."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Replace the placeholder social media links in the site footer with working, correct URLs for Agrigence profiles using the provided handles, and open them in a new tab with safe link attributes. Use these URLs:\n- LinkedIn: https://www.linkedin.com/company/agrigence\n- Instagram: https://www.instagram.com/agrigence.in\n- Facebook: https://www.facebook.com/agrigence.in\n- X: https://x.com/agrigence\n- YouTube: https://www.youtube.com/@agrigence",
+      "text": "Add a minimal regression check for the consultation flow to prevent the same error from reappearing (covering link generation and form-validity gating).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "add proper working link of soicial media platefarm \nlinkedin @agrigence instagram @agrigence.in facebook @agrigence.in X @agrigence Youtube @agrigence"
+          "Recheck and fix the error"
         ]
       },
       "acceptanceCriteria": [
-        "Footer social icons are no longer \"#\" and each icon navigates to the correct Agrigence social URL listed in this requirement.",
-        "Each social link uses target=\"_blank\" and rel=\"noopener noreferrer\".",
-        "All user-facing text remains in English."
+        "There is automated coverage (unit and/or lightweight component test) that verifies the WhatsApp URL and mailto URL builders produce encoded output containing the provided fields.",
+        "There is automated coverage that verifies the contact buttons remain disabled when required fields are missing/invalid and become enabled when all required fields are valid."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (read-only shadcn components).",
-    "Do not edit frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts (immutable paths).",
-    "Backend must remain a single Motoko actor in backend/main.mo; only add migration logic if a state upgrade is required."
+    "Do not edit files under frontend/src/components/ui (read-only).",
+    "Do not edit the immutable hook files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx.",
+    "Keep the backend as a single Motoko actor; only change backend if the consultation fix demonstrably requires it."
   ],
   "nonGoals": [
-    "Implementing email/password authentication (the current email/password form is a placeholder and is out of scope for this request).",
-    "Adding or integrating third-party authentication providers beyond Internet Identity.",
-    "Changing admin permissions/role definitions in the backend beyond what is required for redirect behavior."
+    "Do not add new consultation types beyond the existing options (Academic Support, Crop Support, Industrial Support).",
+    "Do not add backend persistence or ticket creation for consultation requests; the flow remains WhatsApp/mailto based.",
+    "Do not add third-party messaging/email integrations beyond opening WhatsApp and mailto links."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [
+      "Use English for any user-facing text."
+    ],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

@@ -14,61 +14,26 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(false);
 
-  const { login, loginStatus, identity } = useInternetIdentity();
-  const { data: isAdmin, refetch: refetchIsAdmin } = useIsCallerAdmin();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    if (!email || !password) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // TODO: Replace with actual backend authentication once implemented
-      // await loginWithEmailPassword(email, password);
-      
-      // Temporary placeholder - will be replaced with actual backend call
-      toast.error('Email/password authentication is not yet implemented. Please use Internet Identity for now.');
-      
-      // Once backend is ready, uncomment:
-      // toast.success('Login successful!');
-      // navigate({ to: '/dashboard' });
-    } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your credentials.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { login, loginStatus } = useInternetIdentity();
+  const { refetch: refetchIsAdmin } = useIsCallerAdmin();
 
   const handleInternetIdentityLogin = async () => {
     if (isCheckingAdmin) return;
 
     try {
       setIsCheckingAdmin(true);
-      setError('');
 
-      // Perform Internet Identity login
       await login();
 
-      // After successful login, check if user is admin
       const adminCheckResult = await refetchIsAdmin();
 
       if (adminCheckResult.isError) {
-        // If admin check fails, show error and don't navigate
-        setError('Unable to verify account permissions. Please try again or contact support.');
+        toast.error('Unable to verify account permissions. Please try again or contact support.');
         return;
       }
 
-      // Navigate based on admin status
       if (adminCheckResult.data === true) {
         toast.success('Welcome, Admin!');
         navigate({ to: '/admin' });
@@ -79,9 +44,9 @@ export default function LoginPage() {
     } catch (err: any) {
       console.error('Login error:', err);
       if (err.message === 'User is already authenticated') {
-        setError('You are already logged in. Please refresh the page.');
+        toast.error('You are already logged in. Please refresh the page.');
       } else {
-        setError('Login failed. Please try again.');
+        toast.error('Login failed. Please try again.');
       }
     } finally {
       setIsCheckingAdmin(false);
@@ -106,17 +71,17 @@ export default function LoginPage() {
         <Card>
           <CardHeader>
             <CardTitle>Login</CardTitle>
-            <CardDescription>Enter your email and password to access your account</CardDescription>
+            <CardDescription>Email/password authentication is not available</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+            <Alert className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Email and password authentication is not currently supported. Please use Internet Identity to login securely.
+              </AlertDescription>
+            </Alert>
 
+            <div className="space-y-4 opacity-50 pointer-events-none">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -125,8 +90,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your.email@example.com"
-                  required
-                  disabled={isLoading}
+                  disabled
                 />
               </div>
 
@@ -138,8 +102,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  required
-                  disabled={isLoading}
+                  disabled
                 />
               </div>
 
@@ -149,37 +112,34 @@ export default function LoginPage() {
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  'Logging in...'
-                ) : (
-                  <>
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Login
-                  </>
-                )}
+              <Button type="button" className="w-full" disabled>
+                <LogIn className="h-4 w-4 mr-2" />
+                Login (Unavailable)
               </Button>
+            </div>
 
-              <div className="text-center text-sm text-muted-foreground">
-                Don't have an account?{' '}
-                <Link to="/signup" className="text-primary hover:underline font-medium">
-                  Create Account
-                </Link>
-              </div>
-            </form>
+            <div className="text-center text-sm text-muted-foreground mt-4">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-primary hover:underline font-medium">
+                Create Account
+              </Link>
+            </div>
           </CardContent>
         </Card>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-muted-foreground mb-4">Or continue with</p>
+          <p className="text-sm text-muted-foreground mb-4">Continue with</p>
           <Button 
-            variant="outline" 
+            variant="default" 
             className="w-full" 
             onClick={handleInternetIdentityLogin}
             disabled={isInternetIdentityLoading}
           >
             {isInternetIdentityLoading ? 'Logging in...' : 'Internet Identity'}
           </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Secure authentication powered by Internet Computer
+          </p>
         </div>
       </div>
     </div>

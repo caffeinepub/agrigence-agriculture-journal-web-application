@@ -4,13 +4,21 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        # Build-time arguments for Internet Identity URL
+        # Override these in production with your actual II URL
+        II_URL: ${II_URL:-https://identity.ic0.app}
+        NODE_ENV: production
     container_name: agrigence-frontend
     restart: unless-stopped
     ports:
       - "${HOST_PORT:-8080}:80"
     environment:
+      # Runtime environment variables
+      # These are injected into the container at startup
       - NODE_ENV=production
+      - II_URL=${II_URL:-https://identity.ic0.app}
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
       interval: 30s

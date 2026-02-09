@@ -19,8 +19,16 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
-export const Time = IDL.Int;
-export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const ProductCategory = IDL.Variant({
+  'agriculturalStore' : IDL.Null,
+  'books' : IDL.Null,
+});
+export const ProductInput = IDL.Record({
+  'id' : IDL.Text,
+  'name' : IDL.Text,
+  'buyLink' : IDL.Text,
+  'category' : ProductCategory,
+});
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -33,137 +41,11 @@ export const ShoppingItem = IDL.Record({
   'priceInCents' : IDL.Nat,
   'productDescription' : IDL.Text,
 });
-export const ArticlePreview = IDL.Record({
-  'id' : IDL.Nat,
-  'title' : IDL.Text,
-  'description' : IDL.Text,
-  'author' : IDL.Text,
-});
-export const Article = IDL.Record({
-  'status' : IDL.Variant({
-    'pending' : IDL.Null,
-    'approved' : IDL.Null,
-    'rejected' : IDL.Null,
-  }),
-  'title' : IDL.Text,
-  'externalBlob' : ExternalBlob,
-  'fileName' : IDL.Text,
-  'filePath' : IDL.Text,
-  'fileSize' : IDL.Nat,
-  'fileType' : IDL.Variant({ 'doc' : IDL.Null, 'pdf' : IDL.Null }),
-  'author' : IDL.Text,
-  'submissionDate' : Time,
-});
-export const BlogPost = IDL.Record({
-  'id' : IDL.Nat,
-  'title' : IDL.Text,
-  'content' : IDL.Text,
-  'blob' : IDL.Opt(ExternalBlob),
-  'authorName' : IDL.Text,
-  'shortSummary' : IDL.Text,
-  'imageUrl' : IDL.Opt(IDL.Text),
-  'publicationDate' : Time,
-});
-export const EditorialMember = IDL.Record({
-  'id' : IDL.Nat,
-  'blob' : IDL.Opt(ExternalBlob),
-  'name' : IDL.Text,
-  'createdAt' : Time,
-  'role' : IDL.Text,
-  'isEditorialBoardAuthor' : IDL.Bool,
-  'email' : IDL.Text,
-  'expertise' : IDL.Text,
-  'profilePictureUrl' : IDL.Text,
-  'isEditorInChief' : IDL.Bool,
-  'phone' : IDL.Text,
-  'isReviewerBoardMember' : IDL.Bool,
-  'qualification' : IDL.Text,
-});
-export const Journal = IDL.Record({
-  'id' : IDL.Nat,
-  'month' : IDL.Nat,
-  'title' : IDL.Text,
-  'blob' : ExternalBlob,
-  'year' : IDL.Nat,
-  'description' : IDL.Text,
-  'fileSize' : IDL.Nat,
-  'fileType' : IDL.Variant({ 'pdf' : IDL.Null }),
-  'filename' : IDL.Text,
-  'isArchive' : IDL.Bool,
-  'isCurrent' : IDL.Bool,
-  'uploadDate' : Time,
-});
-export const Magazine = IDL.Record({
-  'id' : IDL.Nat,
-  'title' : IDL.Text,
-  'publishedDate' : Time,
-  'description' : IDL.Text,
-  'imageUrl' : IDL.Text,
-  'issue' : IDL.Text,
-});
-export const News = IDL.Record({
+export const Product = IDL.Record({
   'id' : IDL.Text,
-  'title' : IDL.Text,
-  'content' : IDL.Text,
-  'createdAt' : Time,
-  'summary' : IDL.Text,
-});
-export const UserReview = IDL.Record({
-  'id' : IDL.Nat,
   'name' : IDL.Text,
-  'photoUrl' : IDL.Opt(IDL.Text),
-  'feedback' : IDL.Text,
-  'rating' : IDL.Nat,
-});
-export const CMSBannerNotice = IDL.Record({
-  'link' : IDL.Opt(IDL.Text),
-  'text' : IDL.Text,
-});
-export const CMSBannerConfig = IDL.Record({
-  'notices' : IDL.Vec(CMSBannerNotice),
-  'isBannerEnabled' : IDL.Bool,
-});
-export const UserProfile = IDL.Record({
-  'occupation' : IDL.Text,
-  'name' : IDL.Text,
-  'isUnlimited' : IDL.Bool,
-  'email' : IDL.Text,
-  'phone' : IDL.Text,
-  'isInstitute' : IDL.Bool,
-  'qualification' : IDL.Text,
-});
-export const Subscription = IDL.Record({
-  'endDate' : Time,
-  'planId' : IDL.Text,
-  'isUnlimited' : IDL.Bool,
-  'isActive' : IDL.Bool,
-  'remainingArticles' : IDL.Nat,
-  'isInstitute' : IDL.Bool,
-  'startDate' : Time,
-});
-export const ProfileOutput = IDL.Record({
-  'occupation' : IDL.Text,
-  'name' : IDL.Text,
-  'isUnlimited' : IDL.Bool,
-  'email' : IDL.Text,
-  'phone' : IDL.Text,
-  'isInstitute' : IDL.Bool,
-  'activeSubscriptions' : IDL.Opt(IDL.Vec(Subscription)),
-  'qualification' : IDL.Text,
-});
-export const HomePageArticle = IDL.Record({
-  'title' : IDL.Text,
-  'description' : IDL.Text,
-  'author' : IDL.Text,
-  'submissionDate' : Time,
-});
-export const HomePageMagazine = IDL.Record({
-  'id' : IDL.Nat,
-  'title' : IDL.Text,
-  'publishedDate' : Time,
-  'description' : IDL.Text,
-  'imageUrl' : IDL.Text,
-  'issue' : IDL.Text,
+  'buyLink' : IDL.Text,
+  'category' : ProductCategory,
 });
 export const StripeSessionStatus = IDL.Variant({
   'completed' : IDL.Record({
@@ -171,43 +53,6 @@ export const StripeSessionStatus = IDL.Variant({
     'response' : IDL.Text,
   }),
   'failed' : IDL.Record({ 'error' : IDL.Text }),
-});
-export const SubscriptionPlan = IDL.Record({
-  'id' : IDL.Text,
-  'name' : IDL.Text,
-  'durationMonths' : IDL.Nat,
-  'isUnlimited' : IDL.Bool,
-  'maxArticles' : IDL.Nat,
-  'price' : IDL.Nat,
-  'isInstitute' : IDL.Bool,
-});
-export const TermsPlaceholders = IDL.Record({
-  'websiteName' : IDL.Text,
-  'companyEmail' : IDL.Text,
-  'lastUpdateDate' : IDL.Text,
-  'addressCity' : IDL.Text,
-  'companyName' : IDL.Text,
-  'companyAddress' : IDL.Text,
-});
-export const VisitorCounter = IDL.Record({
-  'averageSessionDuration' : IDL.Nat,
-  'activeSessions' : IDL.Opt(IDL.Nat),
-  'totalSessions' : IDL.Nat,
-  'pageViews' : IDL.Nat,
-  'uniqueVisitors' : IDL.Nat,
-});
-export const ProfileInput = IDL.Record({
-  'occupation' : IDL.Text,
-  'name' : IDL.Text,
-  'isUnlimited' : IDL.Bool,
-  'email' : IDL.Text,
-  'phone' : IDL.Text,
-  'isInstitute' : IDL.Bool,
-  'qualification' : IDL.Text,
-});
-export const CMSBannerInput = IDL.Record({
-  'link' : IDL.Opt(IDL.Text),
-  'text' : IDL.Text,
 });
 export const StripeConfiguration = IDL.Record({
   'allowedCountries' : IDL.Vec(IDL.Text),
@@ -260,236 +105,31 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
-  'addBlogPost' : IDL.Func(
-      [
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Opt(IDL.Text),
-        Time,
-        IDL.Opt(ExternalBlob),
-        IDL.Text,
-      ],
-      [],
-      [],
-    ),
-  'addEditorialMember' : IDL.Func(
-      [
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Bool,
-        IDL.Bool,
-        IDL.Bool,
-        IDL.Text,
-        IDL.Opt(ExternalBlob),
-      ],
-      [],
-      [],
-    ),
-  'addNews' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+  'addProduct' : IDL.Func([ProductInput], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'cancelSubscription' : IDL.Func([IDL.Text], [], []),
   'createCheckoutSession' : IDL.Func(
       [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
       [IDL.Text],
       [],
     ),
-  'createFeaturedHomePageMagazine' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, Time],
-      [],
-      [],
-    ),
-  'createHomePageArticle' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, Time],
-      [],
-      [],
-    ),
-  'createHomePageMagazine' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, Time],
-      [],
-      [],
-    ),
-  'createMagazine' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, Time],
-      [],
-      [],
-    ),
-  'createSubscription' : IDL.Func([IDL.Text, Time], [], []),
-  'createUserReview' : IDL.Func(
-      [IDL.Text, IDL.Opt(IDL.Text), IDL.Nat, IDL.Text],
-      [],
-      [],
-    ),
-  'deleteArticle' : IDL.Func([IDL.Text], [], []),
-  'deleteBlogPost' : IDL.Func([IDL.Nat], [], []),
-  'deleteEditorialMember' : IDL.Func([IDL.Nat], [], []),
-  'deleteNews' : IDL.Func([IDL.Text], [], []),
-  'getAllArticlePreviews' : IDL.Func([], [IDL.Vec(ArticlePreview)], ['query']),
-  'getAllArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
-  'getAllBlogPosts' : IDL.Func([], [IDL.Vec(BlogPost)], ['query']),
-  'getAllEditorialMembers' : IDL.Func(
-      [],
-      [IDL.Vec(EditorialMember)],
-      ['query'],
-    ),
-  'getAllJournalsByYear' : IDL.Func([IDL.Nat], [IDL.Vec(Journal)], ['query']),
-  'getAllMagazines' : IDL.Func([], [IDL.Vec(Magazine)], ['query']),
-  'getAllNews' : IDL.Func([], [IDL.Vec(News)], ['query']),
-  'getAllPendingArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
-  'getAllUserReviews' : IDL.Func([], [IDL.Vec(UserReview)], ['query']),
-  'getArticlePreview' : IDL.Func([IDL.Nat], [ArticlePreview], ['query']),
-  'getBannerConfig' : IDL.Func([], [CMSBannerConfig], ['query']),
-  'getBlogPost' : IDL.Func([IDL.Nat], [BlogPost], ['query']),
-  'getBlogPostCount' : IDL.Func([], [IDL.Nat], ['query']),
-  'getBlogPostsPaginated' : IDL.Func(
-      [IDL.Nat, IDL.Nat],
-      [IDL.Vec(BlogPost)],
-      ['query'],
-    ),
-  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-  'getCurrentJournal' : IDL.Func([], [IDL.Opt(Journal)], ['query']),
-  'getEditorInChiefMembers' : IDL.Func(
-      [],
-      [IDL.Vec(EditorialMember)],
-      ['query'],
-    ),
-  'getEditorialBoardMembers' : IDL.Func(
-      [],
-      [IDL.Vec(EditorialMember)],
-      ['query'],
-    ),
-  'getFilteredProfilesDTOs' : IDL.Func(
-      [IDL.Bool, IDL.Bool],
-      [IDL.Vec(ProfileOutput)],
-      ['query'],
-    ),
-  'getHomePageArticles' : IDL.Func([], [IDL.Vec(HomePageArticle)], ['query']),
-  'getHomePageMagazines' : IDL.Func([], [IDL.Vec(HomePageMagazine)], ['query']),
-  'getJournal' : IDL.Func([IDL.Nat], [Journal], ['query']),
-  'getJournalCount' : IDL.Func([], [IDL.Nat], ['query']),
-  'getLatestBlogPosts' : IDL.Func([IDL.Nat], [IDL.Vec(BlogPost)], ['query']),
-  'getLatestNews' : IDL.Func([IDL.Nat], [IDL.Vec(News)], ['query']),
-  'getMagazine' : IDL.Func([IDL.Nat], [Magazine], ['query']),
-  'getNews' : IDL.Func([IDL.Text], [News], ['query']),
-  'getNewsCount' : IDL.Func([], [IDL.Nat], ['query']),
-  'getPendingArticleCount' : IDL.Func([], [IDL.Nat], ['query']),
-  'getPlanCount' : IDL.Func([], [IDL.Nat], ['query']),
-  'getRemainingArticles' : IDL.Func([IDL.Principal], [IDL.Nat], []),
-  'getReviewerBoardMembers' : IDL.Func(
-      [],
-      [IDL.Vec(EditorialMember)],
+  'getProductsByCategory' : IDL.Func(
+      [ProductCategory],
+      [IDL.Vec(Product)],
       ['query'],
     ),
   'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
-  'getSubscriptionPlanObject' : IDL.Func(
-      [IDL.Text],
-      [SubscriptionPlan],
-      ['query'],
-    ),
-  'getSubscriptionPlans' : IDL.Func([], [IDL.Vec(SubscriptionPlan)], ['query']),
-  'getTermsAndConditions' : IDL.Func([], [IDL.Text], ['query']),
-  'getTermsPlaceholders' : IDL.Func([], [TermsPlaceholders], ['query']),
-  'getUserArticles' : IDL.Func([IDL.Principal], [IDL.Vec(Article)], ['query']),
-  'getUserProfile' : IDL.Func(
-      [IDL.Principal],
-      [IDL.Opt(UserProfile)],
-      ['query'],
-    ),
-  'getUserReview' : IDL.Func([IDL.Nat], [UserReview], ['query']),
-  'getUsersByPlan' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Principal)], ['query']),
-  'getVisitorCounter' : IDL.Func([], [VisitorCounter], ['query']),
-  'hasActiveSubscription' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
-  'saveCallerUserProfile' : IDL.Func([ProfileInput], [], []),
-  'setBannerNotices' : IDL.Func([IDL.Vec(CMSBannerInput)], [], []),
+  'listAllProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+  'removeProduct' : IDL.Func([IDL.Text], [], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
-  'setTermsPlaceholders' : IDL.Func([TermsPlaceholders], [], []),
-  'submitArticle' : IDL.Func(
-      [
-        IDL.Text,
-        IDL.Variant({ 'doc' : IDL.Null, 'pdf' : IDL.Null }),
-        IDL.Text,
-        IDL.Nat,
-        ExternalBlob,
-      ],
-      [],
-      [],
-    ),
-  'toggleBanner' : IDL.Func([IDL.Bool], [], []),
   'transform' : IDL.Func(
       [TransformationInput],
       [TransformationOutput],
       ['query'],
     ),
-  'updateArticleStatus' : IDL.Func(
-      [
-        IDL.Principal,
-        IDL.Text,
-        IDL.Variant({ 'approved' : IDL.Null, 'rejected' : IDL.Null }),
-      ],
-      [],
-      [],
-    ),
-  'updateBlogPost' : IDL.Func(
-      [
-        IDL.Nat,
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        Time,
-        IDL.Opt(IDL.Text),
-        IDL.Opt(ExternalBlob),
-        IDL.Text,
-      ],
-      [],
-      [],
-    ),
-  'updateEditorialMember' : IDL.Func(
-      [
-        IDL.Nat,
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Text,
-        IDL.Bool,
-        IDL.Bool,
-        IDL.Bool,
-        IDL.Text,
-        IDL.Opt(ExternalBlob),
-      ],
-      [],
-      [],
-    ),
-  'updateSubscriptionsTimestamp' : IDL.Func([], [], []),
-  'updateTermsAndConditions' : IDL.Func([IDL.Text], [], []),
-  'updateVisitorCounter' : IDL.Func(
-      [IDL.Nat, IDL.Nat, IDL.Nat, IDL.Nat, IDL.Opt(IDL.Nat)],
-      [],
-      [],
-    ),
-  'uploadJournal' : IDL.Func(
-      [
-        IDL.Text,
-        IDL.Nat,
-        IDL.Nat,
-        IDL.Text,
-        IDL.Text,
-        IDL.Nat,
-        ExternalBlob,
-        IDL.Bool,
-        IDL.Bool,
-      ],
-      [],
-      [],
-    ),
+  'updateProduct' : IDL.Func([IDL.Text, ProductInput], [], []),
 });
 
 export const idlInitArgs = [];
@@ -506,8 +146,16 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
-  const Time = IDL.Int;
-  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const ProductCategory = IDL.Variant({
+    'agriculturalStore' : IDL.Null,
+    'books' : IDL.Null,
+  });
+  const ProductInput = IDL.Record({
+    'id' : IDL.Text,
+    'name' : IDL.Text,
+    'buyLink' : IDL.Text,
+    'category' : ProductCategory,
+  });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
@@ -520,137 +168,11 @@ export const idlFactory = ({ IDL }) => {
     'priceInCents' : IDL.Nat,
     'productDescription' : IDL.Text,
   });
-  const ArticlePreview = IDL.Record({
-    'id' : IDL.Nat,
-    'title' : IDL.Text,
-    'description' : IDL.Text,
-    'author' : IDL.Text,
-  });
-  const Article = IDL.Record({
-    'status' : IDL.Variant({
-      'pending' : IDL.Null,
-      'approved' : IDL.Null,
-      'rejected' : IDL.Null,
-    }),
-    'title' : IDL.Text,
-    'externalBlob' : ExternalBlob,
-    'fileName' : IDL.Text,
-    'filePath' : IDL.Text,
-    'fileSize' : IDL.Nat,
-    'fileType' : IDL.Variant({ 'doc' : IDL.Null, 'pdf' : IDL.Null }),
-    'author' : IDL.Text,
-    'submissionDate' : Time,
-  });
-  const BlogPost = IDL.Record({
-    'id' : IDL.Nat,
-    'title' : IDL.Text,
-    'content' : IDL.Text,
-    'blob' : IDL.Opt(ExternalBlob),
-    'authorName' : IDL.Text,
-    'shortSummary' : IDL.Text,
-    'imageUrl' : IDL.Opt(IDL.Text),
-    'publicationDate' : Time,
-  });
-  const EditorialMember = IDL.Record({
-    'id' : IDL.Nat,
-    'blob' : IDL.Opt(ExternalBlob),
-    'name' : IDL.Text,
-    'createdAt' : Time,
-    'role' : IDL.Text,
-    'isEditorialBoardAuthor' : IDL.Bool,
-    'email' : IDL.Text,
-    'expertise' : IDL.Text,
-    'profilePictureUrl' : IDL.Text,
-    'isEditorInChief' : IDL.Bool,
-    'phone' : IDL.Text,
-    'isReviewerBoardMember' : IDL.Bool,
-    'qualification' : IDL.Text,
-  });
-  const Journal = IDL.Record({
-    'id' : IDL.Nat,
-    'month' : IDL.Nat,
-    'title' : IDL.Text,
-    'blob' : ExternalBlob,
-    'year' : IDL.Nat,
-    'description' : IDL.Text,
-    'fileSize' : IDL.Nat,
-    'fileType' : IDL.Variant({ 'pdf' : IDL.Null }),
-    'filename' : IDL.Text,
-    'isArchive' : IDL.Bool,
-    'isCurrent' : IDL.Bool,
-    'uploadDate' : Time,
-  });
-  const Magazine = IDL.Record({
-    'id' : IDL.Nat,
-    'title' : IDL.Text,
-    'publishedDate' : Time,
-    'description' : IDL.Text,
-    'imageUrl' : IDL.Text,
-    'issue' : IDL.Text,
-  });
-  const News = IDL.Record({
+  const Product = IDL.Record({
     'id' : IDL.Text,
-    'title' : IDL.Text,
-    'content' : IDL.Text,
-    'createdAt' : Time,
-    'summary' : IDL.Text,
-  });
-  const UserReview = IDL.Record({
-    'id' : IDL.Nat,
     'name' : IDL.Text,
-    'photoUrl' : IDL.Opt(IDL.Text),
-    'feedback' : IDL.Text,
-    'rating' : IDL.Nat,
-  });
-  const CMSBannerNotice = IDL.Record({
-    'link' : IDL.Opt(IDL.Text),
-    'text' : IDL.Text,
-  });
-  const CMSBannerConfig = IDL.Record({
-    'notices' : IDL.Vec(CMSBannerNotice),
-    'isBannerEnabled' : IDL.Bool,
-  });
-  const UserProfile = IDL.Record({
-    'occupation' : IDL.Text,
-    'name' : IDL.Text,
-    'isUnlimited' : IDL.Bool,
-    'email' : IDL.Text,
-    'phone' : IDL.Text,
-    'isInstitute' : IDL.Bool,
-    'qualification' : IDL.Text,
-  });
-  const Subscription = IDL.Record({
-    'endDate' : Time,
-    'planId' : IDL.Text,
-    'isUnlimited' : IDL.Bool,
-    'isActive' : IDL.Bool,
-    'remainingArticles' : IDL.Nat,
-    'isInstitute' : IDL.Bool,
-    'startDate' : Time,
-  });
-  const ProfileOutput = IDL.Record({
-    'occupation' : IDL.Text,
-    'name' : IDL.Text,
-    'isUnlimited' : IDL.Bool,
-    'email' : IDL.Text,
-    'phone' : IDL.Text,
-    'isInstitute' : IDL.Bool,
-    'activeSubscriptions' : IDL.Opt(IDL.Vec(Subscription)),
-    'qualification' : IDL.Text,
-  });
-  const HomePageArticle = IDL.Record({
-    'title' : IDL.Text,
-    'description' : IDL.Text,
-    'author' : IDL.Text,
-    'submissionDate' : Time,
-  });
-  const HomePageMagazine = IDL.Record({
-    'id' : IDL.Nat,
-    'title' : IDL.Text,
-    'publishedDate' : Time,
-    'description' : IDL.Text,
-    'imageUrl' : IDL.Text,
-    'issue' : IDL.Text,
+    'buyLink' : IDL.Text,
+    'category' : ProductCategory,
   });
   const StripeSessionStatus = IDL.Variant({
     'completed' : IDL.Record({
@@ -658,43 +180,6 @@ export const idlFactory = ({ IDL }) => {
       'response' : IDL.Text,
     }),
     'failed' : IDL.Record({ 'error' : IDL.Text }),
-  });
-  const SubscriptionPlan = IDL.Record({
-    'id' : IDL.Text,
-    'name' : IDL.Text,
-    'durationMonths' : IDL.Nat,
-    'isUnlimited' : IDL.Bool,
-    'maxArticles' : IDL.Nat,
-    'price' : IDL.Nat,
-    'isInstitute' : IDL.Bool,
-  });
-  const TermsPlaceholders = IDL.Record({
-    'websiteName' : IDL.Text,
-    'companyEmail' : IDL.Text,
-    'lastUpdateDate' : IDL.Text,
-    'addressCity' : IDL.Text,
-    'companyName' : IDL.Text,
-    'companyAddress' : IDL.Text,
-  });
-  const VisitorCounter = IDL.Record({
-    'averageSessionDuration' : IDL.Nat,
-    'activeSessions' : IDL.Opt(IDL.Nat),
-    'totalSessions' : IDL.Nat,
-    'pageViews' : IDL.Nat,
-    'uniqueVisitors' : IDL.Nat,
-  });
-  const ProfileInput = IDL.Record({
-    'occupation' : IDL.Text,
-    'name' : IDL.Text,
-    'isUnlimited' : IDL.Bool,
-    'email' : IDL.Text,
-    'phone' : IDL.Text,
-    'isInstitute' : IDL.Bool,
-    'qualification' : IDL.Text,
-  });
-  const CMSBannerInput = IDL.Record({
-    'link' : IDL.Opt(IDL.Text),
-    'text' : IDL.Text,
   });
   const StripeConfiguration = IDL.Record({
     'allowedCountries' : IDL.Vec(IDL.Text),
@@ -744,256 +229,31 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
-    'addBlogPost' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Opt(IDL.Text),
-          Time,
-          IDL.Opt(ExternalBlob),
-          IDL.Text,
-        ],
-        [],
-        [],
-      ),
-    'addEditorialMember' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Bool,
-          IDL.Bool,
-          IDL.Bool,
-          IDL.Text,
-          IDL.Opt(ExternalBlob),
-        ],
-        [],
-        [],
-      ),
-    'addNews' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+    'addProduct' : IDL.Func([ProductInput], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'cancelSubscription' : IDL.Func([IDL.Text], [], []),
     'createCheckoutSession' : IDL.Func(
         [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
         [IDL.Text],
         [],
       ),
-    'createFeaturedHomePageMagazine' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, Time],
-        [],
-        [],
-      ),
-    'createHomePageArticle' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, Time],
-        [],
-        [],
-      ),
-    'createHomePageMagazine' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, Time],
-        [],
-        [],
-      ),
-    'createMagazine' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, Time],
-        [],
-        [],
-      ),
-    'createSubscription' : IDL.Func([IDL.Text, Time], [], []),
-    'createUserReview' : IDL.Func(
-        [IDL.Text, IDL.Opt(IDL.Text), IDL.Nat, IDL.Text],
-        [],
-        [],
-      ),
-    'deleteArticle' : IDL.Func([IDL.Text], [], []),
-    'deleteBlogPost' : IDL.Func([IDL.Nat], [], []),
-    'deleteEditorialMember' : IDL.Func([IDL.Nat], [], []),
-    'deleteNews' : IDL.Func([IDL.Text], [], []),
-    'getAllArticlePreviews' : IDL.Func(
-        [],
-        [IDL.Vec(ArticlePreview)],
-        ['query'],
-      ),
-    'getAllArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
-    'getAllBlogPosts' : IDL.Func([], [IDL.Vec(BlogPost)], ['query']),
-    'getAllEditorialMembers' : IDL.Func(
-        [],
-        [IDL.Vec(EditorialMember)],
-        ['query'],
-      ),
-    'getAllJournalsByYear' : IDL.Func([IDL.Nat], [IDL.Vec(Journal)], ['query']),
-    'getAllMagazines' : IDL.Func([], [IDL.Vec(Magazine)], ['query']),
-    'getAllNews' : IDL.Func([], [IDL.Vec(News)], ['query']),
-    'getAllPendingArticles' : IDL.Func([], [IDL.Vec(Article)], ['query']),
-    'getAllUserReviews' : IDL.Func([], [IDL.Vec(UserReview)], ['query']),
-    'getArticlePreview' : IDL.Func([IDL.Nat], [ArticlePreview], ['query']),
-    'getBannerConfig' : IDL.Func([], [CMSBannerConfig], ['query']),
-    'getBlogPost' : IDL.Func([IDL.Nat], [BlogPost], ['query']),
-    'getBlogPostCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'getBlogPostsPaginated' : IDL.Func(
-        [IDL.Nat, IDL.Nat],
-        [IDL.Vec(BlogPost)],
-        ['query'],
-      ),
-    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-    'getCurrentJournal' : IDL.Func([], [IDL.Opt(Journal)], ['query']),
-    'getEditorInChiefMembers' : IDL.Func(
-        [],
-        [IDL.Vec(EditorialMember)],
-        ['query'],
-      ),
-    'getEditorialBoardMembers' : IDL.Func(
-        [],
-        [IDL.Vec(EditorialMember)],
-        ['query'],
-      ),
-    'getFilteredProfilesDTOs' : IDL.Func(
-        [IDL.Bool, IDL.Bool],
-        [IDL.Vec(ProfileOutput)],
-        ['query'],
-      ),
-    'getHomePageArticles' : IDL.Func([], [IDL.Vec(HomePageArticle)], ['query']),
-    'getHomePageMagazines' : IDL.Func(
-        [],
-        [IDL.Vec(HomePageMagazine)],
-        ['query'],
-      ),
-    'getJournal' : IDL.Func([IDL.Nat], [Journal], ['query']),
-    'getJournalCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'getLatestBlogPosts' : IDL.Func([IDL.Nat], [IDL.Vec(BlogPost)], ['query']),
-    'getLatestNews' : IDL.Func([IDL.Nat], [IDL.Vec(News)], ['query']),
-    'getMagazine' : IDL.Func([IDL.Nat], [Magazine], ['query']),
-    'getNews' : IDL.Func([IDL.Text], [News], ['query']),
-    'getNewsCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'getPendingArticleCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'getPlanCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'getRemainingArticles' : IDL.Func([IDL.Principal], [IDL.Nat], []),
-    'getReviewerBoardMembers' : IDL.Func(
-        [],
-        [IDL.Vec(EditorialMember)],
+    'getProductsByCategory' : IDL.Func(
+        [ProductCategory],
+        [IDL.Vec(Product)],
         ['query'],
       ),
     'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
-    'getSubscriptionPlanObject' : IDL.Func(
-        [IDL.Text],
-        [SubscriptionPlan],
-        ['query'],
-      ),
-    'getSubscriptionPlans' : IDL.Func(
-        [],
-        [IDL.Vec(SubscriptionPlan)],
-        ['query'],
-      ),
-    'getTermsAndConditions' : IDL.Func([], [IDL.Text], ['query']),
-    'getTermsPlaceholders' : IDL.Func([], [TermsPlaceholders], ['query']),
-    'getUserArticles' : IDL.Func(
-        [IDL.Principal],
-        [IDL.Vec(Article)],
-        ['query'],
-      ),
-    'getUserProfile' : IDL.Func(
-        [IDL.Principal],
-        [IDL.Opt(UserProfile)],
-        ['query'],
-      ),
-    'getUserReview' : IDL.Func([IDL.Nat], [UserReview], ['query']),
-    'getUsersByPlan' : IDL.Func(
-        [IDL.Text],
-        [IDL.Vec(IDL.Principal)],
-        ['query'],
-      ),
-    'getVisitorCounter' : IDL.Func([], [VisitorCounter], ['query']),
-    'hasActiveSubscription' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
-    'saveCallerUserProfile' : IDL.Func([ProfileInput], [], []),
-    'setBannerNotices' : IDL.Func([IDL.Vec(CMSBannerInput)], [], []),
+    'listAllProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+    'removeProduct' : IDL.Func([IDL.Text], [], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
-    'setTermsPlaceholders' : IDL.Func([TermsPlaceholders], [], []),
-    'submitArticle' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Variant({ 'doc' : IDL.Null, 'pdf' : IDL.Null }),
-          IDL.Text,
-          IDL.Nat,
-          ExternalBlob,
-        ],
-        [],
-        [],
-      ),
-    'toggleBanner' : IDL.Func([IDL.Bool], [], []),
     'transform' : IDL.Func(
         [TransformationInput],
         [TransformationOutput],
         ['query'],
       ),
-    'updateArticleStatus' : IDL.Func(
-        [
-          IDL.Principal,
-          IDL.Text,
-          IDL.Variant({ 'approved' : IDL.Null, 'rejected' : IDL.Null }),
-        ],
-        [],
-        [],
-      ),
-    'updateBlogPost' : IDL.Func(
-        [
-          IDL.Nat,
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          Time,
-          IDL.Opt(IDL.Text),
-          IDL.Opt(ExternalBlob),
-          IDL.Text,
-        ],
-        [],
-        [],
-      ),
-    'updateEditorialMember' : IDL.Func(
-        [
-          IDL.Nat,
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Text,
-          IDL.Bool,
-          IDL.Bool,
-          IDL.Bool,
-          IDL.Text,
-          IDL.Opt(ExternalBlob),
-        ],
-        [],
-        [],
-      ),
-    'updateSubscriptionsTimestamp' : IDL.Func([], [], []),
-    'updateTermsAndConditions' : IDL.Func([IDL.Text], [], []),
-    'updateVisitorCounter' : IDL.Func(
-        [IDL.Nat, IDL.Nat, IDL.Nat, IDL.Nat, IDL.Opt(IDL.Nat)],
-        [],
-        [],
-      ),
-    'uploadJournal' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Nat,
-          IDL.Nat,
-          IDL.Text,
-          IDL.Text,
-          IDL.Nat,
-          ExternalBlob,
-          IDL.Bool,
-          IDL.Bool,
-        ],
-        [],
-        [],
-      ),
+    'updateProduct' : IDL.Func([IDL.Text, ProductInput], [], []),
   });
 };
 

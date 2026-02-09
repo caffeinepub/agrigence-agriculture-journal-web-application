@@ -1,24 +1,49 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-07T08:03:03.589Z",
-  "summary": "REQ-1 and REQ-2 appear implemented: LoginPage now performs Internet Identity login then checks admin status and routes to /admin or /dashboard with error handling; Footer social links now point to the specified Agrigence URLs and open safely in new tabs.",
-  "missing_requirements": [],
+  "generatedAt": "2026-02-08T18:07:46.980Z",
+  "summary": "Consultation flow was updated with strict boolean form validation and improved WhatsApp/mailto URL builders, including popup-blocked handling via toast. However, the diff summary does not show any added/updated automated tests required for regression coverage, and button disabled/enabled gating cannot be fully verified from the truncated ConsultationPage diff.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Add a minimal regression check (automated test) verifying WhatsApp/mailto URL builders produce encoded output containing provided fields, and verifying contact buttons are disabled until required fields are valid.",
+      "reason": "No test files or test-related modifications are shown in the diff summary; only utility and page code changes are present.",
+      "evidence": [
+        "Added/Modified files list shows only frontend/src/utils/consultationValidation.ts, frontend/src/pages/ConsultationPage.tsx, frontend/src/utils/consultExpertMailto.ts, frontend/src/utils/consultWhatsAppLink.ts (no test paths present)"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "WhatsApp/Mail buttons enable only when all required fields are valid (strict boolean gating).",
+      "reason": "A strict boolean `isFormValid` is computed, but the truncated diff does not show the actual Button components’ `disabled` props or other UI gating logic, so it cannot be confirmed from provided evidence.",
+      "evidence": [
+        "frontend/src/pages/ConsultationPage.tsx (truncated)"
+      ]
+    }
+  ],
   "hallucinated_features": [
     {
-      "description": "Added a \"Terms and Conditions\" link in the footer (route \"/terms-and-conditions\"), which was not requested as part of REQ-1 or REQ-2.",
-      "reason": "BuildRequest only asked to fix admin login redirect behavior and replace placeholder social media links; it did not request adding new footer navigation items.",
+      "description": "Added a legacy/backward-compatible static mailto builder (getConsultExpertMailto) in addition to the requested dynamic mailto link builder.",
+      "reason": "The BuildRequest only asks to fix the consultation flow and ensure mailto includes encoded fields; it does not request preserving/adding a legacy static template generator.",
       "evidence": [
-        "frontend/src/components/Footer.tsx",
-        "frontend-file-summaries.txt (mentions new Terms and Conditions route in App.tsx)"
+        "frontend/src/utils/consultExpertMailto.ts"
+      ]
+    },
+    {
+      "description": "Success toasts for opening WhatsApp and opening email client.",
+      "reason": "The BuildRequest specifically requires an error toast when WhatsApp popup is blocked, but does not request success toasts.",
+      "evidence": [
+        "frontend/src/pages/ConsultationPage.tsx (truncated)"
       ]
     }
   ],
   "confidence": 0.74,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/components/Footer.tsx",
-    "frontend/src/pages/LoginPage.tsx",
+    "frontend/src/pages/ConsultationPage.tsx",
+    "frontend/src/utils/consultExpertMailto.ts",
+    "frontend/src/utils/consultWhatsAppLink.ts",
+    "frontend/src/utils/consultationValidation.ts",
     "project_state.json"
   ]
 }

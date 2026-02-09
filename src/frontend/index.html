@@ -1,9 +1,34 @@
+<!DOCTYPE html>
 <html lang='en'>
     <head>
         <meta charset='UTF-8' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
         <meta name='description' content='Agrigence - Agriculture Journal Web Application' />
-        <title>Agrigence   Agriculture Journal Web Application</title>
+        <title>Agrigence - Agriculture Journal Web Application</title>
+        
+        <!-- Runtime environment shim - must load before main app -->
+        <script>
+            // Define process.env for browser runtime to prevent crashes
+            // when code references process.env.II_URL or other env variables
+            if (typeof process === 'undefined') {
+                window.process = {
+                    env: {
+                        II_URL: 'https://identity.ic0.app',
+                        NODE_ENV: 'production'
+                    }
+                };
+            } else if (!process.env) {
+                process.env = {
+                    II_URL: 'https://identity.ic0.app',
+                    NODE_ENV: 'production'
+                };
+            }
+            
+            // Allow runtime override via window.ENV if provided
+            if (window.ENV && window.ENV.II_URL) {
+                process.env.II_URL = window.ENV.II_URL;
+            }
+        </script>
     </head>
     <body>
         <div id='root'></div>

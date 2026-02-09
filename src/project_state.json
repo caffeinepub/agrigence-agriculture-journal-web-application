@@ -1,43 +1,33 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "App needs role-based authentication where admins log in via the user login and are redirected to a full-control admin interface, plus proper working social media links for Agrigence across platforms.",
+  "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "User reports an unspecified error in the deployed consultation flow and requests recheck and fix."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-enable-admins-to-sign-in-from-the-same-login-entry-point-as-regular-users-and-automatically-open-the-admin-interface-when-the-signed-in-identity-is-an-admin-specifically-after-a-successful-internet-identity-login-check-admin-status-via-the-existing-admin-check-and-redirect-admins-to-admin-redirect-non-admin-authenticated-users-to-dashboard",
-      "title": "Enable admins to sign in from the same login entry point as regular users and automatically open the admin interface when the signed-in identity is an admin. Specifically: after a successful Internet Identity login, check admin status via the existing admin check and redirect admins to \"/admin\"; redirect non-admin authenticated users to \"/dashboard\".",
+      "id": "feature-identify-the-current-error-in-the-deployed-consultation-flow-and-fix-it-so-the-consultation-page-renders-and-the-contact-actions-work-without-runtime-errors-or-typescript-build-errors",
+      "title": "Identify the current error in the deployed consultation flow and fix it so the Consultation page renders and the contact actions work without runtime errors or TypeScript build errors.",
       "reqIds": [
         "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-replace-the-placeholder-social-media-links-in-the-site-footer-with-working-correct-urls-for-agrigence-profiles-using-the-provided-handles-and-open-them-in-a-new-tab-with-safe-link-attributes-use-these-urls-linkedin-https-www-linkedin-com-company-agrigence-instagram-https-www-instagram-com-agrigence-in-facebook-https-www-facebook-com-agrigence-in-x-https-x-com-agrigence-youtube-https-www-youtube-com-agrigence",
-      "title": "Replace the placeholder social media links in the site footer with working, correct URLs for Agrigence profiles using the provided handles, and open them in a new tab with safe link attributes. Use these URLs:\n- LinkedIn: https://www.linkedin.com/company/agrigence\n- Instagram: https://www.instagram.com/agrigence.in\n- Facebook: https://www.facebook.com/agrigence.in\n- X: https://x.com/agrigence\n- YouTube: https://www.youtube.com/@agrigence",
-      "reqIds": [
-        "REQ-2"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-1",
-      "summary": "Add role-based login: admins can log in from the user login screen and are redirected to an admin interface with full control of the app",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
       "id": "AR-2",
-      "summary": "Add working social media links for Agrigence: LinkedIn @agrigence, Instagram @agrigence.in, Facebook @agrigence.in, X @agrigence, YouTube @agrigence",
-      "reqIds": [],
+      "summary": "Add a minimal regression check for the consultation flow to prevent the same error from reappearing (covering link generation and form-validity gating).",
+      "reqIds": [
+        "REQ-2"
+      ],
       "status": "pending"
     }
   ],
-  "projectName": "Admin login redirect to admin panel + fix Agrigence social media links",
+  "projectName": "Recheck and fix the consultation flow error",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

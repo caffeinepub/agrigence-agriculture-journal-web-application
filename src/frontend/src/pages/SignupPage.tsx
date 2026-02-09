@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { UserPlus, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -18,50 +17,9 @@ export default function SignupPage() {
     password: '',
     confirmPassword: '',
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    // Validation
-    if (!formData.name || !formData.email || !formData.phone || !formData.occupation || !formData.password || !formData.confirmPassword) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // TODO: Replace with actual backend registration once implemented
-      // await registerUser(formData.email, formData.password, formData.name, formData.phone, formData.occupation);
-      
-      // Temporary placeholder - will be replaced with actual backend call
-      toast.error('Email/password registration is not yet implemented. Please use Internet Identity for now.');
-      
-      // Once backend is ready, uncomment:
-      // toast.success('Account created successfully! Please login.');
-      // navigate({ to: '/login' });
-    } catch (err: any) {
-      setError(err.message || 'Registration failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -80,17 +38,17 @@ export default function SignupPage() {
         <Card>
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
-            <CardDescription>Create your account to get started</CardDescription>
+            <CardDescription>Email/password registration is not available</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+            <Alert className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Email and password registration is not currently supported. Please use Internet Identity to create your account securely.
+              </AlertDescription>
+            </Alert>
 
+            <div className="space-y-4 opacity-50 pointer-events-none">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
@@ -98,8 +56,7 @@ export default function SignupPage() {
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
                   placeholder="Enter your full name"
-                  required
-                  disabled={isLoading}
+                  disabled
                 />
               </div>
 
@@ -111,8 +68,7 @@ export default function SignupPage() {
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
                   placeholder="your.email@example.com"
-                  required
-                  disabled={isLoading}
+                  disabled
                 />
               </div>
 
@@ -124,8 +80,7 @@ export default function SignupPage() {
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
                   placeholder="+91 1234567890"
-                  required
-                  disabled={isLoading}
+                  disabled
                 />
               </div>
 
@@ -136,8 +91,7 @@ export default function SignupPage() {
                   value={formData.occupation}
                   onChange={(e) => handleChange('occupation', e.target.value)}
                   placeholder="e.g., Researcher, Farmer, Student"
-                  required
-                  disabled={isLoading}
+                  disabled
                 />
               </div>
 
@@ -149,10 +103,8 @@ export default function SignupPage() {
                   value={formData.password}
                   onChange={(e) => handleChange('password', e.target.value)}
                   placeholder="Create a strong password"
-                  required
-                  disabled={isLoading}
+                  disabled
                 />
-                <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
               </div>
 
               <div className="space-y-2">
@@ -163,37 +115,33 @@ export default function SignupPage() {
                   value={formData.confirmPassword}
                   onChange={(e) => handleChange('confirmPassword', e.target.value)}
                   placeholder="Re-enter your password"
-                  required
-                  disabled={isLoading}
+                  disabled
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  'Creating Account...'
-                ) : (
-                  <>
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Create Account
-                  </>
-                )}
+              <Button type="button" className="w-full" disabled>
+                <UserPlus className="h-4 w-4 mr-2" />
+                Create Account (Unavailable)
               </Button>
+            </div>
 
-              <div className="text-center text-sm text-muted-foreground">
-                Already have an account?{' '}
-                <Link to="/login" className="text-primary hover:underline font-medium">
-                  Login
-                </Link>
-              </div>
-            </form>
+            <div className="text-center text-sm text-muted-foreground mt-4">
+              Already have an account?{' '}
+              <Link to="/login" className="text-primary hover:underline font-medium">
+                Login
+              </Link>
+            </div>
           </CardContent>
         </Card>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-muted-foreground mb-4">Or continue with</p>
-          <Button variant="outline" className="w-full" onClick={() => navigate({ to: '/' })}>
+          <p className="text-sm text-muted-foreground mb-4">Continue with</p>
+          <Button variant="default" className="w-full" onClick={() => navigate({ to: '/login' })}>
             Internet Identity
           </Button>
+          <p className="text-xs text-muted-foreground mt-2">
+            Secure authentication powered by Internet Computer
+          </p>
         </div>
       </div>
     </div>

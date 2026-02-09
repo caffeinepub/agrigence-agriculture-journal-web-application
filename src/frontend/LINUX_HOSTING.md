@@ -5,12 +5,13 @@ This guide provides step-by-step instructions for deploying the Agrigence Vite R
 ## Table of Contents
 
 1. [Prerequisites](#prerequisites)
-2. [Option 1: Docker Deployment](#option-1-docker-deployment)
-3. [Option 2: Docker Compose Deployment](#option-2-docker-compose-deployment)
-4. [Option 3: Direct Nginx Deployment](#option-3-direct-nginx-deployment)
-5. [Backend Configuration](#backend-configuration)
-6. [Verification Checklist](#verification-checklist)
-7. [Troubleshooting](#troubleshooting)
+2. [Environment Configuration](#environment-configuration)
+3. [Option 1: Docker Deployment](#option-1-docker-deployment)
+4. [Option 2: Docker Compose Deployment](#option-2-docker-compose-deployment)
+5. [Option 3: Direct Nginx Deployment](#option-3-direct-nginx-deployment)
+6. [Backend Configuration](#backend-configuration)
+7. [SPA Routing Verification](#spa-routing-verification)
+8. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -33,6 +34,19 @@ This guide provides step-by-step instructions for deploying the Agrigence Vite R
 
 ---
 
-## Option 1: Docker Deployment
+## Environment Configuration
 
-### Step 1: Clone Repository
+### Required Environment Variables
+
+Before deploying, configure the following environment variables:
+
+| Variable | Description | Default | Example |
+|----------|-------------|---------|---------|
+| `II_URL` | Internet Identity provider URL | `https://identity.ic0.app` | `https://identity.ic0.app` |
+| `NODE_ENV` | Node environment | `production` | `production` |
+| `HOST_PORT` | Host port for Docker | `8080` | `8080` |
+
+### Setting Up Environment Variables
+
+**Create a `.env` file in the frontend directory:**
+
