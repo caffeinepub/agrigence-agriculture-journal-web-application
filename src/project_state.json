@@ -4,13 +4,13 @@
   "summary": "New project",
   "architectural_notes": [],
   "known_issues": [
-    "User reports an unspecified error in the deployed consultation flow and requests recheck and fix."
+    "Build/deploy attempts are failing due to internal AI/LLM errors, preventing proper app functionality review/fix."
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-identify-the-current-error-in-the-deployed-consultation-flow-and-fix-it-so-the-consultation-page-renders-and-the-contact-actions-work-without-runtime-errors-or-typescript-build-errors",
-      "title": "Identify the current error in the deployed consultation flow and fix it so the Consultation page renders and the contact actions work without runtime errors or TypeScript build errors.",
+      "id": "feature-restore-roll-back-the-deployed-application-to-version-v59-ensuring-both-the-frontend-and-backend-code-state-correspond-to-what-was-running-in-v59",
+      "title": "Restore (roll back) the deployed application to version v59, ensuring both the frontend and backend code/state correspond to what was running in v59.",
       "reqIds": [
         "REQ-1"
       ],
@@ -19,15 +19,13 @@
   ],
   "new_feature_requests": [
     {
-      "id": "AR-2",
-      "summary": "Add a minimal regression check for the consultation flow to prevent the same error from reappearing (covering link generation and form-validity gating).",
-      "reqIds": [
-        "REQ-2"
-      ],
+      "id": "AR-1",
+      "summary": "Restore/rollback deployment to version v59",
+      "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Recheck and fix the consultation flow error",
+  "projectName": "Rollback app to Version v59",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

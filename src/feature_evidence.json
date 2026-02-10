@@ -2,9 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-identify-the-current-error-in-the-deployed-consultation-flow-and-fix-it-so-the-consultation-page-renders-and-the-contact-actions-work-without-runtime-errors-or-typescript-build-errors",
-      "featureTitle": "Identify the current error in the deployed consultation flow and fix it so the Consultation page renders and the contact actions work without runtime errors or TypeScript build errors.",
+      "featureId": "feature-restore-roll-back-the-deployed-application-to-version-v59-ensuring-both-the-frontend-and-backend-code-state-correspond-to-what-was-running-in-v59",
+      "featureTitle": "Restore (roll back) the deployed application to version v59, ensuring both the frontend and backend code/state correspond to what was running in v59.",
       "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/Header.tsx",
         "frontend/src/pages/ConsultationPage.tsx",
         "frontend/src/utils/consultExpertMailto.ts",
         "frontend/src/utils/consultWhatsAppLink.ts",

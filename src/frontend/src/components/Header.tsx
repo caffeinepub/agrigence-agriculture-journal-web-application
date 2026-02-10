@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Menu, X, User, LogOut, LayoutDashboard, FileText, CreditCard, Shield, Mail } from 'lucide-react';
+import { Menu, X, User, LogOut, LayoutDashboard, FileText, CreditCard, Shield } from 'lucide-react';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useIsCallerAdmin } from '../hooks/useQueries';
 import { useQueryClient } from '@tanstack/react-query';
@@ -26,11 +26,6 @@ export default function Header() {
     await clear();
     queryClient.clear();
     navigate({ to: '/' });
-  };
-
-  const handleConsultClick = () => {
-    navigate({ to: '/consultation' });
-    setMobileMenuOpen(false);
   };
 
   const navLinks = [
@@ -70,16 +65,6 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button 
-            onClick={handleConsultClick}
-            variant="outline" 
-            className="hidden lg:inline-flex"
-            aria-label="Consult an Expert"
-          >
-            <Mail className="h-4 w-4 mr-2" />
-            Consult an Expert
-          </Button>
-
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -154,14 +139,6 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <button
-              onClick={handleConsultClick}
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors flex items-center text-left"
-              aria-label="Consult an Expert"
-            >
-              <Mail className="h-4 w-4 mr-2" />
-              Consult an Expert
-            </button>
             {!isAuthenticated && (
               <>
                 <Link

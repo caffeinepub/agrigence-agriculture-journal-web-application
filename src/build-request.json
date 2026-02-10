@@ -1,70 +1,38 @@
 {
   "kind": "build_request",
-  "title": "Recheck and fix the consultation flow error",
+  "title": "Rollback app to Version v59",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Identify the current error in the deployed consultation flow and fix it so the Consultation page renders and the contact actions work without runtime errors or TypeScript build errors.",
-      "target": "frontend",
+      "text": "Restore (roll back) the deployed application to version v59, ensuring both the frontend and backend code/state correspond to what was running in v59.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Recheck and fix the error"
+          "Restore the v59"
         ]
       },
       "acceptanceCriteria": [
-        "Visiting the /consultation route does not crash and shows the consultation form.",
-        "The Consultation page has no TypeScript compile errors (including unused imports/variables).",
-        "The form validation state used for disabling/enabling buttons is a strict boolean (not a string/union), and the WhatsApp/Mail buttons enable only when all required fields are valid.",
-        "Clicking “WhatsApp Us” builds a valid wa.me URL and attempts to open it in a new tab; if the popup is blocked, a user-facing error toast is shown (English text).",
-        "Clicking “Mail Us” navigates to a valid mailto: URL with URL-encoded subject/body containing consultation type, name, email, and message."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Add a minimal regression check for the consultation flow to prevent the same error from reappearing (covering link generation and form-validity gating).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Recheck and fix the error"
-        ]
-      },
-      "acceptanceCriteria": [
-        "There is automated coverage (unit and/or lightweight component test) that verifies the WhatsApp URL and mailto URL builders produce encoded output containing the provided fields.",
-        "There is automated coverage that verifies the contact buttons remain disabled when required fields are missing/invalid and become enabled when all required fields are valid."
+        "Production deployment is running the v59 code (frontend bundle and backend canister WASM match v59).",
+        "All primary routes load without runtime errors in the browser console (at minimum: /, /consultation, /products, /subscription, /admin).",
+        "The Consultation page renders and its WhatsApp and Mail actions work as they did in v59 (no crashes; buttons enable/disable based on form validity)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (read-only).",
-    "Do not edit the immutable hook files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx.",
-    "Keep the backend as a single Motoko actor; only change backend if the consultation fix demonstrably requires it."
+    "Do not edit any files under frontend/src/components/ui (read-only shadcn components).",
+    "Do not modify frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and frontend/src/components/ui.",
+    "Keep the backend as a single Motoko actor in backend/main.mo; only introduce backend/migration.mo if restoring v59 requires a state upgrade/downgrade path."
   ],
   "nonGoals": [
-    "Do not add new consultation types beyond the existing options (Academic Support, Crop Support, Industrial Support).",
-    "Do not add backend persistence or ticket creation for consultation requests; the flow remains WhatsApp/mailto based.",
-    "Do not add third-party messaging/email integrations beyond opening WhatsApp and mailto links."
+    "Implement new consultation features or redesign the consultation flow beyond what is necessary to restore v59 behavior.",
+    "Add new third-party integrations or authentication methods beyond Internet Identity."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Use English for any user-facing text."
-    ],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

@@ -1,45 +1,62 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T18:07:46.980Z",
-  "summary": "Consultation flow was updated with strict boolean form validation and improved WhatsApp/mailto URL builders, including popup-blocked handling via toast. However, the diff summary does not show any added/updated automated tests required for regression coverage, and button disabled/enabled gating cannot be fully verified from the truncated ConsultationPage diff.",
+  "generatedAt": "2026-02-10T15:17:36.529Z",
+  "summary": "The diff does not clearly implement a rollback to v59. Most notably, the frontend router setup appears to omit the required /consultation route, jeopardizing the acceptance criteria that primary routes (including /consultation) load without runtime errors. The changes also include several substantial backend/frontend feature additions (e.g., Stripe integration, blob storage mixins, user profiles, product management) that are not explicitly requested by the rollback-only BuildRequest.",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "Add a minimal regression check (automated test) verifying WhatsApp/mailto URL builders produce encoded output containing provided fields, and verifying contact buttons are disabled until required fields are valid.",
-      "reason": "No test files or test-related modifications are shown in the diff summary; only utility and page code changes are present.",
-      "evidence": [
-        "Added/Modified files list shows only frontend/src/utils/consultationValidation.ts, frontend/src/pages/ConsultationPage.tsx, frontend/src/utils/consultExpertMailto.ts, frontend/src/utils/consultWhatsAppLink.ts (no test paths present)"
-      ]
-    },
-    {
       "id": "REQ-1",
-      "requirement": "WhatsApp/Mail buttons enable only when all required fields are valid (strict boolean gating).",
-      "reason": "A strict boolean `isFormValid` is computed, but the truncated diff does not show the actual Button components’ `disabled` props or other UI gating logic, so it cannot be confirmed from provided evidence.",
+      "requirement": "All primary routes load without runtime errors in the browser console (at minimum: /, /consultation, /products, /subscription, /admin).",
+      "reason": "The router configuration summary explicitly states the consultation route is not defined, so /consultation is unlikely to load as required.",
       "evidence": [
-        "frontend/src/pages/ConsultationPage.tsx (truncated)"
+        "frontend/src/App.tsx",
+        "frontend-file-summaries.txt"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added a legacy/backward-compatible static mailto builder (getConsultExpertMailto) in addition to the requested dynamic mailto link builder.",
-      "reason": "The BuildRequest only asks to fix the consultation flow and ensure mailto includes encoded fields; it does not request preserving/adding a legacy static template generator.",
+      "description": "Backend Stripe integration and HTTP outcalls added/kept (described as for potential future use).",
+      "reason": "BuildRequest is a rollback to v59 with a non-goal of adding new third-party integrations; the diff shows Stripe/outcalls code paths without evidence they are required strictly for restoring v59.",
       "evidence": [
-        "frontend/src/utils/consultExpertMailto.ts"
+        "backend/main.mo"
       ]
     },
     {
-      "description": "Success toasts for opening WhatsApp and opening email client.",
-      "reason": "The BuildRequest specifically requires an error toast when WhatsApp popup is blocked, but does not request success toasts.",
+      "description": "Backend blob storage mixin/storage support included (described as for potential future use).",
+      "reason": "Not requested by the rollback requirement; appears as additional capability beyond what is necessary to restore v59 behavior.",
       "evidence": [
-        "frontend/src/pages/ConsultationPage.tsx (truncated)"
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Backend user profile management APIs (get/save caller profile, admin checks) implemented.",
+      "reason": "Not requested by the rollback requirement and not mentioned in v59 restoration scope; appears to be additional feature work.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Backend product management APIs and product category types implemented (add/update/remove/list products).",
+      "reason": "Not requested by the rollback requirement; appears as additional feature work.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Frontend profile/admin/stripe setup dialogs and various non-requested page flows (e.g., article submission, payment success/failure) described in frontend summaries.",
+      "reason": "REQ-1 is limited to restoring v59; these additions are not referenced as necessary to restore consultation behavior/routes and may represent extra scope beyond rollback.",
+      "evidence": [
+        "frontend-file-summaries.txt"
       ]
     }
   ],
-  "confidence": 0.74,
+  "confidence": 0.66,
   "changed_files": [
+    "backend/main.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/App.tsx",
+    "frontend/src/components/Header.tsx",
     "frontend/src/pages/ConsultationPage.tsx",
     "frontend/src/utils/consultExpertMailto.ts",
     "frontend/src/utils/consultWhatsAppLink.ts",

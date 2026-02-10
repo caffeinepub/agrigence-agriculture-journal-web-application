@@ -7,6 +7,12 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export interface Product {
+    id: string;
+    name: string;
+    buyLink: string;
+    category: ProductCategory;
+}
 export interface ProductInput {
     id: string;
     name: string;
@@ -54,11 +60,8 @@ export interface StripeConfiguration {
     allowedCountries: Array<string>;
     secretKey: string;
 }
-export interface Product {
-    id: string;
+export interface UserProfile {
     name: string;
-    buyLink: string;
-    category: ProductCategory;
 }
 export enum ProductCategory {
     agriculturalStore = "agriculturalStore",
@@ -73,13 +76,16 @@ export interface backendInterface {
     addProduct(input: ProductInput): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
+    getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getProductsByCategory(category: ProductCategory): Promise<Array<Product>>;
     getStripeSessionStatus(sessionId: string): Promise<StripeSessionStatus>;
+    getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     isStripeConfigured(): Promise<boolean>;
     listAllProducts(): Promise<Array<Product>>;
     removeProduct(id: string): Promise<void>;
+    saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
     transform(input: TransformationInput): Promise<TransformationOutput>;
     updateProduct(id: string, updatedInput: ProductInput): Promise<void>;

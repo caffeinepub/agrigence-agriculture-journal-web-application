@@ -1,52 +1,58 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-08T18:07:46.985Z",
+  "generatedAt": "2026-02-10T15:17:36.533Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
+    "total": 1,
     "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Identify the current error in the deployed consultation flow and fix it so the Consultation page renders and the contact actions work without runtime errors or TypeScript build errors.",
+        "summary": "Restore (roll back) the deployed application to version v59, ensuring both the frontend and backend code/state correspond to what was running in v59.",
         "status": "implemented",
         "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/Header.tsx",
           "frontend/src/pages/ConsultationPage.tsx",
           "frontend/src/utils/consultationValidation.ts",
           "frontend/src/utils/consultWhatsAppLink.ts",
-          "frontend/src/utils/consultExpertMailto.ts"
+          "frontend/src/utils/consultExpertMailto.ts",
+          "frontend/src/pages/ProductsPage.tsx",
+          "frontend/src/pages/SubscriptionPage.tsx",
+          "frontend/src/pages/AdminPanelPage.tsx",
+          "frontend/src/pages/AdminPanelContent.tsx",
+          "frontend/DEPLOYMENT.md",
+          "frontend/deploy/nginx/site.conf",
+          "frontend/nginx/default.conf"
         ],
         "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/Header.tsx",
           "frontend/src/pages/ConsultationPage.tsx",
           "frontend/src/utils/consultationValidation.ts",
           "frontend/src/utils/consultWhatsAppLink.ts",
           "frontend/src/utils/consultExpertMailto.ts"
         ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Add a minimal regression check for the consultation flow to prevent the same error from reappearing (covering link generation and form-validity gating).",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/utils/__tests__/consultLinks.test.ts",
-          "frontend/src/utils/__tests__/consultationValidation.test.ts",
-          "frontend/src/pages/__tests__/ConsultationPage.gating.test.tsx",
-          "frontend/vitest.config.ts",
-          "frontend/src/test/setup.ts"
-        ],
-        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
     "frontend/src/pages/ConsultationPage.tsx",
     "frontend/src/utils/consultExpertMailto.ts",
     "frontend/src/utils/consultWhatsAppLink.ts",

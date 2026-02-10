@@ -20,7 +20,6 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ProductsPage from './pages/ProductsPage';
-import ConsultationPage from './pages/ConsultationPage';
 import Layout from './components/Layout';
 import LoadingScreen from './components/LoadingScreen';
 import './index.css';
@@ -133,12 +132,6 @@ const productsRoute = createRoute({
   component: ProductsPage,
 });
 
-const consultationRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/consultation',
-  component: ConsultationPage,
-});
-
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
@@ -157,7 +150,6 @@ const routeTree = rootRoute.addChildren([
   paymentSuccessRoute,
   paymentFailureRoute,
   productsRoute,
-  consultationRoute,
 ]);
 
 const router = createRouter({ routeTree });

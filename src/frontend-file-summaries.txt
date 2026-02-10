@@ -1,7 +1,7 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup, defining all routes including the new Consultation route along with existing routes, with LoadingScreen component integration.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, defining all routes (home, news, journals, products, subscription, admin, etc.) without the consultation route, with LoadingScreen component integration.",
   "frontend/src/components/Layout.tsx": "Root layout component that wraps all pages with Header, main content area (Outlet), and Footer.",
-  "frontend/src/components/Header.tsx": "Responsive navigation header with \"Consult an Expert\" button that navigates to /consultation page (visible on desktop and in mobile menu), profile dropdown menu, dynamic options based on login state, and mobile menu support with consistent English copy.",
+  "frontend/src/components/Header.tsx": "Responsive navigation header with profile dropdown menu, dynamic options based on login state, and mobile menu support without the \"Consult an Expert\" button.",
   "frontend/src/components/Footer.tsx": "Footer component with Pricing link to /subscription, contact information, social media links, countdown timer, visitor counter, and caffeine.ai attribution with consistent English copy.",
   "frontend/src/components/ProfileSetupDialog.tsx": "Modal dialog for first-time user profile setup, collecting name, email, phone, qualification, and occupation fields required by the backend ProfileInput type.",
   "frontend/src/components/StripeSetupDialog.tsx": "Admin-only modal for configuring Stripe payment integration with secret key and allowed countries, including validation, helpful instructions, and proper onOpenChange prop for dialog control.",

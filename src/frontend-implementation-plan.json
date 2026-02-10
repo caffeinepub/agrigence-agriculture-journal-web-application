@@ -1,73 +1,81 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix Consultation flow runtime/TS errors and add regression coverage",
+  "title": "Frontend rollback alignment to v59 behavior",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Fix Consultation page so it renders without runtime/TypeScript errors, with strict boolean validation gating and correct WhatsApp/mailto actions.",
+      "summary": "Roll back the frontend code to match v59 behavior and ensure primary routes and Consultation actions work without runtime errors.",
       "acceptanceCriteria": [
-        "Visiting the /consultation route does not crash and shows the consultation form.",
-        "The Consultation page has no TypeScript compile errors (including unused imports/variables).",
-        "The form validation state used for disabling/enabling buttons is a strict boolean (not a string/union), and the WhatsApp/Mail buttons enable only when all required fields are valid.",
-        "Clicking “WhatsApp Us” builds a valid wa.me URL and attempts to open it in a new tab; if the popup is blocked, a user-facing error toast is shown (English text).",
-        "Clicking “Mail Us” navigates to a valid mailto: URL with URL-encoded subject/body containing consultation type, name, email, and message."
+        "Production deployment is running the v59 code (frontend bundle and backend canister WASM match v59).",
+        "All primary routes load without runtime errors in the browser console (at minimum: /, /consultation, /products, /subscription, /admin).",
+        "The Consultation page renders and its WhatsApp and Mail actions work as they did in v59 (no crashes; buttons enable/disable based on form validity)."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Restore v59 route tree and app bootstrapping behavior for all primary routes (/, /consultation, /products, /subscription, /admin), ensuring no route-level runtime errors after rollback."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Restore v59 navigation/linking behavior (including access to /consultation, /products, /subscription, /admin) and ensure navigation actions do not trigger console/runtime errors after rollback."
+        },
+        {
           "path": "frontend/src/pages/ConsultationPage.tsx",
           "operation": "modify",
-          "description": "Eliminate the current TypeScript/runtime issue by making form validity a strict boolean (avoid truthy string unions from chained &&), remove unused imports (e.g., unused icon imports), and ensure button disabled props and helper text conditions rely on boolean validity. Keep WhatsApp window.open behavior and show an English toast error when a popup is blocked; keep mailto navigation with URL-encoded subject/body including consultation type, name, email, and message."
+          "description": "Restore v59 Consultation page UI/behavior, specifically: form validity gating, button enable/disable rules, and click handlers for WhatsApp and Mail so they work without crashes and match v59 behavior."
         },
         {
           "path": "frontend/src/utils/consultationValidation.ts",
-          "operation": "create",
-          "description": "Introduce shared, testable consultation validation helpers (e.g., email validation + full-form validity computation) that return strict booleans, so the Consultation page can use a single source of truth for gating WhatsApp/Mail actions."
+          "operation": "modify",
+          "description": "Restore v59 consultation form validation semantics (required fields + email validation) to ensure the Consultation page button gating matches v59."
         },
         {
           "path": "frontend/src/utils/consultWhatsAppLink.ts",
           "operation": "modify",
-          "description": "Harden the WhatsApp URL builder to ensure it always returns a valid https://wa.me/<number>?text=<encoded> URL and that the encoded text contains the provided consultation type, name, email, and message (no accidental omission/partial encoding)."
+          "description": "Restore v59 WhatsApp link generation logic (target phone number, message format, and URL encoding) used by the Consultation page."
         },
         {
           "path": "frontend/src/utils/consultExpertMailto.ts",
           "operation": "modify",
-          "description": "Harden the mailto builder to ensure it always returns a valid mailto: URL with URL-encoded subject/body that include consultation type, name, email, and message; keep English-only user-facing content in the generated subject/body."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Add automated regression tests for consultation link generation and strict validity gating for contact buttons.",
-      "acceptanceCriteria": [
-        "There is automated coverage (unit and/or lightweight component test) that verifies the WhatsApp URL and mailto URL builders produce encoded output containing the provided fields.",
-        "There is automated coverage that verifies the contact buttons remain disabled when required fields are missing/invalid and become enabled when all required fields are valid."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/utils/__tests__/consultLinks.test.ts",
-          "operation": "create",
-          "description": "Add unit tests verifying buildConsultWhatsAppLink() and buildConsultExpertMailto() generate URLs that are properly encoded and include the provided consultation type, name, email, and message."
+          "description": "Restore v59 mailto link generation logic (recipient, subject/body formatting, and URL encoding) used by the Consultation page."
         },
         {
-          "path": "frontend/src/utils/__tests__/consultationValidation.test.ts",
-          "operation": "create",
-          "description": "Add unit tests for the shared validation helpers ensuring validity is a strict boolean and toggles correctly for missing fields and invalid email values."
+          "path": "frontend/src/pages/ProductsPage.tsx",
+          "operation": "modify",
+          "description": "Restore v59 Products page rendering behavior and error/loading states to ensure /products loads without runtime errors and matches v59 UX expectations."
         },
         {
-          "path": "frontend/src/pages/__tests__/ConsultationPage.gating.test.tsx",
-          "operation": "create",
-          "description": "Add a lightweight component test that renders the Consultation page and asserts the WhatsApp/Mail buttons are disabled until all required fields are valid, then enabled once valid inputs are provided."
+          "path": "frontend/src/pages/SubscriptionPage.tsx",
+          "operation": "modify",
+          "description": "Restore v59 Subscription page behavior (including any Stripe gating/visibility logic) to ensure /subscription loads without runtime errors and aligns with v59."
         },
         {
-          "path": "frontend/vitest.config.ts",
-          "operation": "create",
-          "description": "Add/standardize a minimal Vitest configuration for running the new unit/component tests in the frontend project (jsdom for component tests if needed)."
+          "path": "frontend/src/pages/AdminPanelPage.tsx",
+          "operation": "modify",
+          "description": "Restore v59 admin access gating and loading/error handling to ensure /admin loads without runtime errors and behaves as it did in v59."
         },
         {
-          "path": "frontend/src/test/setup.ts",
-          "operation": "create",
-          "description": "Add a test setup file for the frontend test environment (e.g., extending matchers and configuring jsdom-related globals) used by the Consultation regression tests."
+          "path": "frontend/src/pages/AdminPanelContent.tsx",
+          "operation": "modify",
+          "description": "Restore v59 Admin panel content UI behavior so that the admin page renders without runtime errors and matches v59 interactions."
+        },
+        {
+          "path": "frontend/DEPLOYMENT.md",
+          "operation": "modify",
+          "description": "Update deployment/rollback notes to explicitly document how to verify the frontend artifact corresponds to v59 (build provenance and route smoke-check list including /, /consultation, /products, /subscription, /admin)."
+        },
+        {
+          "path": "frontend/deploy/nginx/site.conf",
+          "operation": "modify",
+          "description": "Ensure the static hosting configuration remains compatible with v59 routing (SPA fallback) so direct navigation to /consultation, /products, /subscription, and /admin works after rollback."
+        },
+        {
+          "path": "frontend/nginx/default.conf",
+          "operation": "modify",
+          "description": "Align SPA fallback and caching behavior with what was used in v59 to avoid route load failures and eliminate unexpected runtime asset loading issues after rollback."
         }
       ]
     }
